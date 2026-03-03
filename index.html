@@ -92,12 +92,6 @@
             letter-spacing: 4px;
         }
 
-        .code-input {
-            font-family: 'JetBrains Mono', monospace;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
         .admin-panel {
             position: fixed;
             bottom: 20px;
@@ -148,23 +142,11 @@
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 12px;
-            transition: all 0.2s;
-        }
-
-        .participant-card:hover {
-            border-color: var(--primary);
-            transform: translateX(5px);
         }
 
         .participant-card.boom-active {
             border-color: var(--boom);
             background: rgba(255, 107, 107, 0.1);
-            animation: glow-boom 1s infinite;
-        }
-
-        @keyframes glow-boom {
-            0%, 100% { box-shadow: 0 0 10px rgba(255, 107, 107, 0.3); }
-            50% { box-shadow: 0 0 20px rgba(255, 107, 107, 0.6); }
         }
 
         .boom-effect {
@@ -187,21 +169,34 @@
             100% { opacity: 0; transform: translate(-50%, -50%) scale(2); }
         }
 
-        .room-info {
-            background: linear-gradient(135deg, rgba(0,255,255,0.1), rgba(153,69,255,0.1));
-            border: 1px solid var(--primary);
+        .loading-spinner {
+            border: 3px solid rgba(0, 255, 255, 0.3);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
         }
 
-        .copy-button {
-            background: rgba(255,255,255,0.1);
-            padding: 4px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        .copy-button:hover {
-            background: rgba(255,255,255,0.2);
+        .waiting-room {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .participant-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -256,7 +251,7 @@
                         <label class="block text-sm font-medium text-gray-400 mb-2">ROOM CODE</label>
                         <div class="flex gap-2">
                             <input type="text" id="input-room-code" placeholder="Enter room code..." 
-                                   class="code-input flex-1 bg-gray-900 border border-gray-700 rounded-xl p-4 text-white focus:outline-none focus:border-cyan-400 text-center text-xl font-bold">
+                                   class="flex-1 bg-gray-900 border border-gray-700 rounded-xl p-4 text-white focus:outline-none focus:border-cyan-400 text-center text-xl font-bold uppercase">
                             <button onclick="generateRoomCode()" class="bg-purple-600 hover:bg-purple-700 px-4 rounded-xl text-sm">
                                 Generate
                             </button>
@@ -280,41 +275,45 @@
                         </button>
                     </div>
                     
-                    <button id="btn-start" onclick="startGame()" disabled 
-                            class="cyber-button w-full py-4 rounded-xl font-bold text-lg disabled:opacity-50">
-                        WAITING FOR ADMIN...
-                    </button>
-                    
+                    <div id="room-status-display" class="hidden mt-4 p-4 bg-gray-900 rounded-xl">
+                        <div class="text-center mb-3">
+                            <div class="text-sm text-gray-400">ROOM CODE</div>
+                            <div class="room-code text-center my-2" id="display-room-code">DEFAULT</div>
+                            <button onclick="copyRoomCode()" class="copy-button px-3 py-1 bg-gray-800 rounded-lg text-xs hover:bg-gray-700">
+                                📋 Copy Code
+                            </button>
+                        </div>
+                        
+                        <div class="flex justify-between text-sm mb-2">
+                            <span>Status:</span>
+                            <span id="room-status-text" class="text-yellow-400">Waiting for admin...</span>
+                        </div>
+                        
+                        <div class="flex justify-between text-sm mb-4">
+                            <span>Participants:</span>
+                            <span id="room-participants-count">0</span>
+                        </div>
+                        
+                        <!-- Waiting Room Participants -->
+                        <div id="waiting-participants" class="mt-4">
+                            <h3 class="text-sm font-bold mb-2">Participants in Room:</h3>
+                            <div id="participants-list-waiting" class="space-y-2 max-h-40 overflow-y-auto">
+                                <!-- Participants will be listed here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Start Button (only for admin) -->
+                        <button id="btn-start" onclick="startGame()" disabled 
+                                class="cyber-button w-full mt-4 py-4 rounded-xl font-bold text-lg disabled:opacity-50">
+                            WAITING FOR ADMIN...
+                        </button>
+                    </div>
+
                     <div id="auth-status-container" class="mt-4">
                         <div id="auth-status" class="text-sm text-yellow-400 text-center">
                             <span class="inline-block w-2 h-2 bg-yellow-400 rounded-full mr-2"></span>
                             Initializing security protocol...
                         </div>
-                    </div>
-
-                    <!-- Room Info Display -->
-                    <div id="room-info-display" class="hidden mt-6 p-4 room-info rounded-xl">
-                        <div class="text-center">
-                            <div class="text-sm text-gray-400 mb-2">ROOM CODE</div>
-                            <div class="room-code text-center mb-2" id="display-room-code">DEFAULT</div>
-                            <button onclick="copyRoomCode()" class="copy-button">📋 Copy Code</button>
-                        </div>
-                        <div class="flex justify-between mt-4 text-sm">
-                            <span>Participants: <span id="room-participants">0</span></span>
-                            <span>Status: <span id="room-status" class="text-yellow-400">Waiting</span></span>
-                        </div>
-                    </div>
-
-                    <!-- Boom Rules -->
-                    <div class="mt-6 p-4 bg-gray-900 rounded-xl">
-                        <h3 class="font-bold text-orange-400 mb-2">💣 BOOM MECHANIC</h3>
-                        <ul class="text-xs text-gray-400 space-y-1">
-                            <li>✓ Streak 3 jawaban benar = dapat 1 BOOM</li>
-                            <li>✓ BOOM bisa digunakan untuk mengurangi poin lawan</li>
-                            <li>✓ Pilih target dari daftar peserta</li>
-                            <li>✓ Setiap BOOM mengurangi 500 poin lawan</li>
-                            <li>✓ Maksimal 3 BOOM per pemain</li>
-                        </ul>
                     </div>
                 </div>
             </div>
@@ -344,7 +343,6 @@
                             Waiting for server instructions...
                         </p>
 
-                        <!-- Question Progress -->
                         <div class="mt-4 flex justify-between items-center text-xs text-gray-400">
                             <span id="question-progress">Question 0/0</span>
                             <span id="question-difficulty" class="px-2 py-1 bg-gray-900 rounded">Medium</span>
@@ -355,7 +353,7 @@
 
                     <div id="feedback" class="hidden rounded-xl p-4 text-center font-bold text-lg"></div>
 
-                    <!-- Boom Targets (Muncul saat BOOM aktif) -->
+                    <!-- Boom Targets -->
                     <div id="boom-targets" class="hidden glass-card rounded-2xl p-4">
                         <h3 class="font-bold text-red-400 mb-3">💣 SELECT BOOM TARGET</h3>
                         <div id="targets-list" class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-40 overflow-y-auto">
@@ -458,23 +456,6 @@
                     </div>
                 </div>
 
-                <!-- Boom Statistics -->
-                <div class="glass-card rounded-2xl p-6">
-                    <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
-                        <span>💣</span> BOOM STATISTICS
-                    </h3>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="text-center p-4 bg-gray-900 rounded-lg">
-                            <div class="text-2xl font-bold text-orange-400" id="total-booms">0</div>
-                            <div class="text-xs text-gray-400">Total Booms Used</div>
-                        </div>
-                        <div class="text-center p-4 bg-gray-900 rounded-lg">
-                            <div class="text-2xl font-bold text-red-400" id="damage-dealt">0</div>
-                            <div class="text-xs text-gray-400">Damage Dealt</div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Final Leaderboard -->
                 <div class="glass-card rounded-2xl p-6">
                     <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
@@ -493,7 +474,6 @@
                                     <th class="text-right pb-3">Score</th>
                                     <th class="text-right pb-3">Streak</th>
                                     <th class="text-right pb-3">Booms</th>
-                                    <th class="text-right pb-3">Performance</th>
                                 </tr>
                             </thead>
                             <tbody id="final-leaderboard" class="divide-y divide-gray-800"></tbody>
@@ -514,7 +494,7 @@
         </div>
     </div>
 
-    <!-- Admin Monitoring Panel (Terpisah) -->
+    <!-- Admin Monitoring Panel -->
     <div class="admin-panel">
         <div class="admin-toggle" onclick="toggleAdminModal()">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -523,7 +503,7 @@
         </div>
     </div>
 
-    <!-- Admin Modal (Hanya untuk Monitoring) -->
+    <!-- Admin Modal -->
     <div id="admin-modal" class="admin-modal">
         <div class="admin-content glass-card rounded-2xl p-6">
             <div class="flex justify-between items-center mb-6">
@@ -535,19 +515,17 @@
                 </button>
             </div>
 
-            <!-- Room Selection untuk Monitoring -->
             <div class="mb-6">
                 <label class="block text-sm font-medium text-gray-400 mb-2">ENTER ROOM CODE TO MONITOR</label>
                 <div class="flex gap-2">
                     <input type="text" id="admin-room-code" placeholder="Room code..." 
-                           class="code-input flex-1 bg-gray-900 border border-gray-700 rounded-lg p-3 text-white">
+                           class="flex-1 bg-gray-900 border border-gray-700 rounded-lg p-3 text-white uppercase">
                     <button onclick="monitorRoom()" class="cyber-button px-6 py-3 rounded-lg font-bold">
                         MONITOR
                     </button>
                 </div>
             </div>
 
-            <!-- Current Monitoring Info -->
             <div id="admin-monitoring-info" class="hidden mb-4 p-3 bg-cyan-900/30 rounded-lg">
                 <span class="text-sm">Monitoring Room: <span id="monitoring-room-code" class="font-bold text-cyan-400"></span></span>
                 <button onclick="stopMonitoring()" class="ml-4 text-red-400 text-sm hover:text-red-300">Stop</button>
@@ -569,22 +547,12 @@
                 </div>
             </div>
 
-            <!-- Participants List untuk Monitoring -->
             <h3 class="font-bold mb-3">ACTIVE PARTICIPANTS</h3>
-            <div id="participants-list" class="space-y-2 max-h-[400px] overflow-y-auto">
-                <!-- Participants will be populated here -->
-            </div>
+            <div id="participants-list" class="space-y-2 max-h-[400px] overflow-y-auto"></div>
 
-            <!-- Activity Log -->
             <div class="mt-6">
                 <h3 class="font-bold mb-3">RECENT ACTIVITY</h3>
-                <div id="activity-log" class="space-y-2 max-h-200 overflow-y-auto bg-gray-900 rounded-lg p-3">
-                    <!-- Activity log will be populated here -->
-                </div>
-            </div>
-
-            <div class="mt-6 text-center text-xs text-gray-400">
-                Admin Mode: View Only • No Controls
+                <div id="activity-log" class="space-y-2 max-h-40 overflow-y-auto bg-gray-900 rounded-lg p-3"></div>
             </div>
         </div>
     </div>
@@ -593,7 +561,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, updateDoc, collection, onSnapshot, increment, arrayUnion, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, updateDoc, collection, onSnapshot, increment, arrayUnion, getDoc, query, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyD73uPU8es-9EK2EXl3zj8hpcXPwpAu_xk",
@@ -619,6 +587,7 @@
         let timeLeft;
         let currentStreak = 0;
         let boomCount = 0;
+        let roomUnsubscribe = null;
         const MAX_BOOM = 3;
 
         // Default questions
@@ -646,22 +615,6 @@
                 category: "SQL", 
                 time: 20,
                 difficulty: "Easy"
-            },
-            { 
-                q: "Which key is used to establish a relationship between two tables?", 
-                a: ["Primary Key", "Super Key", "Foreign Key", "Candidate Key"], 
-                correct: 2, 
-                category: "RELATIONSHIPS", 
-                time: 20,
-                difficulty: "Easy"
-            },
-            { 
-                q: "Which NoSQL database stores data in key-value format?", 
-                a: ["MongoDB", "Redis", "MySQL", "PostgreSQL"], 
-                correct: 1, 
-                category: "NOSQL", 
-                time: 25,
-                difficulty: "Medium"
             }
         ];
 
@@ -729,20 +682,22 @@
                     streak: 0,
                     booms: 0,
                     joinedAt: Date.now(),
-                    status: 'active'
+                    status: 'active',
+                    isAdmin: true
                 });
 
                 currentRoom = roomCode;
                 currentTeamName = teamName;
                 isAdmin = true;
                 
+                // Update UI
                 document.getElementById('input-room-code').value = roomCode;
                 document.getElementById('display-team-name').innerText = teamName;
-                document.getElementById('current-room-code').innerText = roomCode;
                 document.getElementById('display-room-code').innerText = roomCode;
-                document.getElementById('room-info-display').classList.remove('hidden');
+                document.getElementById('room-status-display').classList.remove('hidden');
                 document.getElementById('btn-start').disabled = false;
                 document.getElementById('btn-start').innerText = 'START GAME AS ADMIN';
+                document.getElementById('room-status-text').innerText = 'Waiting for players...';
                 
                 showNotification(`Room ${roomCode} created! You are admin`, 'success');
                 
@@ -794,7 +749,8 @@
                     streak: 0,
                     booms: 0,
                     joinedAt: Date.now(),
-                    status: 'active'
+                    status: 'active',
+                    isAdmin: false
                 });
 
                 // Update participant count
@@ -804,22 +760,56 @@
 
                 currentRoom = roomCode;
                 currentTeamName = teamName;
+                isAdmin = false;
                 
+                // Update UI
                 document.getElementById('display-team-name').innerText = teamName;
-                document.getElementById('current-room-code').innerText = roomCode;
                 document.getElementById('display-room-code').innerText = roomCode;
-                document.getElementById('room-info-display').classList.remove('hidden');
+                document.getElementById('room-status-display').classList.remove('hidden');
+                document.getElementById('room-status-text').innerText = 'Waiting for admin to start...';
+                document.getElementById('btn-start').disabled = true;
+                document.getElementById('btn-start').innerText = 'WAITING FOR ADMIN';
                 
                 showNotification(`Joined room ${roomCode}`, 'success');
                 
                 // Listen to room updates
                 listenToRoom(roomCode);
                 
+                // Listen for game start
+                listenForGameStart(roomCode);
+                
             } catch (e) {
                 console.error('Failed to join room:', e);
                 alert('Failed to join room');
             }
         };
+
+        // Listen for game start (for participants)
+        function listenForGameStart(roomCode) {
+            onSnapshot(doc(db, 'rooms', roomCode), (doc) => {
+                const data = doc.data();
+                if (data && data.status === 'in-progress' && !isAdmin) {
+                    // Game started, move to battle screen
+                    document.getElementById('screen-lobby').classList.add('hidden');
+                    document.getElementById('screen-battle').classList.remove('hidden');
+                    document.getElementById('stats-bar').classList.remove('hidden');
+                    
+                    // Reset game state
+                    score = 0;
+                    qIdx = 0;
+                    currentStreak = 0;
+                    boomCount = 0;
+                    
+                    document.getElementById('display-score').innerText = '0';
+                    document.getElementById('display-streak').innerText = '0';
+                    
+                    // Load first question
+                    loadQuestion();
+                    
+                    showNotification('Game started!', 'success');
+                }
+            });
+        }
 
         window.startGame = async () => {
             if (!currentRoom || !isAdmin) return;
@@ -840,6 +830,63 @@
                 console.error('Failed to start game:', e);
             }
         };
+
+        // Listen to room updates
+        function listenToRoom(roomCode) {
+            if (roomUnsubscribe) {
+                roomUnsubscribe();
+            }
+            
+            // Listen to participants
+            roomUnsubscribe = onSnapshot(collection(db, 'rooms', roomCode, 'participants'), (snapshot) => {
+                const participants = [];
+                snapshot.forEach(doc => {
+                    participants.push({ id: doc.id, ...doc.data() });
+                });
+                
+                // Update participant count
+                document.getElementById('room-participants-count').innerText = participants.length;
+                document.getElementById('participant-count').innerText = participants.length;
+                
+                // Update waiting participants list
+                const waitingList = document.getElementById('participants-list-waiting');
+                if (waitingList) {
+                    waitingList.innerHTML = participants.map(p => `
+                        <div class="flex items-center gap-2 p-2 bg-gray-800 rounded-lg">
+                            <div class="participant-avatar">
+                                ${p.name.charAt(0).toUpperCase()}
+                            </div>
+                            <div class="flex-1">
+                                <div class="font-medium">${p.name}</div>
+                                <div class="text-xs text-gray-400">${p.isAdmin ? '👑 Admin' : 'Player'}</div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+                
+                // Update leaderboard if in battle
+                if (!document.getElementById('screen-lobby').classList.contains('hidden')) {
+                    return;
+                }
+                
+                const sorted = participants.sort((a, b) => b.score - a.score);
+                const leaderboardEl = document.getElementById('leaderboard');
+                
+                leaderboardEl.innerHTML = sorted.map((p, i) => {
+                    const isMe = p.name === currentTeamName;
+                    return `
+                        <tr class="${isMe ? 'bg-cyan-900/30' : ''}">
+                            <td class="py-2">#${i + 1}</td>
+                            <td class="py-2">${p.name}${isMe ? ' (YOU)' : ''}</td>
+                            <td class="py-2 text-right">${p.score.toLocaleString()}</td>
+                            <td class="py-2 text-center">
+                                ${p.streak > 0 ? `<span class="text-orange-400">${p.streak}🔥</span>` : '-'}
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            });
+        }
 
         // ==================== STREAK & BOOM SYSTEM ====================
 
@@ -894,10 +941,7 @@
                 return;
             }
             
-            // Show target selection
             document.getElementById('boom-targets').classList.remove('hidden');
-            
-            // Populate targets (other participants)
             loadBoomTargets();
         };
 
@@ -926,7 +970,6 @@
             if (boomCount <= 0) return;
             
             try {
-                // Show boom effect
                 showBoomEffect();
                 
                 // Reduce target's score
@@ -944,11 +987,7 @@
                 // Record boom usage
                 await updateDoc(doc(db, 'rooms', currentRoom), {
                     totalBooms: increment(1),
-                    totalDamage: increment(500)
-                });
-                
-                // Add to activity log
-                await updateDoc(doc(db, 'rooms', currentRoom), {
+                    totalDamage: increment(500),
                     activityLog: arrayUnion({
                         type: 'BOOM',
                         from: currentTeamName,
@@ -960,10 +999,7 @@
                 
                 showNotification(`💥 BOOM! ${targetName} lost 500 points!`, 'success');
                 
-                // Hide target selection
                 document.getElementById('boom-targets').classList.add('hidden');
-                
-                // Update displays
                 document.getElementById('boom-count').innerText = boomCount;
                 document.getElementById('boom-progress').style.width = `${(boomCount / MAX_BOOM) * 100}%`;
                 
@@ -1063,10 +1099,8 @@
             
             document.getElementById('display-score').innerText = score.toLocaleString();
             
-            // Update streak
             await updateStreak(isCorrect);
             
-            // Update score in Firebase
             try {
                 await updateDoc(doc(db, 'rooms', currentRoom, 'participants', currentUser.uid), {
                     score: score,
@@ -1089,17 +1123,29 @@
             document.getElementById('res-team-name').innerText = currentTeamName;
             document.getElementById('res-score').innerText = score.toLocaleString();
             
-            // Get final rank from leaderboard
+            // Get final rank
             setTimeout(async () => {
-                const participants = await getDocs(collection(db, 'rooms', currentRoom, 'participants'));
+                const participantsRef = collection(db, 'rooms', currentRoom, 'participants');
+                const snapshot = await getDocs(participantsRef);
                 const teams = [];
-                participants.forEach(d => teams.push(d.data()));
+                snapshot.forEach(doc => teams.push(doc.data()));
                 teams.sort((a, b) => b.score - a.score);
                 
                 const myRank = teams.findIndex(t => t.name === currentTeamName) + 1;
                 document.getElementById('res-rank').innerText = `#${myRank}`;
                 
-                // Update room status if admin
+                // Update final leaderboard
+                const finalEl = document.getElementById('final-leaderboard');
+                finalEl.innerHTML = teams.map((t, i) => `
+                    <tr class="${t.name === currentTeamName ? 'bg-cyan-900/30' : ''}">
+                        <td class="py-3">#${i + 1}</td>
+                        <td class="py-3">${t.name}${t.name === currentTeamName ? ' (YOU)' : ''}</td>
+                        <td class="py-3 text-right">${t.score.toLocaleString()}</td>
+                        <td class="py-3 text-right">${t.streak || 0}</td>
+                        <td class="py-3 text-right">${t.booms || 0}</td>
+                    </tr>
+                `).join('');
+                
                 if (isAdmin) {
                     await updateDoc(doc(db, 'rooms', currentRoom), {
                         status: 'completed',
@@ -1109,50 +1155,7 @@
             }, 1000);
         }
 
-        // ==================== ROOM LISTENERS ====================
-
-        function listenToRoom(roomCode) {
-            // Listen to participants
-            onSnapshot(collection(db, 'rooms', roomCode, 'participants'), (snapshot) => {
-                const participants = [];
-                snapshot.forEach(doc => {
-                    participants.push({ id: doc.id, ...doc.data() });
-                });
-                
-                // Update participant count
-                document.getElementById('participant-count').innerText = participants.length;
-                document.getElementById('room-participants').innerText = participants.length;
-                
-                // Update leaderboard
-                const sorted = participants.sort((a, b) => b.score - a.score);
-                const leaderboardEl = document.getElementById('leaderboard');
-                
-                leaderboardEl.innerHTML = sorted.map((p, i) => {
-                    const isMe = p.name === currentTeamName;
-                    return `
-                        <tr class="${isMe ? 'bg-cyan-900/30' : ''}">
-                            <td class="py-2">#${i + 1}</td>
-                            <td class="py-2">${p.name}${isMe ? ' (YOU)' : ''}</td>
-                            <td class="py-2 text-right">${p.score.toLocaleString()}</td>
-                            <td class="py-2 text-center">
-                                ${p.streak > 0 ? `<span class="text-orange-400">${p.streak}🔥</span>` : '-'}
-                            </td>
-                        </tr>
-                    `;
-                }).join('');
-            });
-            
-            // Listen to room status
-            onSnapshot(doc(db, 'rooms', roomCode), (doc) => {
-                const data = doc.data();
-                if (data) {
-                    document.getElementById('room-status').innerText = 
-                        data.status === 'in-progress' ? '🔴 In Progress' : '🟡 Waiting';
-                }
-            });
-        }
-
-        // ==================== ADMIN MONITORING (VIEW ONLY) ====================
+        // ==================== ADMIN MONITORING ====================
 
         window.monitorRoom = () => {
             const roomCode = document.getElementById('admin-room-code').value.trim().toUpperCase();
@@ -1166,7 +1169,6 @@
                 const participants = [];
                 snapshot.forEach(doc => participants.push({ id: doc.id, ...doc.data() }));
                 
-                // Update stats
                 document.getElementById('admin-participants').innerText = participants.length;
                 
                 const totalBooms = participants.reduce((sum, p) => sum + (p.booms || 0), 0);
@@ -1175,17 +1177,13 @@
                 const active = participants.filter(p => p.status === 'active').length;
                 document.getElementById('admin-active').innerText = active;
                 
-                // Render participants list (view only)
                 const listEl = document.getElementById('participants-list');
                 listEl.innerHTML = participants.map(p => {
-                    let statusClass = '';
-                    if (p.booms >= 3) statusClass = 'boom-active';
-                    
                     return `
-                        <div class="participant-card ${statusClass}">
+                        <div class="participant-card">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <div class="font-bold">${p.name}</div>
+                                    <div class="font-bold">${p.name} ${p.isAdmin ? '👑' : ''}</div>
                                     <div class="text-xs text-gray-400">Score: ${p.score}</div>
                                     <div class="flex gap-2 mt-1">
                                         <span class="text-xs bg-blue-900 px-2 py-0.5 rounded">🔥 Streak: ${p.streak || 0}</span>
@@ -1206,13 +1204,11 @@
                 const data = doc.data();
                 if (data && data.activityLog) {
                     const logEl = document.getElementById('activity-log');
-                    logEl.innerHTML = data.activityLog.reverse().map(activity => `
+                    logEl.innerHTML = data.activityLog.slice().reverse().map(activity => `
                         <div class="text-xs border-b border-gray-700 py-2">
-                            ${activity.type === 'BOOM' ? '💣' : '📝'} 
-                            <span class="text-red-400">${activity.from}</span> 
-                            → 
+                            💣 <span class="text-red-400">${activity.from}</span> → 
                             <span class="text-blue-400">${activity.to}</span>
-                            <span class="text-gray-400">${activity.damage} damage</span>
+                            <span class="text-gray-400">-${activity.damage}</span>
                             <span class="text-gray-600">${new Date(activity.timestamp).toLocaleTimeString()}</span>
                         </div>
                     `).join('');
