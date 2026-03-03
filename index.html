@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Warriors: Multiplayer Battle</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-purple: #bc13fe;
+            --dark-bg: #0a0a12;
+        }
+        body {
+            background-color: var(--dark-bg);
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+        }
+        .code-font { font-family: 'Fira Code', monospace; }
+        .neon-border {
+            border: 2px solid var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+        }
+        .neon-text {
+            text-shadow: 0 0 10px var(--neon-blue);
+        }
+        .btn-cyber {
+            transition: all 0.3s;
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+        }
+        .btn-cyber:not(:disabled):hover {
+            transform: scale(1.05);
+            background: var(--neon-blue);
+            color: black;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app" class="min-h-screen flex flex-col p-4 md:p-8">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-8 border-b border-gray-800 pb-4">
+            <div>
+                <h1 class="text-3xl font-bold neon-text tracking-tighter uppercase">Data Warriors <span class="text-purple-500">Cloud</span></h1>
+                <p class="text-xs text-cyan-400 code-font">v3.5.1 | SESI LIVE</p>
+            </div>
+            <div id="stats-bar" class="hidden flex gap-6">
+                <div class="text-right">
+                    <p class="text-gray-400 text-xs uppercase text-[10px]">Nama Tim</p>
+                    <p id="display-team-name" class="font-bold text-lg leading-tight text-white">--</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-gray-400 text-xs uppercase text-[10px]">Skor</p>
+                    <p id="display-score" class="font-bold text-lg text-yellow-400 leading-tight">0</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Lobby Screen -->
+        <div id="screen-lobby" class="flex-grow flex flex-col items-center justify-center">
+            <div class="max-w-md w-full p-8 neon-border bg-gray-900 rounded-lg text-center">
+                <h2 class="text-2xl mb-6 uppercase tracking-widest">Connect to Instance</h2>
+                <input type="text" id="input-team-name" placeholder="Nama Tim / Kelompok..." class="w-full bg-black border border-gray-700 p-3 mb-4 rounded focus:outline-none focus:border-cyan-400 text-white code-font">
+                <button id="btn-start" onclick="startGame()" disabled class="w-full py-4 bg-gray-600 cursor-not-allowed font-bold uppercase tracking-widest btn-cyber">Menghubungkan Server...</button>
+                <div id="auth-status-container" class="mt-4 p-2 rounded bg-black/50">
+                    <p id="auth-status" class="text-xs text-yellow-500 italic">Menginisialisasi protokol keamanan...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Battle Screen -->
+        <div id="screen-battle" class="hidden flex-grow flex flex-col md:flex-row gap-6">
+            <div class="flex-grow flex flex-col">
+                <div class="bg-gray-900 p-6 rounded-t-lg border-t border-x border-gray-700 relative overflow-hidden">
+                    <div id="timer-bar" class="absolute top-0 left-0 h-1 bg-cyan-400 transition-all duration-1000 w-full"></div>
+                    <div class="flex justify-between items-center mb-4">
+                        <span id="question-category" class="text-[10px] bg-purple-900 px-2 py-1 rounded font-bold uppercase tracking-widest">Loading...</span>
+                        <span id="timer-text" class="text-2xl font-bold code-font">0s</span>
+                    </div>
+                    <p id="question-text" class="text-xl md:text-2xl font-semibold mb-4 leading-relaxed italic">
+                        Menunggu instruksi server...
+                    </p>
+                </div>
+                <div id="answers-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4"></div>
+                <div id="feedback" class="mt-6 hidden p-4 rounded text-center font-bold text-lg"></div>
+            </div>
+
+            <!-- Leaderboard -->
+            <div class="w-full md:w-80 flex flex-col gap-4">
+                <div class="bg-black p-4 border border-gray-800 rounded flex-grow overflow-hidden flex flex-col min-h-[300px]">
+                    <h3 class="text-[10px] font-bold text-cyan-400 uppercase mb-3 tracking-widest flex justify-between">
+                        <span>Papan Skor Live</span>
+                        <span class="animate-pulse">● LIVE</span>
+                    </h3>
+                    <ul id="leaderboard" class="space-y-2 overflow-y-auto text-sm flex-grow">
+                        <li class="text-gray-600 italic text-xs">Menunggu sinkronisasi...</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="screen-results" class="hidden flex-grow flex flex-col items-center justify-center text-center">
+            <h2 class="text-5xl font-bold neon-text mb-8">CLUSTER DEPLOYED</h2>
+            <div id="final-stats" class="bg-gray-900 p-8 rounded border border-cyan-500 mb-8">
+                <p class="text-gray-400 uppercase text-sm mb-2">Peringkat Akhir untuk <span id="res-team-name"></span></p>
+                <p class="text-6xl font-bold text-yellow-400 mb-4" id="res-score">0</p>
+                <p class="text-cyan-400 font-bold" id="res-rank">Menghitung Posisi...</p>
+            </div>
+            <button onclick="location.reload()" class="px-8 py-3 bg-white text-black font-bold uppercase btn-cyber">Main Lagi</button>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, updateDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Konfigurasi Firebase Anda
+        const firebaseConfig = {
+            apiKey: "AIzaSyD73uPU8es-9EK2EXl3zj8hpcXPwpAu_xk",
+            authDomain: "game-basis-data.firebaseapp.com",
+            projectId: "game-basis-data",
+            storageBucket: "game-basis-data.firebasestorage.app",
+            messagingSenderId: "645027573181",
+            appId: "1:645027573181:web:79f2388ebd4849c6a8f6d4",
+            measurementId: "G-LZ6EV88D41"
+        };
+
+        const appId = "battle-db-class-v1";
+        let db, auth, currentUser;
+
+        const init = async () => {
+            const statusEl = document.getElementById('auth-status');
+            try {
+                const app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        currentUser = user;
+                        statusEl.innerText = "Koneksi Aman. Server Siap.";
+                        statusEl.classList.remove('text-yellow-500', 'text-red-500');
+                        statusEl.classList.add('text-green-400');
+                        
+                        const btn = document.getElementById('btn-start');
+                        btn.disabled = false;
+                        btn.innerText = "Mulai Sesi";
+                        btn.classList.replace('bg-gray-600', 'bg-cyan-600');
+                        btn.classList.remove('cursor-not-allowed');
+                        listenToLeaderboard();
+                    }
+                });
+
+                // Proses login anonim
+                await signInAnonymously(auth);
+
+            } catch (e) {
+                console.error("Firebase Init Error:", e.code, e.message);
+                if (e.code === 'auth/configuration-not-found') {
+                    statusEl.innerHTML = "<strong>ERROR:</strong> Anonymous Auth belum diaktifkan di Firebase Console!<br><span class='text-[10px] mt-1 block'>Buka: Authentication > Sign-in method > Enable Anonymous.</span>";
+                } else {
+                    statusEl.innerText = "Gagal Terhubung: " + e.message;
+                }
+                statusEl.classList.replace('text-yellow-500', 'text-red-500');
+            }
+        };
+
+        init();
+
+        // Game Data
+        let score = 0;
+        let qIdx = 0;
+        let timer;
+        let timeLeft;
+
+        const questions = [
+            { q: "Apa level normalisasi yang menghilangkan dependensi transitif?", a: ["1NF", "2NF", "3NF", "BCNF"], correct: 2, category: "NORMALISASI", time: 30 },
+            { q: "Prinsip ACID yang menjamin data tetap utuh meski sistem mati mendadak adalah?", a: ["Atomicity", "Consistency", "Isolation", "Durability"], correct: 3, category: "TRANSAKSI", time: 25 },
+            { q: "Perintah SQL untuk mengambil data unik (tidak duplikat) adalah?", a: ["SELECT UNIQUE", "SELECT DISTINCT", "SELECT DIFFERENT", "SELECT ALL"], correct: 1, category: "SQL", time: 20 },
+            { q: "Manakah yang merupakan kunci tamu untuk menghubungkan dua tabel?", a: ["Primary Key", "Super Key", "Foreign Key", "Candidate Key"], correct: 2, category: "RELASI", time: 20 },
+            { q: "Tipe database NoSQL yang menyimpan data dalam bentuk key-value adalah?", a: ["MongoDB", "Redis", "MySQL", "PostgreSQL"], correct: 1, category: "NOSQL", time: 25 }
+        ];
+
+        window.startGame = async () => {
+            const name = document.getElementById('input-team-name').value.trim();
+            if (!name) return alert("Masukkan nama kelompok dulu!");
+            
+            try {
+                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'leaderboard', currentUser.uid), {
+                    name: name, score: 0, lastUpdate: Date.now()
+                });
+
+                document.getElementById('display-team-name').innerText = name;
+                document.getElementById('screen-lobby').classList.add('hidden');
+                document.getElementById('stats-bar').classList.remove('hidden');
+                document.getElementById('screen-battle').classList.remove('hidden');
+                loadQuestion();
+            } catch (err) {
+                alert("Gagal mengirim data. Pastikan Firestore Rules sudah 'allow read, write: if true;'");
+                console.error(err);
+            }
+        };
+
+        function loadQuestion() {
+            const q = questions[qIdx];
+            document.getElementById('question-category').innerText = `KATEGORI: ${q.category}`;
+            document.getElementById('question-text').innerText = q.q;
+            document.getElementById('feedback').classList.add('hidden');
+            const grid = document.getElementById('answers-grid');
+            grid.innerHTML = '';
+            q.a.forEach((ans, i) => {
+                const b = document.createElement('button');
+                b.className = "p-4 bg-gray-800 border border-gray-700 rounded text-left hover:border-cyan-400 transition-colors code-font text-sm";
+                b.innerText = ans;
+                b.onclick = () => check(i);
+                grid.appendChild(b);
+            });
+            startTimer(q.time);
+        }
+
+        function startTimer(s) {
+            clearInterval(timer);
+            timeLeft = s;
+            const update = () => {
+                document.getElementById('timer-text').innerText = `${timeLeft}s`;
+                document.getElementById('timer-bar').style.width = `${(timeLeft/s)*100}%`;
+            };
+            update();
+            timer = setInterval(() => {
+                timeLeft--; update();
+                if(timeLeft <= 0) { clearInterval(timer); check(-1); }
+            }, 1000);
+        }
+
+        async function check(i) {
+            clearInterval(timer);
+            const q = questions[qIdx];
+            const feed = document.getElementById('feedback');
+            feed.classList.remove('hidden');
+            document.querySelectorAll('#answers-grid button').forEach(b => b.disabled = true);
+
+            if(i === q.correct) {
+                const p = 1000 + (timeLeft * 20);
+                score += p;
+                feed.innerText = `BERHASIL! +${p}`;
+                feed.className = "mt-6 p-4 rounded text-center font-bold bg-green-900 text-green-400";
+            } else {
+                score = Math.max(0, score - 150);
+                feed.innerText = "GAGAL: Data Rollback";
+                feed.className = "mt-6 p-4 rounded text-center font-bold bg-red-900 text-red-400";
+            }
+            document.getElementById('display-score').innerText = score.toLocaleString();
+            
+            try {
+                await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'leaderboard', currentUser.uid), { 
+                    score: score, 
+                    lastUpdate: Date.now() 
+                });
+            } catch (e) { console.error("Update score failed", e); }
+
+            setTimeout(() => {
+                qIdx++;
+                if(qIdx < questions.length) loadQuestion();
+                else finish();
+            }, 2000);
+        }
+
+        function listenToLeaderboard() {
+            const lbRef = collection(db, 'artifacts', appId, 'public', 'data', 'leaderboard');
+            onSnapshot(lbRef, (snap) => {
+                const teams = [];
+                snap.forEach(d => teams.push(d.data()));
+                teams.sort((a,b) => b.score - a.score);
+                document.getElementById('leaderboard').innerHTML = teams.map((t, i) => `
+                    <li class="flex justify-between items-center p-2 rounded ${t.name === document.getElementById('display-team-name').innerText ? 'bg-cyan-900/40 border border-cyan-500' : 'bg-gray-900'}">
+                        <span class="truncate pr-2 font-bold">${i+1}. ${t.name}</span>
+                        <span class="code-font text-cyan-400 font-bold">${t.score.toLocaleString()}</span>
+                    </li>
+                `).join('');
+            }, (err) => {
+                console.error("Leaderboard Snapshot Error:", err);
+            });
+        }
+
+        function finish() {
+            document.getElementById('screen-battle').classList.add('hidden');
+            document.getElementById('screen-results').classList.remove('hidden');
+            document.getElementById('res-team-name').innerText = document.getElementById('display-team-name').innerText;
+            document.getElementById('res-score').innerText = score.toLocaleString();
+            
+            const items = document.querySelectorAll('#leaderboard li');
+            items.forEach((li, idx) => {
+                if(li.innerText.includes(document.getElementById('display-team-name').innerText)) {
+                    document.getElementById('res-rank').innerText = `POSISI GLOBAL: #${idx + 1}`;
+                }
+            });
+        }
+    </script>
+</body>
+</html>
