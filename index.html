@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Database Warriors: Anti-Cheat Battle Arena</title>
+    <title>Database Warriors: Boom Battle Arena</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <style>
@@ -24,6 +24,7 @@
             --success: #00ff9d;
             --warning: #ffbe0b;
             --danger: #ff4d6d;
+            --boom: #ff6b6b;
         }
 
         body {
@@ -57,60 +58,46 @@
             box-shadow: 0 10px 30px rgba(0, 255, 255, 0.4);
         }
 
-        .cyber-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .code-font {
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .answer-btn {
-            background: rgba(30, 31, 46, 0.9);
-            border: 1px solid rgba(0, 255, 255, 0.2);
-            transition: all 0.2s;
-        }
-
-        .answer-btn:hover:not(:disabled) {
-            background: rgba(0, 255, 255, 0.1);
-            border-color: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        .answer-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .timer-bar {
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            height: 4px;
-            transition: width 1s linear;
-        }
-
-        /* Anti-Cheat Warning */
-        .cheat-warning {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(255, 75, 75, 0.9);
+        .boom-button {
+            background: linear-gradient(135deg, #ff6b6b, #ff3366);
             color: white;
-            padding: 12px 24px;
-            border-radius: 50px;
+            animation: pulse-boom 1.5s infinite;
+        }
+
+        @keyframes pulse-boom {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .streak-badge {
+            background: linear-gradient(135deg, #ffd700, #ffa500);
+            color: black;
+            padding: 4px 12px;
+            border-radius: 20px;
             font-weight: bold;
-            z-index: 9999;
-            animation: slideDown 0.3s ease;
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
 
-        @keyframes slideDown {
-            from { transform: translate(-50%, -100%); }
-            to { transform: translate(-50%, 0); }
+        .room-code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            font-size: 24px;
+            letter-spacing: 4px;
         }
 
-        /* Admin Panel */
+        .code-input {
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
         .admin-panel {
             position: fixed;
             bottom: 20px;
@@ -150,7 +137,7 @@
 
         .admin-content {
             width: 90%;
-            max-width: 1000px;
+            max-width: 1200px;
             max-height: 80vh;
             overflow-y: auto;
         }
@@ -169,56 +156,52 @@
             transform: translateX(5px);
         }
 
-        .participant-card.warning {
-            border-color: var(--warning);
-            background: rgba(255, 190, 11, 0.1);
+        .participant-card.boom-active {
+            border-color: var(--boom);
+            background: rgba(255, 107, 107, 0.1);
+            animation: glow-boom 1s infinite;
         }
 
-        .participant-card.danger {
-            border-color: var(--danger);
-            background: rgba(255, 77, 109, 0.1);
-            animation: pulse 1s infinite;
+        @keyframes glow-boom {
+            0%, 100% { box-shadow: 0 0 10px rgba(255, 107, 107, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(255, 107, 107, 0.6); }
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
+        .boom-effect {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 100px;
+            font-weight: bold;
+            color: #ff3366;
+            text-shadow: 0 0 50px #ff3366;
+            z-index: 9999;
+            animation: boomAnim 1s ease-out;
+            pointer-events: none;
         }
 
-        .suspicious-activity {
-            font-size: 12px;
-            color: var(--warning);
-            margin-top: 8px;
+        @keyframes boomAnim {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.5); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(2); }
         }
 
-        .ban-button {
-            background: var(--danger);
-            color: white;
-            border: none;
-            padding: 4px 12px;
-            border-radius: 4px;
-            font-size: 12px;
-            cursor: pointer;
-        }
-
-        .ban-button:hover {
-            background: #ff1a1a;
-        }
-
-        /* Room Code Display */
-        .room-code {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-family: 'JetBrains Mono', monospace;
+        .room-info {
+            background: linear-gradient(135deg, rgba(0,255,255,0.1), rgba(153,69,255,0.1));
             border: 1px solid var(--primary);
-            color: var(--primary);
         }
 
-        /* Focus Warning */
-        .focus-warning {
-            background: rgba(255, 190, 11, 0.2);
-            border: 1px solid var(--warning);
+        .copy-button {
+            background: rgba(255,255,255,0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .copy-button:hover {
+            background: rgba(255,255,255,0.2);
         }
     </style>
 </head>
@@ -236,7 +219,7 @@
                     <h1 class="text-2xl font-extrabold tracking-tight">
                         <span class="neon-glow text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-600">DATABASE WARRIORS</span>
                     </h1>
-                    <p class="text-xs text-gray-400 code-font">ANTI-CHEAT BATTLE ARENA v5.0</p>
+                    <p class="text-xs text-gray-400 code-font">BOOM BATTLE ARENA v6.0</p>
                 </div>
             </div>
             <div id="stats-bar" class="hidden flex gap-6">
@@ -247,6 +230,15 @@
                 <div class="text-right">
                     <p class="text-gray-400 text-xs uppercase tracking-wider">Score</p>
                     <p id="display-score" class="font-bold text-lg text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-400">0</p>
+                </div>
+                <div class="text-right" id="streak-container">
+                    <p class="text-gray-400 text-xs uppercase tracking-wider">Streak</p>
+                    <p id="display-streak" class="font-bold text-lg text-orange-400">0</p>
+                </div>
+                <div class="text-right" id="boom-container" style="display: none;">
+                    <button id="boom-button" onclick="activateBoom()" class="boom-button px-3 py-1 rounded-lg text-sm font-bold">
+                        💣 BOOM READY!
+                    </button>
                 </div>
             </div>
         </header>
@@ -262,8 +254,13 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-400 mb-2">ROOM CODE</label>
-                        <input type="text" id="input-room-code" placeholder="Enter room code..." value="DEFAULT" 
-                               class="w-full bg-gray-900 border border-gray-700 rounded-xl p-4 text-white focus:outline-none focus:border-cyan-400 code-font text-center text-xl font-bold">
+                        <div class="flex gap-2">
+                            <input type="text" id="input-room-code" placeholder="Enter room code..." 
+                                   class="code-input flex-1 bg-gray-900 border border-gray-700 rounded-xl p-4 text-white focus:outline-none focus:border-cyan-400 text-center text-xl font-bold">
+                            <button onclick="generateRoomCode()" class="bg-purple-600 hover:bg-purple-700 px-4 rounded-xl text-sm">
+                                Generate
+                            </button>
+                        </div>
                     </div>
 
                     <div>
@@ -285,7 +282,7 @@
                     
                     <button id="btn-start" onclick="startGame()" disabled 
                             class="cyber-button w-full py-4 rounded-xl font-bold text-lg disabled:opacity-50">
-                        WAITING FOR ROOM...
+                        WAITING FOR ADMIN...
                     </button>
                     
                     <div id="auth-status-container" class="mt-4">
@@ -295,15 +292,28 @@
                         </div>
                     </div>
 
-                    <!-- Anti-Cheat Rules -->
+                    <!-- Room Info Display -->
+                    <div id="room-info-display" class="hidden mt-6 p-4 room-info rounded-xl">
+                        <div class="text-center">
+                            <div class="text-sm text-gray-400 mb-2">ROOM CODE</div>
+                            <div class="room-code text-center mb-2" id="display-room-code">DEFAULT</div>
+                            <button onclick="copyRoomCode()" class="copy-button">📋 Copy Code</button>
+                        </div>
+                        <div class="flex justify-between mt-4 text-sm">
+                            <span>Participants: <span id="room-participants">0</span></span>
+                            <span>Status: <span id="room-status" class="text-yellow-400">Waiting</span></span>
+                        </div>
+                    </div>
+
+                    <!-- Boom Rules -->
                     <div class="mt-6 p-4 bg-gray-900 rounded-xl">
-                        <h3 class="font-bold text-red-400 mb-2">⚠️ ANTI-CHEAT RULES</h3>
-                        <ul class="text-xs text-gray-400 space-y-1 list-disc pl-4">
-                            <li>Dilarang berpindah tab/browser (akan tercatat)</li>
-                            <li>Dilarang membuka developer tools (F12)</li>
-                            <li>Dilarang copy-paste jawaban</li>
-                            <li>Dilarang refresh halaman</li>
-                            <li>3 kali pelanggaran = diskualifikasi</li>
+                        <h3 class="font-bold text-orange-400 mb-2">💣 BOOM MECHANIC</h3>
+                        <ul class="text-xs text-gray-400 space-y-1">
+                            <li>✓ Streak 3 jawaban benar = dapat 1 BOOM</li>
+                            <li>✓ BOOM bisa digunakan untuk mengurangi poin lawan</li>
+                            <li>✓ Pilih target dari daftar peserta</li>
+                            <li>✓ Setiap BOOM mengurangi 500 poin lawan</li>
+                            <li>✓ Maksimal 3 BOOM per pemain</li>
                         </ul>
                     </div>
                 </div>
@@ -323,7 +333,9 @@
                                 <span id="question-category" class="text-xs bg-gradient-to-r from-purple-600 to-pink-600 px-3 py-1 rounded-full font-bold">
                                     LOADING...
                                 </span>
-                                <span id="room-code-display" class="room-code text-xs"></span>
+                                <span id="streak-badge" class="streak-badge" style="display: none;">
+                                    🔥 STREAK <span id="streak-count">0</span>
+                                </span>
                             </div>
                             <span id="timer-text" class="text-3xl font-bold code-font text-cyan-400">30s</span>
                         </div>
@@ -343,12 +355,11 @@
 
                     <div id="feedback" class="hidden rounded-xl p-4 text-center font-bold text-lg"></div>
 
-                    <!-- Anti-Cheat Status -->
-                    <div id="cheat-status" class="hidden bg-red-900/50 border border-red-500 rounded-xl p-3 text-sm">
-                        <div class="flex items-center gap-2">
-                            <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-                            <span class="text-red-400 font-bold">ANTI-CHEAT:</span>
-                            <span id="cheat-message" class="text-gray-300"></span>
+                    <!-- Boom Targets (Muncul saat BOOM aktif) -->
+                    <div id="boom-targets" class="hidden glass-card rounded-2xl p-4">
+                        <h3 class="font-bold text-red-400 mb-3">💣 SELECT BOOM TARGET</h3>
+                        <div id="targets-list" class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-40 overflow-y-auto">
+                            <!-- Targets will be populated here -->
                         </div>
                     </div>
                 </div>
@@ -365,17 +376,30 @@
                             </span>
                         </div>
 
-                        <div class="overflow-y-auto max-h-[300px]">
+                        <div class="overflow-y-auto max-h-[400px]">
                             <table class="w-full">
                                 <thead class="text-xs text-gray-400 uppercase">
                                     <tr>
                                         <th class="text-left pb-2">#</th>
                                         <th class="text-left pb-2">Team</th>
                                         <th class="text-right pb-2">Score</th>
+                                        <th class="text-center pb-2">Streak</th>
                                     </tr>
                                 </thead>
                                 <tbody id="leaderboard" class="text-sm"></tbody>
                             </table>
+                        </div>
+                    </div>
+
+                    <!-- Boom Stock -->
+                    <div id="boom-stock" class="glass-card rounded-2xl p-6 hidden">
+                        <h3 class="font-bold text-orange-400 uppercase tracking-wider text-sm mb-2">💣 BOOM STOCK</h3>
+                        <div class="flex items-center justify-between">
+                            <span class="text-3xl font-bold" id="boom-count">0</span>
+                            <span class="text-xs text-gray-400">/ 3 max</span>
+                        </div>
+                        <div class="w-full h-2 bg-gray-700 rounded-full mt-2">
+                            <div id="boom-progress" class="h-full bg-gradient-to-r from-orange-400 to-red-600 rounded-full" style="width: 0%"></div>
                         </div>
                     </div>
 
@@ -392,18 +416,13 @@
                                 <span id="participant-count" class="text-white">0</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-gray-400">Started:</span>
-                                <span id="game-started" class="text-green-400">No</span>
+                                <span class="text-gray-400">Your Streak:</span>
+                                <span id="current-streak" class="text-orange-400 font-bold">0</span>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Warning Level -->
-                    <div id="warning-level" class="glass-card rounded-2xl p-6 border border-yellow-500 hidden">
-                        <h3 class="font-bold text-yellow-400 uppercase tracking-wider text-sm mb-2">⚠️ WARNING</h3>
-                        <p id="warning-text" class="text-xs text-gray-300"></p>
-                        <div class="mt-2 h-2 bg-gray-700 rounded-full overflow-hidden">
-                            <div id="warning-progress" class="h-full bg-yellow-500" style="width: 0%"></div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Your Booms:</span>
+                                <span id="current-booms" class="text-red-400 font-bold">0</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -439,6 +458,23 @@
                     </div>
                 </div>
 
+                <!-- Boom Statistics -->
+                <div class="glass-card rounded-2xl p-6">
+                    <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                        <span>💣</span> BOOM STATISTICS
+                    </h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="text-center p-4 bg-gray-900 rounded-lg">
+                            <div class="text-2xl font-bold text-orange-400" id="total-booms">0</div>
+                            <div class="text-xs text-gray-400">Total Booms Used</div>
+                        </div>
+                        <div class="text-center p-4 bg-gray-900 rounded-lg">
+                            <div class="text-2xl font-bold text-red-400" id="damage-dealt">0</div>
+                            <div class="text-xs text-gray-400">Damage Dealt</div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Final Leaderboard -->
                 <div class="glass-card rounded-2xl p-6">
                     <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
@@ -455,8 +491,9 @@
                                     <th class="text-left pb-3">Rank</th>
                                     <th class="text-left pb-3">Team</th>
                                     <th class="text-right pb-3">Score</th>
+                                    <th class="text-right pb-3">Streak</th>
+                                    <th class="text-right pb-3">Booms</th>
                                     <th class="text-right pb-3">Performance</th>
-                                    <th class="text-right pb-3">Status</th>
                                 </tr>
                             </thead>
                             <tbody id="final-leaderboard" class="divide-y divide-gray-800"></tbody>
@@ -477,7 +514,7 @@
         </div>
     </div>
 
-    <!-- Admin Panel (For Room Monitoring) -->
+    <!-- Admin Monitoring Panel (Terpisah) -->
     <div class="admin-panel">
         <div class="admin-toggle" onclick="toggleAdminModal()">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -486,7 +523,7 @@
         </div>
     </div>
 
-    <!-- Admin Monitoring Modal -->
+    <!-- Admin Modal (Hanya untuk Monitoring) -->
     <div id="admin-modal" class="admin-modal">
         <div class="admin-content glass-card rounded-2xl p-6">
             <div class="flex justify-between items-center mb-6">
@@ -498,81 +535,56 @@
                 </button>
             </div>
 
-            <!-- Room Selection -->
+            <!-- Room Selection untuk Monitoring -->
             <div class="mb-6">
-                <label class="block text-sm font-medium text-gray-400 mb-2">SELECT ROOM TO MONITOR</label>
+                <label class="block text-sm font-medium text-gray-400 mb-2">ENTER ROOM CODE TO MONITOR</label>
                 <div class="flex gap-2">
-                    <input type="text" id="admin-room-code" placeholder="Enter room code..." class="flex-1 bg-gray-900 border border-gray-700 rounded-lg p-3 text-white">
-                    <button onclick="monitorRoom()" class="cyber-button px-6 py-3 rounded-lg font-bold">MONITOR</button>
-                    <button onclick="createAdminRoom()" class="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-lg font-bold">CREATE</button>
+                    <input type="text" id="admin-room-code" placeholder="Room code..." 
+                           class="code-input flex-1 bg-gray-900 border border-gray-700 rounded-lg p-3 text-white">
+                    <button onclick="monitorRoom()" class="cyber-button px-6 py-3 rounded-lg font-bold">
+                        MONITOR
+                    </button>
                 </div>
             </div>
 
             <!-- Current Monitoring Info -->
             <div id="admin-monitoring-info" class="hidden mb-4 p-3 bg-cyan-900/30 rounded-lg">
                 <span class="text-sm">Monitoring Room: <span id="monitoring-room-code" class="font-bold text-cyan-400"></span></span>
-                <button onclick="stopMonitoring()" class="ml-4 text-red-400 text-sm">Stop</button>
+                <button onclick="stopMonitoring()" class="ml-4 text-red-400 text-sm hover:text-red-300">Stop</button>
             </div>
 
-            <!-- Tabs -->
-            <div class="flex gap-2 mb-4">
-                <button class="tab-button active" onclick="switchAdminTab('participants')" id="tab-participants">Participants</button>
-                <button class="tab-button" onclick="switchAdminTab('activity')" id="tab-activity">Activity Log</button>
-                <button class="tab-button" onclick="switchAdminTab('banned')" id="tab-banned">Banned Users</button>
-                <button class="tab-button" onclick="switchAdminTab('settings')" id="tab-settings">Room Settings</button>
-            </div>
-
-            <!-- Participants Tab -->
-            <div id="tab-participants-content" class="space-y-4 max-h-[400px] overflow-y-auto">
-                <div class="flex justify-between items-center mb-2">
-                    <h3 class="font-bold">Active Participants: <span id="active-count">0</span></h3>
-                    <button onclick="broadcastWarning()" class="text-xs bg-yellow-600 px-3 py-1 rounded">Broadcast Warning</button>
+            <!-- Stats Overview -->
+            <div class="grid grid-cols-3 gap-4 mb-6">
+                <div class="bg-gray-900 p-3 rounded-lg text-center">
+                    <div class="text-2xl font-bold text-cyan-400" id="admin-participants">0</div>
+                    <div class="text-xs text-gray-400">Participants</div>
                 </div>
-                <div id="participants-list" class="space-y-2"></div>
-            </div>
-
-            <!-- Activity Log Tab -->
-            <div id="tab-activity-content" class="hidden max-h-[400px] overflow-y-auto">
-                <div id="activity-log" class="space-y-2">
-                    <p class="text-gray-500 text-center py-8">Select a room to view activity</p>
+                <div class="bg-gray-900 p-3 rounded-lg text-center">
+                    <div class="text-2xl font-bold text-yellow-400" id="admin-total-booms">0</div>
+                    <div class="text-xs text-gray-400">Total Booms</div>
+                </div>
+                <div class="bg-gray-900 p-3 rounded-lg text-center">
+                    <div class="text-2xl font-bold text-green-400" id="admin-active">0</div>
+                    <div class="text-xs text-gray-400">Active</div>
                 </div>
             </div>
 
-            <!-- Banned Users Tab -->
-            <div id="tab-banned-content" class="hidden max-h-[400px] overflow-y-auto">
-                <div id="banned-list" class="space-y-2">
-                    <p class="text-gray-500 text-center py-8">No banned users</p>
+            <!-- Participants List untuk Monitoring -->
+            <h3 class="font-bold mb-3">ACTIVE PARTICIPANTS</h3>
+            <div id="participants-list" class="space-y-2 max-h-[400px] overflow-y-auto">
+                <!-- Participants will be populated here -->
+            </div>
+
+            <!-- Activity Log -->
+            <div class="mt-6">
+                <h3 class="font-bold mb-3">RECENT ACTIVITY</h3>
+                <div id="activity-log" class="space-y-2 max-h-200 overflow-y-auto bg-gray-900 rounded-lg p-3">
+                    <!-- Activity log will be populated here -->
                 </div>
             </div>
 
-            <!-- Room Settings Tab -->
-            <div id="tab-settings-content" class="hidden space-y-4">
-                <div>
-                    <label class="block text-sm text-gray-400 mb-2">Max Participants</label>
-                    <input type="number" id="max-participants" value="50" min="1" max="100" class="bg-gray-900 border border-gray-700 rounded-lg p-2 w-full">
-                </div>
-                <div>
-                    <label class="block text-sm text-gray-400 mb-2">Warning Limit Before Ban</label>
-                    <input type="number" id="warning-limit" value="3" min="1" max="10" class="bg-gray-900 border border-gray-700 rounded-lg p-2 w-full">
-                </div>
-                <div>
-                    <label class="block text-sm text-gray-400 mb-2">Auto-Kick on Tab Switch</label>
-                    <select id="auto-kick" class="bg-gray-900 border border-gray-700 rounded-lg p-2 w-full">
-                        <option value="yes">Yes (Immediate Kick)</option>
-                        <option value="warning">Warning Only</option>
-                        <option value="no">No</option>
-                    </select>
-                </div>
-                <button onclick="saveRoomSettings()" class="cyber-button w-full py-3 rounded-lg">SAVE SETTINGS</button>
-            </div>
-
-            <div class="mt-6 flex justify-end gap-2">
-                <button onclick="exportRoomData()" class="bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-lg text-sm">
-                    EXPORT DATA
-                </button>
-                <button onclick="clearAllData()" class="bg-red-900 hover:bg-red-800 px-4 py-2 rounded-lg text-sm">
-                    CLEAR ROOM
-                </button>
+            <div class="mt-6 text-center text-xs text-gray-400">
+                Admin Mode: View Only • No Controls
             </div>
         </div>
     </div>
@@ -581,7 +593,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, updateDoc, collection, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, updateDoc, collection, onSnapshot, increment, arrayUnion, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyD73uPU8es-9EK2EXl3zj8hpcXPwpAu_xk",
@@ -605,9 +617,9 @@
         let qIdx = 0;
         let timer;
         let timeLeft;
-        let warningCount = 0;
-        let isFocused = true;
-        let devToolsOpen = false;
+        let currentStreak = 0;
+        let boomCount = 0;
+        const MAX_BOOM = 3;
 
         // Default questions
         let questions = [
@@ -634,6 +646,22 @@
                 category: "SQL", 
                 time: 20,
                 difficulty: "Easy"
+            },
+            { 
+                q: "Which key is used to establish a relationship between two tables?", 
+                a: ["Primary Key", "Super Key", "Foreign Key", "Candidate Key"], 
+                correct: 2, 
+                category: "RELATIONSHIPS", 
+                time: 20,
+                difficulty: "Easy"
+            },
+            { 
+                q: "Which NoSQL database stores data in key-value format?", 
+                a: ["MongoDB", "Redis", "MySQL", "PostgreSQL"], 
+                correct: 1, 
+                category: "NOSQL", 
+                time: 25,
+                difficulty: "Medium"
             }
         ];
 
@@ -647,189 +675,79 @@
             }
         });
 
-        // ==================== ANTI-CHEAT SYSTEM ====================
+        // ==================== ROOM CODE GENERATOR ====================
 
-        // Detect tab visibility change
-        document.addEventListener('visibilitychange', () => {
-            if (!currentRoom || document.getElementById('screen-battle').classList.contains('hidden')) return;
-            
-            if (document.hidden) {
-                isFocused = false;
-                recordCheat('TAB_SWITCH', 'Meninggalkan tab game');
-            } else {
-                isFocused = true;
+        window.generateRoomCode = () => {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = '';
+            for (let i = 0; i < 6; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
             }
-        });
+            document.getElementById('input-room-code').value = code;
+            return code;
+        };
 
-        // Detect copy/paste
-        document.addEventListener('copy', (e) => {
-            if (!currentRoom) return;
-            e.preventDefault();
-            recordCheat('COPY', 'Mencoba copy teks');
-            return false;
-        });
-
-        document.addEventListener('paste', (e) => {
-            if (!currentRoom) return;
-            e.preventDefault();
-            recordCheat('PASTE', 'Mencoba paste teks');
-            return false;
-        });
-
-        // Detect right click
-        document.addEventListener('contextmenu', (e) => {
-            if (!currentRoom) return;
-            e.preventDefault();
-            recordCheat('RIGHT_CLICK', 'Mencoba klik kanan');
-            return false;
-        });
-
-        // Detect keyboard shortcuts for dev tools
-        document.addEventListener('keydown', (e) => {
-            if (!currentRoom) return;
-            
-            // F12
-            if (e.key === 'F12') {
-                e.preventDefault();
-                recordCheat('DEV_TOOLS', 'Mencoba buka developer tools (F12)');
-            }
-            
-            // Ctrl+Shift+I / Cmd+Opt+I
-            if ((e.ctrlKey && e.shiftKey && e.key === 'I') || (e.metaKey && e.altKey && e.key === 'I')) {
-                e.preventDefault();
-                recordCheat('DEV_TOOLS', 'Mencoba buka developer tools (Shortcut)');
-            }
-            
-            // Ctrl+U (view source)
-            if (e.ctrlKey && e.key === 'u') {
-                e.preventDefault();
-                recordCheat('VIEW_SOURCE', 'Mencoba lihat source code');
-            }
-        });
-
-        // Detect window resize (possible dev tools)
-        let windowWidth = window.innerWidth;
-        window.addEventListener('resize', () => {
-            if (!currentRoom) return;
-            
-            // Detect if width changed significantly (possible dev tools open)
-            if (Math.abs(window.innerWidth - windowWidth) > 100) {
-                recordCheat('DEV_TOOLS_RESIZE', 'Deteksi perubahan ukuran window');
-            }
-            windowWidth = window.innerWidth;
-        });
-
-        // Blur detection (kehilangan fokus)
-        window.addEventListener('blur', () => {
-            if (!currentRoom) return;
-            recordCheat('WINDOW_BLUR', 'Kehilangan fokus window');
-        });
-
-        async function recordCheat(type, details) {
-            if (!currentUser || !currentRoom) return;
-            
-            warningCount++;
-            
-            // Update warning display
-            const warningEl = document.getElementById('warning-level');
-            const warningText = document.getElementById('warning-text');
-            const warningProgress = document.getElementById('warning-progress');
-            
-            warningEl.classList.remove('hidden');
-            warningText.innerText = `Peringatan ${warningCount}/3: ${details}`;
-            warningProgress.style.width = `${(warningCount / 3) * 100}%`;
-            
-            // Show cheat message
-            const cheatStatus = document.getElementById('cheat-status');
-            const cheatMessage = document.getElementById('cheat-message');
-            cheatStatus.classList.remove('hidden');
-            cheatMessage.innerText = `${details} (Peringatan ${warningCount}/3)`;
-            
-            setTimeout(() => {
-                cheatStatus.classList.add('hidden');
-            }, 3000);
-
-            // Record to Firebase
-            try {
-                const cheatRef = doc(db, 'rooms', currentRoom, 'participants', currentUser.uid);
-                await updateDoc(cheatRef, {
-                    warnings: warningCount,
-                    lastCheat: {
-                        type: type,
-                        details: details,
-                        timestamp: Date.now()
-                    },
-                    cheatHistory: arrayUnion({
-                        type: type,
-                        details: details,
-                        timestamp: Date.now()
-                    })
-                });
-
-                // Auto kick if warning count >= 3
-                if (warningCount >= 3) {
-                    await disqualifyUser('Terlalu banyak peringatan');
-                }
-            } catch (e) {
-                console.error('Failed to record cheat:', e);
-            }
-        }
-
-        async function disqualifyUser(reason) {
-            showNotification(`⚠️ DISKUALIFIKASI: ${reason}`, 'error');
-            
-            // Update status di Firebase
-            await updateDoc(doc(db, 'rooms', currentRoom, 'participants', currentUser.uid), {
-                status: 'disqualified',
-                disqualifyReason: reason,
-                disqualifyTime: Date.now()
-            });
-            
-            // Kembali ke lobby
-            setTimeout(() => {
-                location.reload();
-            }, 3000);
-        }
+        window.copyRoomCode = () => {
+            const code = document.getElementById('display-room-code').innerText;
+            navigator.clipboard.writeText(code);
+            showNotification('Room code copied!', 'success');
+        };
 
         // ==================== ROOM MANAGEMENT ====================
 
         window.createRoom = async () => {
-            const roomCode = document.getElementById('input-room-code').value.trim().toUpperCase() || 
-                            generateRoomCode();
+            const roomCode = document.getElementById('input-room-code').value.trim().toUpperCase() || generateRoomCode();
+            const teamName = document.getElementById('input-team-name').value.trim();
+            
+            if (!teamName) {
+                alert('Enter team name!');
+                return;
+            }
             
             try {
                 // Create room document
                 await setDoc(doc(db, 'rooms', roomCode), {
                     createdBy: currentUser.uid,
+                    createdByName: teamName,
                     createdAt: Date.now(),
                     status: 'waiting',
-                    participants: 0,
+                    participants: 1,
                     maxParticipants: 50,
                     questions: questions,
                     settings: {
-                        warningLimit: 3,
-                        autoKickOnTabSwitch: true,
-                        allowCopyPaste: false
+                        maxBooms: 3,
+                        boomDamage: 500,
+                        streakRequired: 3
                     }
                 });
 
-                // Add creator as admin
-                await setDoc(doc(db, 'rooms', roomCode, 'admins', currentUser.uid), {
+                // Add creator as participant
+                await setDoc(doc(db, 'rooms', roomCode, 'participants', currentUser.uid), {
+                    name: teamName,
                     uid: currentUser.uid,
-                    addedAt: Date.now()
+                    score: 0,
+                    streak: 0,
+                    booms: 0,
+                    joinedAt: Date.now(),
+                    status: 'active'
                 });
 
                 currentRoom = roomCode;
+                currentTeamName = teamName;
                 isAdmin = true;
                 
                 document.getElementById('input-room-code').value = roomCode;
+                document.getElementById('display-team-name').innerText = teamName;
+                document.getElementById('current-room-code').innerText = roomCode;
+                document.getElementById('display-room-code').innerText = roomCode;
+                document.getElementById('room-info-display').classList.remove('hidden');
                 document.getElementById('btn-start').disabled = false;
                 document.getElementById('btn-start').innerText = 'START GAME AS ADMIN';
                 
                 showNotification(`Room ${roomCode} created! You are admin`, 'success');
                 
-                // Monitor room as admin
-                monitorRoom(roomCode);
+                // Listen to room updates
+                listenToRoom(roomCode);
                 
             } catch (e) {
                 console.error('Failed to create room:', e);
@@ -841,13 +759,8 @@
             const roomCode = document.getElementById('input-room-code').value.trim().toUpperCase();
             const teamName = document.getElementById('input-team-name').value.trim();
             
-            if (!roomCode) {
-                alert('Enter room code!');
-                return;
-            }
-            
-            if (!teamName) {
-                alert('Enter team name!');
+            if (!roomCode || !teamName) {
+                alert('Enter room code and team name!');
                 return;
             }
             
@@ -878,15 +791,15 @@
                     name: teamName,
                     uid: currentUser.uid,
                     score: 0,
+                    streak: 0,
+                    booms: 0,
                     joinedAt: Date.now(),
-                    warnings: 0,
-                    status: 'active',
-                    cheatHistory: []
+                    status: 'active'
                 });
 
                 // Update participant count
                 await updateDoc(roomRef, {
-                    participants: (roomData.participants || 0) + 1
+                    participants: increment(1)
                 });
 
                 currentRoom = roomCode;
@@ -894,19 +807,13 @@
                 
                 document.getElementById('display-team-name').innerText = teamName;
                 document.getElementById('current-room-code').innerText = roomCode;
-                document.getElementById('room-code-display').innerText = roomCode;
-                
-                // Check if user is admin
-                const adminRef = doc(db, 'rooms', roomCode, 'admins', currentUser.uid);
-                const adminSnap = await getDoc(adminRef);
-                isAdmin = adminSnap.exists();
-                
-                if (isAdmin) {
-                    document.getElementById('btn-start').disabled = false;
-                    document.getElementById('btn-start').innerText = 'START GAME AS ADMIN';
-                }
+                document.getElementById('display-room-code').innerText = roomCode;
+                document.getElementById('room-info-display').classList.remove('hidden');
                 
                 showNotification(`Joined room ${roomCode}`, 'success');
+                
+                // Listen to room updates
+                listenToRoom(roomCode);
                 
             } catch (e) {
                 console.error('Failed to join room:', e);
@@ -915,7 +822,7 @@
         };
 
         window.startGame = async () => {
-            if (!currentRoom) return;
+            if (!currentRoom || !isAdmin) return;
             
             try {
                 await updateDoc(doc(db, 'rooms', currentRoom), {
@@ -924,8 +831,8 @@
                 });
                 
                 document.getElementById('screen-lobby').classList.add('hidden');
-                document.getElementById('stats-bar').classList.remove('hidden');
                 document.getElementById('screen-battle').classList.remove('hidden');
+                document.getElementById('stats-bar').classList.remove('hidden');
                 
                 loadQuestion();
                 
@@ -934,114 +841,152 @@
             }
         };
 
-        // ==================== ADMIN MONITORING ====================
+        // ==================== STREAK & BOOM SYSTEM ====================
 
-        window.monitorRoom = (roomCode = null) => {
-            const code = roomCode || document.getElementById('admin-room-code').value.trim().toUpperCase();
-            if (!code) return;
-            
-            document.getElementById('admin-monitoring-info').classList.remove('hidden');
-            document.getElementById('monitoring-room-code').innerText = code;
-            
-            // Listen to participants
-            onSnapshot(collection(db, 'rooms', code, 'participants'), (snapshot) => {
-                const participants = [];
-                snapshot.forEach(doc => participants.push({ id: doc.id, ...doc.data() }));
+        async function updateStreak(isCorrect) {
+            if (isCorrect) {
+                currentStreak++;
                 
-                document.getElementById('active-count').innerText = participants.length;
-                
-                // Render participants list
-                const listEl = document.getElementById('participants-list');
-                listEl.innerHTML = participants.map(p => {
-                    let cardClass = 'participant-card';
-                    if (p.warnings >= 3) cardClass += ' danger';
-                    else if (p.warnings > 0) cardClass += ' warning';
+                // Check for boom reward (every 3 streak)
+                if (currentStreak % 3 === 0 && boomCount < MAX_BOOM) {
+                    boomCount++;
+                    showNotification('💣 BOOM UNLOCKED! You can now attack other teams!', 'success');
                     
-                    return `
-                        <div class="${cardClass}">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <div class="font-bold">${p.name}</div>
-                                    <div class="text-xs text-gray-400">Score: ${p.score}</div>
-                                    ${p.warnings > 0 ? `<div class="text-xs text-yellow-400">Warnings: ${p.warnings}</div>` : ''}
-                                </div>
-                                <div class="flex gap-2">
-                                    <button onclick="warnParticipant('${p.id}')" class="text-xs bg-yellow-600 px-2 py-1 rounded">⚠️</button>
-                                    <button onclick="kickParticipant('${p.id}')" class="text-xs bg-red-600 px-2 py-1 rounded">KICK</button>
-                                    <button onclick="banParticipant('${p.id}')" class="text-xs bg-red-800 px-2 py-1 rounded">BAN</button>
-                                </div>
-                            </div>
-                            ${p.lastCheat ? `
-                                <div class="suspicious-activity">
-                                    Last Cheat: ${p.lastCheat.details} (${new Date(p.lastCheat.timestamp).toLocaleTimeString()})
-                                </div>
-                            ` : ''}
-                        </div>
-                    `;
-                }).join('');
-                
-                // Update activity log
-                const activityEl = document.getElementById('activity-log');
-                const allCheats = participants.flatMap(p => 
-                    (p.cheatHistory || []).map(c => ({ ...c, player: p.name }))
-                ).sort((a, b) => b.timestamp - a.timestamp).slice(0, 20);
-                
-                activityEl.innerHTML = allCheats.map(c => `
-                    <div class="text-xs border-b border-gray-700 py-2">
-                        <span class="text-red-400">${c.player}</span>
-                        <span class="text-gray-400">- ${c.details}</span>
-                        <span class="text-gray-600">${new Date(c.timestamp).toLocaleTimeString()}</span>
-                    </div>
-                `).join('') || '<p class="text-gray-500 text-center py-4">No activity</p>';
+                    // Update boom display
+                    document.getElementById('boom-count').innerText = boomCount;
+                    document.getElementById('boom-progress').style.width = `${(boomCount / MAX_BOOM) * 100}%`;
+                    document.getElementById('boom-stock').classList.remove('hidden');
+                    
+                    if (boomCount > 0) {
+                        document.getElementById('boom-container').style.display = 'block';
+                    }
+                    
+                    // Update in Firebase
+                    await updateDoc(doc(db, 'rooms', currentRoom, 'participants', currentUser.uid), {
+                        booms: boomCount,
+                        streak: currentStreak
+                    });
+                }
+            } else {
+                currentStreak = 0;
+            }
+            
+            // Update streak display
+            document.getElementById('display-streak').innerText = currentStreak;
+            document.getElementById('current-streak').innerText = currentStreak;
+            
+            if (currentStreak > 0) {
+                document.getElementById('streak-badge').style.display = 'inline-flex';
+                document.getElementById('streak-count').innerText = currentStreak;
+            } else {
+                document.getElementById('streak-badge').style.display = 'none';
+            }
+            
+            // Update in Firebase
+            await updateDoc(doc(db, 'rooms', currentRoom, 'participants', currentUser.uid), {
+                streak: currentStreak
             });
+        }
+
+        window.activateBoom = () => {
+            if (boomCount <= 0) {
+                showNotification('No BOOM available!', 'warning');
+                return;
+            }
+            
+            // Show target selection
+            document.getElementById('boom-targets').classList.remove('hidden');
+            
+            // Populate targets (other participants)
+            loadBoomTargets();
         };
 
-        window.warnParticipant = async (participantId) => {
-            if (!currentRoom) return;
+        async function loadBoomTargets() {
+            const participantsRef = collection(db, 'rooms', currentRoom, 'participants');
+            const snapshot = await getDocs(participantsRef);
             
-            const participantRef = doc(db, 'rooms', currentRoom, 'participants', participantId);
-            await updateDoc(participantRef, {
-                warnings: increment(1),
-                lastCheat: {
-                    type: 'ADMIN_WARNING',
-                    details: 'Peringatan dari admin',
-                    timestamp: Date.now()
+            const targets = [];
+            snapshot.forEach(doc => {
+                if (doc.id !== currentUser.uid) {
+                    targets.push({ id: doc.id, ...doc.data() });
                 }
             });
             
-            showNotification('Warning sent', 'warning');
+            const targetsList = document.getElementById('targets-list');
+            targetsList.innerHTML = targets.map(t => `
+                <button onclick="useBoom('${t.id}', '${t.name}')" 
+                        class="bg-gray-800 hover:bg-red-800 p-2 rounded-lg text-sm transition-colors">
+                    <div class="font-bold">${t.name}</div>
+                    <div class="text-xs text-gray-400">Score: ${t.score}</div>
+                </button>
+            `).join('');
+        }
+
+        window.useBoom = async (targetId, targetName) => {
+            if (boomCount <= 0) return;
+            
+            try {
+                // Show boom effect
+                showBoomEffect();
+                
+                // Reduce target's score
+                const targetRef = doc(db, 'rooms', currentRoom, 'participants', targetId);
+                await updateDoc(targetRef, {
+                    score: increment(-500)
+                });
+                
+                // Reduce user's boom count
+                boomCount--;
+                await updateDoc(doc(db, 'rooms', currentRoom, 'participants', currentUser.uid), {
+                    booms: boomCount
+                });
+                
+                // Record boom usage
+                await updateDoc(doc(db, 'rooms', currentRoom), {
+                    totalBooms: increment(1),
+                    totalDamage: increment(500)
+                });
+                
+                // Add to activity log
+                await updateDoc(doc(db, 'rooms', currentRoom), {
+                    activityLog: arrayUnion({
+                        type: 'BOOM',
+                        from: currentTeamName,
+                        to: targetName,
+                        damage: 500,
+                        timestamp: Date.now()
+                    })
+                });
+                
+                showNotification(`💥 BOOM! ${targetName} lost 500 points!`, 'success');
+                
+                // Hide target selection
+                document.getElementById('boom-targets').classList.add('hidden');
+                
+                // Update displays
+                document.getElementById('boom-count').innerText = boomCount;
+                document.getElementById('boom-progress').style.width = `${(boomCount / MAX_BOOM) * 100}%`;
+                
+                if (boomCount === 0) {
+                    document.getElementById('boom-container').style.display = 'none';
+                    document.getElementById('boom-stock').classList.add('hidden');
+                }
+                
+            } catch (e) {
+                console.error('Failed to use boom:', e);
+            }
         };
 
-        window.kickParticipant = async (participantId) => {
-            if (!currentRoom) return;
+        function showBoomEffect() {
+            const boom = document.createElement('div');
+            boom.className = 'boom-effect';
+            boom.innerText = '💣 BOOM!';
+            document.body.appendChild(boom);
             
-            await deleteDoc(doc(db, 'rooms', currentRoom, 'participants', participantId));
-            showNotification('Participant kicked', 'success');
-        };
-
-        window.banParticipant = async (participantId) => {
-            if (!currentRoom) return;
-            
-            const participant = await getDoc(doc(db, 'rooms', currentRoom, 'participants', participantId));
-            const data = participant.data();
-            
-            // Add to banned list
-            await setDoc(doc(db, 'rooms', currentRoom, 'banned', participantId), {
-                ...data,
-                bannedAt: Date.now(),
-                bannedBy: currentUser.uid
-            });
-            
-            // Remove from participants
-            await deleteDoc(doc(db, 'rooms', currentRoom, 'participants', participantId));
-            
-            showNotification('Participant banned', 'error');
-        };
-
-        window.broadcastWarning = () => {
-            if (!currentRoom) return;
-            showNotification('Broadcast warning sent to all participants', 'warning');
-        };
+            setTimeout(() => {
+                boom.remove();
+            }, 1000);
+        }
 
         // ==================== GAME FUNCTIONS ====================
 
@@ -1103,7 +1048,9 @@
             feed.classList.remove('hidden');
             document.querySelectorAll('#answers-grid button').forEach(b => b.disabled = true);
 
-            if (i === q.correct) {
+            const isCorrect = (i === q.correct);
+            
+            if (isCorrect) {
                 const points = 1000 + (timeLeft * 20);
                 score += points;
                 feed.innerText = `✓ CORRECT! +${points.toLocaleString()}`;
@@ -1115,6 +1062,9 @@
             }
             
             document.getElementById('display-score').innerText = score.toLocaleString();
+            
+            // Update streak
+            await updateStreak(isCorrect);
             
             // Update score in Firebase
             try {
@@ -1139,29 +1089,148 @@
             document.getElementById('res-team-name').innerText = currentTeamName;
             document.getElementById('res-score').innerText = score.toLocaleString();
             
-            // Update room status
-            if (isAdmin) {
-                updateDoc(doc(db, 'rooms', currentRoom), {
-                    status: 'completed',
-                    completedAt: Date.now()
-                });
-            }
+            // Get final rank from leaderboard
+            setTimeout(async () => {
+                const participants = await getDocs(collection(db, 'rooms', currentRoom, 'participants'));
+                const teams = [];
+                participants.forEach(d => teams.push(d.data()));
+                teams.sort((a, b) => b.score - a.score);
+                
+                const myRank = teams.findIndex(t => t.name === currentTeamName) + 1;
+                document.getElementById('res-rank').innerText = `#${myRank}`;
+                
+                // Update room status if admin
+                if (isAdmin) {
+                    await updateDoc(doc(db, 'rooms', currentRoom), {
+                        status: 'completed',
+                        completedAt: Date.now()
+                    });
+                }
+            }, 1000);
         }
+
+        // ==================== ROOM LISTENERS ====================
+
+        function listenToRoom(roomCode) {
+            // Listen to participants
+            onSnapshot(collection(db, 'rooms', roomCode, 'participants'), (snapshot) => {
+                const participants = [];
+                snapshot.forEach(doc => {
+                    participants.push({ id: doc.id, ...doc.data() });
+                });
+                
+                // Update participant count
+                document.getElementById('participant-count').innerText = participants.length;
+                document.getElementById('room-participants').innerText = participants.length;
+                
+                // Update leaderboard
+                const sorted = participants.sort((a, b) => b.score - a.score);
+                const leaderboardEl = document.getElementById('leaderboard');
+                
+                leaderboardEl.innerHTML = sorted.map((p, i) => {
+                    const isMe = p.name === currentTeamName;
+                    return `
+                        <tr class="${isMe ? 'bg-cyan-900/30' : ''}">
+                            <td class="py-2">#${i + 1}</td>
+                            <td class="py-2">${p.name}${isMe ? ' (YOU)' : ''}</td>
+                            <td class="py-2 text-right">${p.score.toLocaleString()}</td>
+                            <td class="py-2 text-center">
+                                ${p.streak > 0 ? `<span class="text-orange-400">${p.streak}🔥</span>` : '-'}
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            });
+            
+            // Listen to room status
+            onSnapshot(doc(db, 'rooms', roomCode), (doc) => {
+                const data = doc.data();
+                if (data) {
+                    document.getElementById('room-status').innerText = 
+                        data.status === 'in-progress' ? '🔴 In Progress' : '🟡 Waiting';
+                }
+            });
+        }
+
+        // ==================== ADMIN MONITORING (VIEW ONLY) ====================
+
+        window.monitorRoom = () => {
+            const roomCode = document.getElementById('admin-room-code').value.trim().toUpperCase();
+            if (!roomCode) return;
+            
+            document.getElementById('admin-monitoring-info').classList.remove('hidden');
+            document.getElementById('monitoring-room-code').innerText = roomCode;
+            
+            // Listen to participants
+            onSnapshot(collection(db, 'rooms', roomCode, 'participants'), (snapshot) => {
+                const participants = [];
+                snapshot.forEach(doc => participants.push({ id: doc.id, ...doc.data() }));
+                
+                // Update stats
+                document.getElementById('admin-participants').innerText = participants.length;
+                
+                const totalBooms = participants.reduce((sum, p) => sum + (p.booms || 0), 0);
+                document.getElementById('admin-total-booms').innerText = totalBooms;
+                
+                const active = participants.filter(p => p.status === 'active').length;
+                document.getElementById('admin-active').innerText = active;
+                
+                // Render participants list (view only)
+                const listEl = document.getElementById('participants-list');
+                listEl.innerHTML = participants.map(p => {
+                    let statusClass = '';
+                    if (p.booms >= 3) statusClass = 'boom-active';
+                    
+                    return `
+                        <div class="participant-card ${statusClass}">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div class="font-bold">${p.name}</div>
+                                    <div class="text-xs text-gray-400">Score: ${p.score}</div>
+                                    <div class="flex gap-2 mt-1">
+                                        <span class="text-xs bg-blue-900 px-2 py-0.5 rounded">🔥 Streak: ${p.streak || 0}</span>
+                                        <span class="text-xs bg-red-900 px-2 py-0.5 rounded">💣 Booms: ${p.booms || 0}</span>
+                                    </div>
+                                </div>
+                                <div class="text-xs text-gray-400">
+                                    ${new Date(p.joinedAt).toLocaleTimeString()}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            });
+            
+            // Listen to activity log
+            onSnapshot(doc(db, 'rooms', roomCode), (doc) => {
+                const data = doc.data();
+                if (data && data.activityLog) {
+                    const logEl = document.getElementById('activity-log');
+                    logEl.innerHTML = data.activityLog.reverse().map(activity => `
+                        <div class="text-xs border-b border-gray-700 py-2">
+                            ${activity.type === 'BOOM' ? '💣' : '📝'} 
+                            <span class="text-red-400">${activity.from}</span> 
+                            → 
+                            <span class="text-blue-400">${activity.to}</span>
+                            <span class="text-gray-400">${activity.damage} damage</span>
+                            <span class="text-gray-600">${new Date(activity.timestamp).toLocaleTimeString()}</span>
+                        </div>
+                    `).join('');
+                }
+            });
+        };
+
+        window.stopMonitoring = () => {
+            document.getElementById('admin-monitoring-info').classList.add('hidden');
+            document.getElementById('participants-list').innerHTML = '';
+            document.getElementById('activity-log').innerHTML = '<div class="text-gray-500 text-center py-4">No room selected</div>';
+        };
 
         // ==================== UTILITY FUNCTIONS ====================
 
-        function generateRoomCode() {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            let code = '';
-            for (let i = 0; i < 6; i++) {
-                code += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return code;
-        }
-
         function showNotification(message, type = 'info') {
             const notification = document.createElement('div');
-            notification.className = `fixed top-4 right-4 px-4 py-2 rounded-lg text-sm font-bold z-50`;
+            notification.className = `fixed top-4 right-4 px-4 py-2 rounded-lg text-sm font-bold z-50 animate-bounce`;
             
             const colors = {
                 success: 'bg-green-500',
@@ -1180,26 +1249,6 @@
         window.toggleAdminModal = () => {
             document.getElementById('admin-modal').classList.toggle('active');
         };
-
-        window.switchAdminTab = (tab) => {
-            document.querySelectorAll('[id^="tab-"]').forEach(el => {
-                if (el.id.startsWith('tab-') && !el.id.includes('content')) {
-                    el.classList.remove('active');
-                }
-            });
-            document.getElementById(`tab-${tab}`).classList.add('active');
-            
-            document.querySelectorAll('[id$="-content"]').forEach(content => content.classList.add('hidden'));
-            document.getElementById(`tab-${tab}-content`).classList.remove('hidden');
-        };
-
-        // Load saved questions
-        const savedQuestions = localStorage.getItem('customQuestions');
-        if (savedQuestions) {
-            try {
-                questions = JSON.parse(savedQuestions);
-            } catch (e) {}
-        }
     </script>
 </body>
 </html>
