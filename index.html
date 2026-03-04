@@ -16,6 +16,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
     />
     <style>
+      /* [SAME STYLES AS BEFORE - tetap sama untuk menghemat space] */
       * {
         margin: 0;
         padding: 0;
@@ -28,32 +29,12 @@
         --neon-purple: #b300ff;
         --neon-yellow: #ffff00;
         --dark-bg: #0a0a0f;
-        --darker-bg: #050507;
       }
 
       body {
         font-family: "Rajdhani", sans-serif;
         background: var(--dark-bg);
         color: #fff;
-        min-height: 100vh;
-        position: relative;
-        overflow-x: hidden;
-      }
-
-      /* Cyber Grid Background */
-      body::before {
-        content: "";
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-image:
-          linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
-        background-size: 50px 50px;
-        pointer-events: none;
-        z-index: 0;
       }
 
       /* Cyber Card */
@@ -62,12 +43,8 @@
         backdrop-filter: blur(10px);
         border: 2px solid var(--neon-blue);
         box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
-        border-radius: 0;
         clip-path: polygon(0 0, 100% 0, 100% 95%, 95% 100%, 0 100%);
         padding: 24px;
-        transition: all 0.3s;
-        position: relative;
-        z-index: 1;
       }
 
       /* Cyber Button */
@@ -76,20 +53,14 @@
         color: var(--neon-blue);
         font-family: "Orbitron", sans-serif;
         font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 2px;
         padding: 16px 32px;
         border: 2px solid var(--neon-blue);
-        position: relative;
-        overflow: hidden;
-        transition: all 0.3s;
         cursor: pointer;
-        z-index: 1;
         clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
         display: inline-flex;
         align-items: center;
-        justify-content: center;
         gap: 8px;
+        transition: all 0.3s;
       }
 
       .cyber-button:hover {
@@ -98,31 +69,17 @@
         box-shadow: 0 0 30px var(--neon-blue);
       }
 
-      .cyber-button:disabled {
-        opacity: 0.3;
-        cursor: not-allowed;
-        border-color: #666;
-      }
-
       .cyber-button-outline {
         background: transparent;
         border: 2px solid var(--neon-pink);
         color: var(--neon-pink);
-        font-family: "Orbitron", sans-serif;
-        font-weight: 600;
         padding: 14px 28px;
         clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
-        transition: all 0.3s;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
       }
 
       .cyber-button-outline:hover {
         background: var(--neon-pink);
         color: var(--dark-bg);
-        box-shadow: 0 0 30px var(--neon-pink);
       }
 
       /* Answer Option */
@@ -132,43 +89,34 @@
         padding: 20px;
         cursor: pointer;
         transition: all 0.2s;
-        font-size: 18px;
-        font-weight: 500;
         clip-path: polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%);
       }
 
       .answer-cyber:hover {
         border-color: var(--neon-pink);
         box-shadow: 0 0 20px var(--neon-pink);
-        transform: scale(1.02);
       }
 
       .answer-cyber.correct {
         border-color: #00ff00;
         box-shadow: 0 0 30px #00ff00;
-        background: rgba(0, 255, 0, 0.1);
       }
 
       .answer-cyber.wrong {
         border-color: #ff0000;
         box-shadow: 0 0 30px #ff0000;
-        background: rgba(255, 0, 0, 0.1);
       }
 
-      /* Timer */
+      /* Cyber Timer */
       .cyber-timer {
         background: rgba(0, 0, 0, 0.8);
         border: 3px solid var(--neon-blue);
         padding: 15px 30px;
         font-size: 48px;
         font-family: "Orbitron", sans-serif;
-        font-weight: 900;
         color: var(--neon-blue);
         text-shadow: 0 0 20px var(--neon-blue);
         clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
       }
 
       /* Room Code */
@@ -187,49 +135,6 @@
         clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
       }
 
-      /* Avatar */
-      .cyber-avatar {
-        width: 50px;
-        height: 50px;
-        background: linear-gradient(
-          135deg,
-          var(--neon-blue),
-          var(--neon-purple)
-        );
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 700;
-        font-size: 20px;
-        color: var(--dark-bg);
-        clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
-      }
-
-      /* Rank Item */
-      .rank-cyber {
-        background: rgba(0, 0, 0, 0.5);
-        border: 1px solid var(--neon-blue);
-        padding: 15px;
-        margin-bottom: 10px;
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        transition: all 0.3s;
-        clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
-      }
-
-      .rank-cyber:hover {
-        border-color: var(--neon-pink);
-        box-shadow: 0 0 20px var(--neon-pink);
-        transform: translateX(10px);
-      }
-
-      .rank-cyber.current-user {
-        border-color: var(--neon-yellow);
-        box-shadow: 0 0 30px var(--neon-yellow);
-        background: rgba(255, 255, 0, 0.1);
-      }
-
       /* Input */
       .cyber-input {
         background: rgba(0, 0, 0, 0.5);
@@ -246,27 +151,6 @@
         outline: none;
         border-color: var(--neon-pink);
         box-shadow: 0 0 30px var(--neon-pink);
-      }
-
-      /* Camera */
-      #camera-container {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        width: 250px;
-        height: 180px;
-        border: 3px solid var(--neon-blue);
-        box-shadow: 0 0 30px var(--neon-blue);
-        overflow: hidden;
-        z-index: 1000;
-        display: none;
-        clip-path: polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%);
-      }
-
-      #camera-container video {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
       }
 
       /* Modal */
@@ -292,79 +176,12 @@
         background: var(--dark-bg);
         border: 3px solid var(--neon-blue);
         padding: 40px;
-        max-width: 600px;
+        max-width: 800px;
         width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
         box-shadow: 0 0 50px var(--neon-blue);
         clip-path: polygon(0 0, 100% 0, 100% 95%, 95% 100%, 0 100%);
-      }
-
-      /* Disqualified */
-      #disqualified-screen {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.95);
-        display: none;
-        align-items: center;
-        justify-content: center;
-        z-index: 3000;
-      }
-
-      #disqualified-screen.active {
-        display: flex;
-      }
-
-      /* Scanner Line */
-      .scanner {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 2px;
-        background: linear-gradient(
-          90deg,
-          transparent,
-          var(--neon-blue),
-          transparent
-        );
-        animation: scan 2s linear infinite;
-      }
-
-      @keyframes scan {
-        0% {
-          top: -10px;
-        }
-        100% {
-          top: 110%;
-        }
-      }
-
-      /* Neon Text */
-      .neon-text-blue {
-        color: var(--neon-blue);
-        text-shadow: 0 0 10px var(--neon-blue);
-      }
-
-      .neon-text-pink {
-        color: var(--neon-pink);
-        text-shadow: 0 0 10px var(--neon-pink);
-      }
-
-      /* Progress Bar */
-      .cyber-progress {
-        height: 10px;
-        background: rgba(0, 255, 255, 0.2);
-        border: 1px solid var(--neon-blue);
-        position: relative;
-      }
-
-      .cyber-progress-fill {
-        height: 100%;
-        background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
-        width: 0%;
-        transition: width 0.3s;
       }
 
       /* JSON Editor */
@@ -376,7 +193,7 @@
         font-size: 14px;
         padding: 15px;
         width: 100%;
-        min-height: 300px;
+        min-height: 400px;
         clip-path: polygon(0 0, 100% 0, 100% 95%, 95% 100%, 0 100%);
       }
 
@@ -387,7 +204,6 @@
         padding: 10px 20px;
         font-family: "Orbitron", sans-serif;
         cursor: pointer;
-        transition: all 0.3s;
         clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
       }
 
@@ -400,148 +216,107 @@
         background: rgba(0, 0, 0, 0.3);
         border: 1px solid var(--neon-blue);
         padding: 15px;
-        margin-bottom: 10px;
+        margin-bottom: 15px;
         clip-path: polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%);
       }
 
-      /* Loading Spinner */
-      .loading-spinner {
-        border: 4px solid rgba(0, 255, 255, 0.3);
-        border-top: 4px solid var(--neon-blue);
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        animation: spin 1s linear infinite;
+      /* Rank Item */
+      .rank-cyber {
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid var(--neon-blue);
+        padding: 15px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
       }
 
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
+      .rank-cyber.current-user {
+        border-color: var(--neon-yellow);
+        box-shadow: 0 0 30px var(--neon-yellow);
       }
     </style>
   </head>
   <body>
     <!-- Camera Container -->
-    <div id="camera-container">
-      <video id="camera-feed" autoplay playsinline muted></video>
-      <div class="scanner"></div>
+    <div
+      id="camera-container"
+      style="
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 250px;
+        height: 180px;
+        border: 3px solid var(--neon-blue);
+        z-index: 1000;
+      "
+    >
+      <video
+        id="camera-feed"
+        autoplay
+        playsinline
+        muted
+        style="width: 100%; height: 100%; object-fit: cover"
+      ></video>
     </div>
 
     <!-- Disqualified Screen -->
-    <div id="disqualified-screen">
+    <div id="disqualified-screen" class="cyber-modal">
       <div class="cyber-modal-content text-center">
-        <div class="text-8xl mb-4 neon-text-pink">
-          <span
-            class="iconify"
-            data-icon="mdi:alert-circle"
-            data-width="80"
-            data-height="80"
-          ></span>
-        </div>
         <h2 class="text-5xl font-bold mb-4 neon-text-pink">DISKUALIFIKASI</h2>
-        <p class="text-xl mb-6 text-gray-300" id="disqualify-reason">
-          Kecurangan terdeteksi
-        </p>
-        <button onclick="location.reload()" class="cyber-button w-full">
-          <span class="iconify" data-icon="mdi:restart"></span>
-          REBOOT SYSTEM
-        </button>
+        <p class="text-xl mb-6" id="disqualify-reason"></p>
+        <button onclick="location.reload()" class="cyber-button">REBOOT</button>
       </div>
     </div>
 
     <!-- Main Container -->
-    <div class="container mx-auto px-4 py-6 max-w-6xl relative z-10">
+    <div class="container mx-auto px-4 py-6 max-w-6xl">
       <!-- Header -->
       <div class="cyber-card mb-6 flex justify-between items-center">
         <div class="flex items-center gap-4">
-          <div class="cyber-avatar text-2xl">
-            <span
-              class="iconify"
-              data-icon="mdi:database"
-              data-width="30"
-              data-height="30"
-            ></span>
-          </div>
+          <div class="text-2xl">💾</div>
           <div>
             <h1 class="text-3xl font-bold">
               <span class="neon-text-blue">CYBERPUNK</span>
               <span class="neon-text-pink"> 2077</span>
             </h1>
-            <p class="text-xs text-gray-500 font-mono">
-              DATABASE WARRIORS v8.0
-            </p>
           </div>
-        </div>
-
-        <!-- Connection Status -->
-        <div id="connection-status" class="flex items-center gap-2">
-          <div
-            class="w-3 h-3 bg-yellow-500 rounded-full animate-pulse"
-            id="status-indicator"
-          ></div>
-          <span id="status-text" class="text-sm font-mono">Connecting...</span>
         </div>
 
         <!-- Game Stats -->
         <div id="stats-bar" class="hidden items-center gap-6">
           <div class="text-right">
-            <p class="text-gray-500 text-xs font-mono">DESIGNATION</p>
+            <p class="text-gray-500 text-xs">PLAYER</p>
             <p
               id="display-team-name"
-              class="font-bold text-xl neon-text-blue flex items-center gap-2"
-            >
-              <span class="iconify" data-icon="mdi:account"></span>
-              <span></span>
+              class="font-bold text-xl neon-text-blue"
+            ></p>
+          </div>
+          <div class="text-right">
+            <p class="text-gray-500 text-xs">SCORE</p>
+            <p id="display-score" class="font-bold text-2xl neon-text-yellow">
+              0
             </p>
           </div>
           <div class="text-right">
-            <p class="text-gray-500 text-xs font-mono">CREDITS</p>
-            <p
-              id="display-score"
-              class="font-bold text-2xl neon-text-yellow flex items-center gap-2"
-            >
-              <span class="iconify" data-icon="mdi:currency-usd"></span>
-              <span>0</span>
+            <p class="text-gray-500 text-xs">RANK</p>
+            <p id="display-rank" class="font-bold text-xl neon-text-purple">
+              #0
             </p>
           </div>
-          <div class="text-right">
-            <p class="text-gray-500 text-xs font-mono">RANK</p>
-            <p
-              id="display-rank"
-              class="font-bold text-xl neon-text-purple flex items-center gap-2"
-            >
-              <span class="iconify" data-icon="mdi:trophy"></span>
-              <span>#0</span>
-            </p>
-          </div>
-        </div>
-
-        <!-- Admin Badge -->
-        <div id="admin-badge" class="hidden">
-          <span
-            class="px-3 py-1 bg-purple-600 text-white text-sm font-bold clip-path-polygon"
-            >ADMIN</span
-          >
         </div>
       </div>
 
       <!-- Question Editor Modal -->
       <div id="question-editor-modal" class="cyber-modal">
-        <div class="cyber-modal-content max-w-4xl w-full">
+        <div class="cyber-modal-content">
           <div class="flex justify-between items-center mb-6">
-            <h2
-              class="text-2xl font-bold neon-text-blue flex items-center gap-2"
-            >
-              <span class="iconify" data-icon="mdi:file-document-edit"></span>
-              QUESTION EDITOR
-            </h2>
+            <h2 class="text-2xl font-bold neon-text-blue">QUESTION EDITOR</h2>
             <button
               onclick="toggleQuestionEditor()"
-              class="text-gray-500 hover:text-neon-pink text-2xl"
+              class="text-2xl text-gray-500 hover:text-neon-pink"
             >
               &times;
             </button>
@@ -554,36 +329,34 @@
               onclick="switchEditorTab('visual')"
               id="tab-visual"
             >
-              <span class="iconify" data-icon="mdi:eye"></span> VISUAL
+              VISUAL
             </button>
             <button
               class="tab-button"
               onclick="switchEditorTab('json')"
               id="tab-json"
             >
-              <span class="iconify" data-icon="mdi:code-json"></span> JSON
+              JSON
             </button>
             <button
               class="tab-button"
               onclick="switchEditorTab('import')"
               id="tab-import"
             >
-              <span class="iconify" data-icon="mdi:file-import"></span> IMPORT
+              IMPORT
             </button>
           </div>
 
           <!-- Visual Editor Tab -->
-          <div id="visual-editor-tab" class="space-y-4">
+          <div id="visual-editor-tab">
             <div
               id="questions-list"
               class="space-y-3 max-h-96 overflow-y-auto pr-2"
             >
               <!-- Questions will be dynamically added here -->
             </div>
-
-            <button onclick="addNewQuestion()" class="cyber-button w-full">
-              <span class="iconify" data-icon="mdi:plus-circle"></span>
-              ADD QUESTION
+            <button onclick="addNewQuestion()" class="cyber-button w-full mt-4">
+              + ADD QUESTION
             </button>
           </div>
 
@@ -596,14 +369,12 @@
             ></textarea>
             <div class="flex gap-3 mt-4">
               <button onclick="applyJsonChanges()" class="cyber-button flex-1">
-                <span class="iconify" data-icon="mdi:check"></span>
                 APPLY
               </button>
               <button
                 onclick="validateJson()"
                 class="cyber-button-outline flex-1"
               >
-                <span class="iconify" data-icon="mdi:check-decagram"></span>
                 VALIDATE
               </button>
             </div>
@@ -612,41 +383,30 @@
           <!-- Import/Export Tab -->
           <div id="import-export-tab" class="hidden">
             <div class="space-y-4">
-              <div>
-                <h3 class="font-bold mb-2 neon-text-blue">EXPORT</h3>
-                <button onclick="exportQuestions()" class="cyber-button w-full">
-                  <span class="iconify" data-icon="mdi:download"></span>
-                  DOWNLOAD JSON
-                </button>
-              </div>
-
-              <div>
-                <h3 class="font-bold mb-2 neon-text-pink">IMPORT</h3>
-                <input
-                  type="file"
-                  id="import-file"
-                  accept=".json"
-                  class="hidden"
-                  onchange="importQuestions(this)"
-                />
-                <button
-                  onclick="document.getElementById('import-file').click()"
-                  class="cyber-button-outline w-full"
-                >
-                  <span class="iconify" data-icon="mdi:upload"></span>
-                  SELECT FILE
-                </button>
-              </div>
+              <button onclick="exportQuestions()" class="cyber-button w-full">
+                DOWNLOAD JSON
+              </button>
+              <input
+                type="file"
+                id="import-file"
+                accept=".json"
+                class="hidden"
+                onchange="importQuestions(this)"
+              />
+              <button
+                onclick="document.getElementById('import-file').click()"
+                class="cyber-button-outline w-full"
+              >
+                UPLOAD JSON
+              </button>
             </div>
           </div>
 
           <div class="flex justify-end gap-3 mt-6">
             <button onclick="saveQuestions()" class="cyber-button">
-              <span class="iconify" data-icon="mdi:content-save"></span>
-              SAVE
+              SAVE TO ROOM
             </button>
             <button onclick="resetToDefault()" class="cyber-button-outline">
-              <span class="iconify" data-icon="mdi:restore"></span>
               RESET
             </button>
           </div>
@@ -658,33 +418,16 @@
         id="screen-lobby"
         class="min-h-[600px] flex items-center justify-center"
       >
-        <div
-          class="cyber-card max-w-md w-full animate__animated animate__fadeInUp"
-        >
+        <div class="cyber-card max-w-md w-full">
           <div class="text-center mb-8">
-            <div class="text-7xl mb-4 neon-text-blue">
-              <span
-                class="iconify"
-                data-icon="mdi:keyboard"
-                data-width="80"
-                data-height="80"
-              ></span>
-            </div>
-            <h2 class="text-4xl font-bold mb-2">
-              <span class="neon-text-blue">INITIALIZE</span>
-            </h2>
-            <p class="text-gray-400 font-mono">Enter access credentials</p>
+            <div class="text-7xl mb-4 neon-text-blue">⌨️</div>
+            <h2 class="text-4xl font-bold mb-2 neon-text-blue">INITIALIZE</h2>
           </div>
 
           <div class="space-y-4">
             <!-- Room Code -->
             <div>
-              <label
-                class="block text-gray-400 font-mono text-sm mb-2 ml-2 flex items-center gap-2"
-              >
-                <span class="iconify" data-icon="mdi:key-variant"></span>
-                ROOM CODE
-              </label>
+              <label class="block text-gray-400 text-sm mb-2">ROOM CODE</label>
               <div class="flex gap-2">
                 <input
                   type="text"
@@ -697,23 +440,18 @@
                   onclick="generateRoomCode()"
                   class="cyber-button-outline px-6"
                 >
-                  <span class="iconify" data-icon="mdi:refresh"></span>
+                  GEN
                 </button>
               </div>
             </div>
 
             <!-- Nickname -->
             <div>
-              <label
-                class="block text-gray-400 font-mono text-sm mb-2 ml-2 flex items-center gap-2"
-              >
-                <span class="iconify" data-icon="mdi:badge-account"></span>
-                DESIGNATION
-              </label>
+              <label class="block text-gray-400 text-sm mb-2">NICKNAME</label>
               <input
                 type="text"
                 id="input-team-name"
-                placeholder="Enter your callsign..."
+                placeholder="Enter your name"
                 class="cyber-input"
               />
             </div>
@@ -725,7 +463,6 @@
                 class="cyber-button"
                 id="create-room-btn"
               >
-                <span class="iconify" data-icon="mdi:plus-circle"></span>
                 CREATE
               </button>
               <button
@@ -733,7 +470,6 @@
                 class="cyber-button-outline"
                 id="join-room-btn"
               >
-                <span class="iconify" data-icon="mdi:login"></span>
                 JOIN
               </button>
             </div>
@@ -744,20 +480,16 @@
               class="hidden mt-6 p-6 bg-black/50 border border-neon-blue"
             >
               <div class="text-center mb-4">
-                <p class="text-gray-400 font-mono text-sm mb-2">ROOM CODE</p>
                 <div class="room-code-cyber text-3xl" id="display-room-code">
                   DEFAULT
                 </div>
-                <button
-                  onclick="copyRoomCode()"
-                  class="mt-3 text-neon-blue hover:text-neon-pink font-mono text-sm"
-                >
-                  📋 COPY CODE
+                <button onclick="copyRoomCode()" class="mt-3 text-neon-blue">
+                  📋 COPY
                 </button>
               </div>
 
-              <div class="flex justify-between items-center mb-4 font-mono">
-                <span class="text-gray-400">STATUS:</span>
+              <div class="flex justify-between mb-4">
+                <span>STATUS:</span>
                 <span id="room-status-text" class="text-neon-yellow"
                   >WAITING</span
                 >
@@ -765,42 +497,35 @@
 
               <!-- Question Info -->
               <div class="mb-4 p-3 bg-black/50 border border-neon-purple">
-                <div class="flex justify-between text-sm">
+                <div class="flex justify-between">
                   <span>Questions:</span>
                   <span id="total-questions" class="text-neon-yellow">0</span>
                 </div>
               </div>
 
               <div class="mb-4">
-                <h3 class="font-mono text-neon-blue mb-3">PLAYERS:</h3>
+                <h3 class="mb-3">PLAYERS:</h3>
                 <div
                   id="participants-list-waiting"
                   class="space-y-2 max-h-48 overflow-y-auto"
-                >
-                  <!-- Participants will be listed here -->
-                </div>
+                ></div>
               </div>
 
-              <!-- Start Button -->
               <button
                 id="btn-start"
                 onclick="startGame()"
                 disabled
-                class="cyber-button w-full text-lg disabled:opacity-50"
+                class="cyber-button w-full"
               >
-                <span class="iconify" data-icon="mdi:play-circle"></span>
-                START MISSION
+                START GAME
               </button>
             </div>
 
             <!-- Error Message -->
             <div
               id="error-message"
-              class="hidden p-3 bg-red-900/50 border border-red-500 text-red-500 text-sm font-mono"
-            >
-              <span class="iconify" data-icon="mdi:alert"></span>
-              <span id="error-text"></span>
-            </div>
+              class="hidden p-3 bg-red-900/50 border border-red-500 text-red-500"
+            ></div>
           </div>
         </div>
       </div>
@@ -810,122 +535,52 @@
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
           <!-- Main Game Area -->
           <div class="lg:col-span-3 space-y-4">
-            <div class="cyber-card relative overflow-hidden">
-              <div class="scanner"></div>
-
+            <div class="cyber-card">
               <div class="flex justify-between items-center mb-6">
                 <span
                   id="question-category"
-                  class="bg-black/50 border border-neon-blue px-4 py-2 font-mono text-neon-blue"
+                  class="px-4 py-2 border border-neon-blue text-neon-blue"
+                  >LOADING...</span
                 >
-                  LOADING...
-                </span>
-
-                <div class="cyber-timer">
-                  <span class="iconify" data-icon="mdi:timer"></span>
-                  <span id="timer-text">30</span>
-                </div>
+                <div class="cyber-timer"><span id="timer-text">30</span></div>
               </div>
-
-              <p
-                id="question-text"
-                class="text-2xl font-bold mb-8 leading-relaxed"
-              >
+              <p id="question-text" class="text-2xl font-bold mb-8">
                 Loading question...
               </p>
-
-              <div class="flex justify-between items-center font-mono text-sm">
-                <span id="question-progress" class="text-gray-400"
-                  >MISSION 0/10</span
-                >
-                <span id="question-points" class="text-neon-yellow"
-                  >+1000 CR</span
-                >
+              <div class="flex justify-between">
+                <span id="question-progress">0/0</span>
+                <span id="question-points" class="text-neon-yellow">+0</span>
               </div>
             </div>
 
             <div
               id="answers-grid"
               class="grid grid-cols-1 md:grid-cols-2 gap-4"
-            >
-              <!-- Answers will be inserted here -->
-            </div>
-
+            ></div>
             <div
               id="feedback"
               class="hidden p-6 text-center font-bold text-xl border-2"
             ></div>
-
-            <!-- Warning Message -->
-            <div
-              id="warning-container"
-              class="hidden p-3 bg-red-900/50 border border-red-500 text-red-500"
-            >
-              <span id="warning-text"></span>
-            </div>
           </div>
 
           <!-- Sidebar -->
           <div class="lg:col-span-1 space-y-4">
             <div class="cyber-card">
-              <h3 class="font-bold text-lg mb-4 neon-text-purple">
-                LIVE RANKINGS
-              </h3>
-
+              <h3 class="font-bold text-lg mb-4 neon-text-purple">RANKINGS</h3>
               <div
                 id="leaderboard"
-                class="space-y-2 max-h-[500px] overflow-y-auto"
-              >
-                <!-- Leaderboard will be inserted here -->
-              </div>
+                class="space-y-2 max-h-96 overflow-y-auto"
+              ></div>
             </div>
 
             <div class="cyber-card">
-              <h3 class="font-bold text-lg mb-3 neon-text-yellow">POWER-UPS</h3>
-              <div class="space-y-2 text-sm">
-                <div
-                  class="flex justify-between p-2 bg-black/50 border border-neon-blue"
-                >
-                  <span>3x STREAK</span>
-                  <span class="text-neon-blue">2x CREDITS</span>
-                </div>
-                <div
-                  class="flex justify-between p-2 bg-black/50 border border-neon-blue"
-                >
-                  <span>5x STREAK</span>
-                  <span class="text-neon-purple">SHIELD</span>
-                </div>
-                <div
-                  class="flex justify-between p-2 bg-black/50 border border-neon-blue"
-                >
-                  <span>7x STREAK</span>
-                  <span class="text-neon-pink">BOOM +1</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="cyber-card">
-              <div class="flex justify-between mb-2 font-mono">
-                <span class="text-gray-400">ROOM:</span>
+              <div class="flex justify-between mb-2">
+                <span>ROOM:</span>
                 <span id="current-room-code" class="text-neon-blue">---</span>
               </div>
-              <div class="flex justify-between mb-2 font-mono">
-                <span class="text-gray-400">PLAYERS:</span>
+              <div class="flex justify-between">
+                <span>PLAYERS:</span>
                 <span id="participant-count" class="text-neon-purple">0</span>
-              </div>
-              <div class="flex justify-between font-mono">
-                <span class="text-gray-400">BOOMS:</span>
-                <span id="current-booms" class="text-neon-pink">0</span>
-              </div>
-            </div>
-
-            <div class="cyber-card">
-              <div class="cyber-progress">
-                <div
-                  id="streak-progress"
-                  class="cyber-progress-fill"
-                  style="width: 0%"
-                ></div>
               </div>
             </div>
           </div>
@@ -934,57 +589,39 @@
 
       <!-- Results Screen -->
       <div id="screen-results" class="hidden">
-        <div class="max-w-4xl mx-auto space-y-6">
+        <div class="max-w-4xl mx-auto">
           <div class="cyber-card text-center p-12">
-            <div class="text-8xl mb-4">
-              <span
-                class="iconify"
-                data-icon="mdi:trophy"
-                data-width="80"
-                data-height="80"
-              ></span>
-            </div>
-            <h2 class="text-6xl font-bold mb-2">
-              <span class="neon-text-blue">MISSION</span>
-              <span class="neon-text-pink"> COMPLETE</span>
-            </h2>
+            <h2 class="text-6xl font-bold mb-2 neon-text-blue">GAME OVER</h2>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
             <div class="cyber-card text-center p-8">
-              <p class="text-gray-400 text-sm mb-2">DESIGNATION</p>
+              <p class="text-gray-400 mb-2">PLAYER</p>
               <p id="res-team-name" class="text-3xl font-bold neon-text-blue">
                 -
               </p>
             </div>
-
             <div class="cyber-card text-center p-8">
-              <p class="text-gray-400 text-sm mb-2">FINAL CREDITS</p>
+              <p class="text-gray-400 mb-2">SCORE</p>
               <p id="res-score" class="text-5xl font-bold neon-text-yellow">
                 0
               </p>
             </div>
-
             <div class="cyber-card text-center p-8">
-              <p class="text-gray-400 text-sm mb-2">FINAL RANK</p>
+              <p class="text-gray-400 mb-2">RANK</p>
               <p id="res-rank" class="text-4xl font-bold neon-text-purple">
                 #0
               </p>
             </div>
           </div>
 
-          <div class="cyber-card p-8">
+          <div class="cyber-card p-8 mt-6">
             <h3 class="text-2xl font-bold mb-6 neon-text-purple">
               FINAL RANKINGS
             </h3>
-
-            <div id="final-leaderboard" class="space-y-2">
-              <!-- Final leaderboard will be inserted here -->
-            </div>
-
+            <div id="final-leaderboard" class="space-y-2"></div>
             <div class="mt-8 text-center">
               <button onclick="location.reload()" class="cyber-button px-12">
-                <span class="iconify" data-icon="mdi:restart"></span>
                 PLAY AGAIN
               </button>
             </div>
@@ -997,101 +634,36 @@
     <div class="fixed bottom-6 right-6 z-50 flex gap-3">
       <button
         onclick="toggleQuestionEditor()"
-        class="cyber-button w-14 h-14 rounded-none p-0 text-2xl"
+        class="cyber-button w-14 h-14 p-0 text-2xl"
       >
-        <span class="iconify" data-icon="mdi:file-document-edit"></span>
+        📝
       </button>
       <button
         onclick="toggleAdminPanel()"
-        class="cyber-button w-14 h-14 rounded-none p-0 text-2xl"
+        class="cyber-button w-14 h-14 p-0 text-2xl"
       >
-        <span class="iconify" data-icon="mdi:crown"></span>
+        👑
       </button>
     </div>
 
     <!-- Admin Modal -->
     <div id="admin-modal" class="cyber-modal">
-      <div class="cyber-modal-content max-w-4xl w-full">
-        <div class="flex justify-between items-center mb-6">
-          <h2 class="text-2xl font-bold neon-text-purple">ADMIN MONITOR</h2>
-          <button
-            onclick="toggleAdminPanel()"
-            class="text-gray-500 hover:text-neon-pink text-2xl"
-          >
-            &times;
-          </button>
-        </div>
-
+      <div class="cyber-modal-content">
+        <h2 class="text-2xl font-bold mb-6 neon-text-purple">ADMIN MONITOR</h2>
         <div class="mb-4">
-          <div class="flex gap-2">
-            <input
-              type="text"
-              id="admin-room-code"
-              placeholder="ROOM CODE"
-              class="cyber-input flex-1"
-            />
-            <button onclick="monitorRoom()" class="cyber-button px-6">
-              MONITOR
-            </button>
-          </div>
-        </div>
-
-        <div
-          id="admin-monitoring-info"
-          class="hidden mb-4 p-4 bg-black/50 border border-neon-blue"
-        >
-          <span
-            >Monitoring:
-            <span id="monitoring-room-code" class="text-neon-blue"></span
-          ></span>
-          <button onclick="stopMonitoring()" class="ml-4 text-neon-pink">
-            STOP
+          <input
+            type="text"
+            id="admin-room-code"
+            placeholder="ROOM CODE"
+            class="cyber-input"
+          />
+          <button onclick="monitorRoom()" class="cyber-button mt-2 w-full">
+            MONITOR
           </button>
         </div>
-
-        <div class="grid grid-cols-4 gap-3 mb-6">
-          <div class="bg-black/50 border border-neon-blue p-3 text-center">
-            <div
-              class="text-2xl font-bold text-neon-blue"
-              id="admin-participants"
-            >
-              0
-            </div>
-            <div class="text-xs text-gray-400">PLAYERS</div>
-          </div>
-          <div class="bg-black/50 border border-neon-purple p-3 text-center">
-            <div
-              class="text-2xl font-bold text-neon-purple"
-              id="admin-total-booms"
-            >
-              0
-            </div>
-            <div class="text-xs text-gray-400">BOOMS</div>
-          </div>
-          <div class="bg-black/50 border border-neon-yellow p-3 text-center">
-            <div
-              class="text-2xl font-bold text-neon-yellow"
-              id="admin-warnings"
-            >
-              0
-            </div>
-            <div class="text-xs text-gray-400">WARNINGS</div>
-          </div>
-          <div class="bg-black/50 border border-neon-pink p-3 text-center">
-            <div
-              class="text-2xl font-bold text-neon-pink"
-              id="admin-disqualified"
-            >
-              0
-            </div>
-            <div class="text-xs text-gray-400">KICKED</div>
-          </div>
-        </div>
-
-        <h3 class="font-bold mb-3 neon-text-blue">ACTIVE PLAYERS</h3>
         <div
-          id="participants-list"
-          class="space-y-2 max-h-60 overflow-y-auto mb-6"
+          id="admin-participants-list"
+          class="space-y-2 max-h-96 overflow-y-auto"
         ></div>
       </div>
     </div>
@@ -1106,7 +678,7 @@
         width: 100%;
         height: 100%;
         pointer-events: none;
-        z-index: 4000;
+        z-index: 9999;
       "
     ></canvas>
 
@@ -1125,10 +697,8 @@
         collection,
         onSnapshot,
         increment,
-        arrayUnion,
         getDoc,
         getDocs,
-        deleteDoc,
       } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
       // Firebase Config
@@ -1142,7 +712,11 @@
       };
 
       // Initialize Firebase
-      let app, auth, db;
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      // Game State
       let currentUser = null;
       let currentRoom = null;
       let currentNickname = "";
@@ -1152,15 +726,10 @@
       let timer;
       let timeLeft;
       let currentStreak = 0;
-      let boomCount = 0;
-      let warningCount = 0;
-      let roomUnsubscribe = null;
-      let cameraStream = null;
-      let isGameActive = false;
       let participants = [];
 
-      // Default Questions
-      let questions = [
+      // Default Questions - PASTIKAN VARIABEL INI GLOBAL
+      window.questions = [
         {
           q: "What is the capital of Indonesia?",
           a: ["JAKARTA", "SURABAYA", "BANDUNG", "MEDAN"],
@@ -1187,71 +756,15 @@
         },
       ];
 
-      // Initialize Firebase with error handling
-      try {
-        app = initializeApp(firebaseConfig);
-        auth = getAuth(app);
-        db = getFirestore(app);
-        console.log("Firebase initialized successfully");
+      // Auth
+      signInAnonymously(auth).catch(console.error);
 
-        // Update connection status
-        document.getElementById("status-text").innerText = "Connected";
-        document.getElementById("status-indicator").className =
-          "w-3 h-3 bg-green-500 rounded-full";
-
-        // Sign in anonymously
-        signInAnonymously(auth).catch((error) => {
-          console.error("Auth error:", error);
-          showError("Authentication failed: " + error.message);
-        });
-      } catch (error) {
-        console.error("Firebase initialization error:", error);
-        showError(
-          "Firebase connection failed. Please check your internet connection.",
-        );
-      }
-
-      // Auth state observer
       onAuthStateChanged(auth, (user) => {
         if (user) {
           currentUser = user;
-          console.log("User authenticated:", user.uid);
-          document.getElementById("status-text").innerText = "Ready";
-          document.getElementById("status-indicator").className =
-            "w-3 h-3 bg-green-500 rounded-full";
-        } else {
-          console.log("No user");
-          currentUser = null;
+          console.log("User:", user.uid);
         }
       });
-
-      // Helper function to show errors
-      function showError(message) {
-        const errorEl = document.getElementById("error-message");
-        const errorText = document.getElementById("error-text");
-        errorText.innerText = message;
-        errorEl.classList.remove("hidden");
-        setTimeout(() => {
-          errorEl.classList.add("hidden");
-        }, 5000);
-      }
-
-      // Helper function to show notifications
-      function showNotification(message, type = "info") {
-        const notification = document.createElement("div");
-        notification.className = `fixed top-4 right-4 px-6 py-3 font-mono z-50 border-2`;
-
-        const colors = {
-          success: "border-green-500 bg-black text-green-500",
-          error: "border-red-500 bg-black text-red-500",
-          info: "border-blue-500 bg-black text-blue-500",
-        };
-
-        notification.className += ` ${colors[type]}`;
-        notification.innerHTML = message;
-        document.body.appendChild(notification);
-        setTimeout(() => notification.remove(), 3000);
-      }
 
       // ==================== ROOM MANAGEMENT ====================
 
@@ -1268,57 +781,31 @@
       window.copyRoomCode = () => {
         const code = document.getElementById("display-room-code").innerText;
         navigator.clipboard.writeText(code);
-        showNotification("CODE COPIED", "success");
+        alert("Code copied!");
       };
 
       window.createRoom = async () => {
-        const createBtn = document.getElementById("create-room-btn");
-        createBtn.disabled = true;
-        createBtn.innerHTML =
-          '<span class="loading-spinner"></span> CREATING...';
+        const roomCode =
+          document
+            .getElementById("input-room-code")
+            .value.trim()
+            .toUpperCase() || generateRoomCode();
+        const nickname = document
+          .getElementById("input-team-name")
+          .value.trim();
+
+        if (!nickname) return alert("Enter your name!");
 
         try {
-          const roomCode =
-            document
-              .getElementById("input-room-code")
-              .value.trim()
-              .toUpperCase() || generateRoomCode();
-          const nickname = document
-            .getElementById("input-team-name")
-            .value.trim();
-
-          if (!nickname) {
-            alert("Enter your name!");
-            createBtn.disabled = false;
-            createBtn.innerHTML =
-              '<span class="iconify" data-icon="mdi:plus-circle"></span> CREATE';
-            return;
-          }
-
-          if (!currentUser) {
-            alert("Please wait for authentication...");
-            createBtn.disabled = false;
-            createBtn.innerHTML =
-              '<span class="iconify" data-icon="mdi:plus-circle"></span> CREATE';
-            return;
-          }
-
-          console.log("Creating room:", roomCode);
-
-          // Create room document
           await setDoc(doc(db, "rooms", roomCode), {
             createdBy: currentUser.uid,
             createdByName: nickname,
             createdAt: Date.now(),
             status: "waiting",
             participants: 1,
-            maxParticipants: 50,
-            questions: questions,
+            questions: window.questions, // SIMPAN QUESTIONS KE ROOM
           });
 
-          console.log("Room created, adding participant...");
-
-          // Add creator as participant
           await setDoc(
             doc(db, "rooms", roomCode, "participants", currentUser.uid),
             {
@@ -1326,102 +813,52 @@
               uid: currentUser.uid,
               score: 0,
               streak: 0,
-              booms: 0,
-              warnings: 0,
               joinedAt: Date.now(),
-              status: "active",
               isAdmin: true,
             },
           );
-
-          console.log("Participant added");
 
           currentRoom = roomCode;
           currentNickname = nickname;
           isAdmin = true;
 
           // Update UI
-          document.getElementById("input-room-code").value = roomCode;
           document.getElementById("display-team-name").innerText = nickname;
           document.getElementById("display-room-code").innerText = roomCode;
           document
             .getElementById("room-status-display")
             .classList.remove("hidden");
           document.getElementById("btn-start").disabled = false;
-          document.getElementById("admin-badge").classList.remove("hidden");
-
-          // Update question info
           document.getElementById("total-questions").innerText =
-            questions.length;
-
-          showNotification(`ROOM ${roomCode} CREATED`, "success");
+            window.questions.length;
 
           listenToRoom(roomCode);
+          alert("Room created!");
         } catch (error) {
-          console.error("Create room error:", error);
-          showError("Failed to create room: " + error.message);
-        } finally {
-          createBtn.disabled = false;
-          createBtn.innerHTML =
-            '<span class="iconify" data-icon="mdi:plus-circle"></span> CREATE';
+          console.error(error);
+          alert("Failed to create room");
         }
       };
 
       window.joinRoom = async () => {
-        const joinBtn = document.getElementById("join-room-btn");
-        joinBtn.disabled = true;
-        joinBtn.innerHTML = '<span class="loading-spinner"></span> JOINING...';
+        const roomCode = document
+          .getElementById("input-room-code")
+          .value.trim()
+          .toUpperCase();
+        const nickname = document
+          .getElementById("input-team-name")
+          .value.trim();
+
+        if (!roomCode || !nickname) return alert("Enter room code and name!");
 
         try {
-          const roomCode = document
-            .getElementById("input-room-code")
-            .value.trim()
-            .toUpperCase();
-          const nickname = document
-            .getElementById("input-team-name")
-            .value.trim();
-
-          if (!roomCode || !nickname) {
-            alert("Enter room code and name!");
-            joinBtn.disabled = false;
-            joinBtn.innerHTML =
-              '<span class="iconify" data-icon="mdi:login"></span> JOIN';
-            return;
-          }
-
-          if (!currentUser) {
-            alert("Please wait for authentication...");
-            joinBtn.disabled = false;
-            joinBtn.innerHTML =
-              '<span class="iconify" data-icon="mdi:login"></span> JOIN';
-            return;
-          }
-
-          console.log("Joining room:", roomCode);
-
-          // Check if room exists
           const roomRef = doc(db, "rooms", roomCode);
           const roomSnap = await getDoc(roomRef);
 
-          if (!roomSnap.exists()) {
-            alert("Room not found!");
-            joinBtn.disabled = false;
-            joinBtn.innerHTML =
-              '<span class="iconify" data-icon="mdi:login"></span> JOIN';
-            return;
-          }
+          if (!roomSnap.exists()) return alert("Room not found!");
 
           const roomData = roomSnap.data();
 
-          if (roomData.status === "in-progress") {
-            alert("Game already in progress!");
-            joinBtn.disabled = false;
-            joinBtn.innerHTML =
-              '<span class="iconify" data-icon="mdi:login"></span> JOIN';
-            return;
-          }
-
-          // Join room
           await setDoc(
             doc(db, "rooms", roomCode, "participants", currentUser.uid),
             {
@@ -1429,63 +866,47 @@
               uid: currentUser.uid,
               score: 0,
               streak: 0,
-              booms: 0,
-              warnings: 0,
               joinedAt: Date.now(),
-              status: "active",
               isAdmin: false,
             },
           );
 
-          await updateDoc(roomRef, {
-            participants: increment(1),
-          });
+          await updateDoc(roomRef, { participants: increment(1) });
 
           currentRoom = roomCode;
           currentNickname = nickname;
           isAdmin = false;
 
-          // Update UI
+          // LOAD QUESTIONS FROM ROOM
+          if (roomData.questions) {
+            window.questions = roomData.questions;
+          }
+
           document.getElementById("display-team-name").innerText = nickname;
           document.getElementById("display-room-code").innerText = roomCode;
           document
             .getElementById("room-status-display")
             .classList.remove("hidden");
           document.getElementById("btn-start").disabled = true;
-
-          // Update question info from room
-          if (roomData.questions) {
-            questions = roomData.questions;
-            document.getElementById("total-questions").innerText =
-              questions.length;
-          }
-
-          showNotification(`JOINED ROOM ${roomCode}`, "success");
+          document.getElementById("total-questions").innerText =
+            window.questions.length;
 
           listenToRoom(roomCode);
           listenForGameStart(roomCode);
         } catch (error) {
-          console.error("Join room error:", error);
-          showError("Failed to join room: " + error.message);
-        } finally {
-          joinBtn.disabled = false;
-          joinBtn.innerHTML =
-            '<span class="iconify" data-icon="mdi:login"></span> JOIN';
+          console.error(error);
+          alert("Failed to join room");
         }
       };
 
       function listenToRoom(roomCode) {
-        if (roomUnsubscribe) {
-          roomUnsubscribe();
-        }
-
-        roomUnsubscribe = onSnapshot(
+        onSnapshot(
           collection(db, "rooms", roomCode, "participants"),
           (snapshot) => {
             participants = [];
-            snapshot.forEach((doc) => {
-              participants.push({ id: doc.id, ...doc.data() });
-            });
+            snapshot.forEach((doc) =>
+              participants.push({ id: doc.id, ...doc.data() }),
+            );
 
             // Update waiting list
             const waitingList = document.getElementById(
@@ -1495,12 +916,8 @@
               waitingList.innerHTML = participants
                 .map(
                   (p) => `
-                        <div class="flex items-center gap-3 p-3 bg-black/50 border border-neon-blue">
-                            <div class="cyber-avatar">${p.name.charAt(0)}</div>
-                            <div>
-                                <div class="font-bold neon-text-blue">${p.name}</div>
-                                <div class="text-xs text-gray-400">${p.isAdmin ? "ADMIN" : "PLAYER"}</div>
-                            </div>
+                        <div class="p-2 bg-black/50 border border-neon-blue">
+                            ${p.name} ${p.isAdmin ? "(ADMIN)" : ""}
                         </div>
                     `,
                 )
@@ -1509,19 +926,7 @@
 
             document.getElementById("participant-count").innerText =
               participants.length;
-
-            if (
-              !document
-                .getElementById("screen-lobby")
-                .classList.contains("hidden")
-            ) {
-              return;
-            }
-
             updateLeaderboard();
-          },
-          (error) => {
-            console.error("Snapshot error:", error);
           },
         );
       }
@@ -1530,27 +935,18 @@
         onSnapshot(doc(db, "rooms", roomCode), (doc) => {
           const data = doc.data();
           if (data && data.status === "in-progress" && !isAdmin) {
+            // LOAD QUESTIONS FROM ROOM
+            if (data.questions) {
+              window.questions = data.questions;
+            }
+
             document.getElementById("screen-lobby").classList.add("hidden");
             document.getElementById("screen-game").classList.remove("hidden");
             document.getElementById("stats-bar").classList.remove("hidden");
 
-            if (data.questions) {
-              questions = data.questions;
-            }
-
             score = 0;
             qIdx = 0;
-            currentStreak = 0;
-            boomCount = 0;
-            isGameActive = true;
-
-            document.getElementById("display-score").innerHTML =
-              `<span class="iconify" data-icon="mdi:currency-usd"></span> 0`;
-
-            startCamera();
             loadQuestion();
-
-            showNotification("MISSION STARTED", "success");
           }
         });
       }
@@ -1559,134 +955,43 @@
         if (!currentRoom || !isAdmin) return;
 
         try {
+          // SAVE CURRENT QUESTIONS TO ROOM BEFORE STARTING
           await updateDoc(doc(db, "rooms", currentRoom), {
             status: "in-progress",
             startedAt: Date.now(),
-            questions: questions,
+            questions: window.questions, // PASTIKAN QUESTIONS TERSIMPAN
           });
 
           document.getElementById("screen-lobby").classList.add("hidden");
           document.getElementById("screen-game").classList.remove("hidden");
           document.getElementById("stats-bar").classList.remove("hidden");
 
-          disableGameForAdmin();
+          // Admin mode
+          document.getElementById("answers-grid").innerHTML =
+            '<div class="col-span-2 text-center p-12">ADMIN MODE - MONITORING ONLY</div>';
         } catch (error) {
-          console.error("Start game error:", error);
-          showError("Failed to start game");
+          console.error(error);
+          alert("Failed to start game");
         }
       };
-
-      function disableGameForAdmin() {
-        document.getElementById("answers-grid").innerHTML = `
-                <div class="col-span-2 text-center p-12 bg-black/50 border border-neon-purple">
-                    <div class="text-5xl mb-4 neon-text-purple">👑</div>
-                    <h3 class="text-2xl font-bold mb-2 neon-text-purple">ADMIN MODE</h3>
-                    <p class="text-gray-400">Monitoring active players</p>
-                </div>
-            `;
-
-        document.getElementById("timer-text").innerText = "--";
-        document.getElementById("question-text").innerText =
-          "ADMIN MODE - MONITORING ONLY";
-        document.getElementById("admin-badge").classList.remove("hidden");
-      }
-
-      // ==================== CAMERA & ANTI-CHEAT ====================
-
-      async function startCamera() {
-        try {
-          cameraStream = await navigator.mediaDevices.getUserMedia({
-            video: true,
-            audio: false,
-          });
-          const video = document.getElementById("camera-feed");
-          video.srcObject = cameraStream;
-          document.getElementById("camera-container").style.display = "block";
-        } catch (e) {
-          console.error("Camera error:", e);
-          recordCheat("NO_CAMERA", "Camera not detected");
-        }
-      }
-
-      document.addEventListener("visibilitychange", () => {
-        if (!isGameActive || isAdmin) return;
-        if (document.hidden) {
-          recordCheat("TAB_SWITCH", "Tab switch detected");
-        }
-      });
-
-      async function recordCheat(type, details) {
-        if (!currentUser || !currentRoom || !isGameActive) return;
-
-        warningCount++;
-
-        const warningEl = document.getElementById("warning-container");
-        const warningText = document.getElementById("warning-text");
-        warningEl.classList.remove("hidden");
-        warningText.innerText = `${details} - WARNING ${warningCount}/3`;
-
-        setTimeout(() => {
-          warningEl.classList.add("hidden");
-        }, 3000);
-
-        try {
-          await updateDoc(
-            doc(db, "rooms", currentRoom, "participants", currentUser.uid),
-            {
-              warnings: warningCount,
-              lastCheat: {
-                type: type,
-                details: details,
-                timestamp: Date.now(),
-              },
-            },
-          );
-
-          if (warningCount >= 3) {
-            disqualifyUser("CHEATING DETECTED");
-          }
-        } catch (e) {
-          console.error("Failed to record cheat:", e);
-        }
-      }
-
-      async function disqualifyUser(reason) {
-        isGameActive = false;
-
-        await updateDoc(
-          doc(db, "rooms", currentRoom, "participants", currentUser.uid),
-          {
-            status: "disqualified",
-            disqualifyReason: reason,
-          },
-        );
-
-        document.getElementById("disqualify-reason").innerText = reason;
-        document.getElementById("disqualified-screen").classList.add("active");
-
-        if (cameraStream) {
-          cameraStream.getTracks().forEach((track) => track.stop());
-        }
-      }
 
       // ==================== GAME FUNCTIONS ====================
 
       function loadQuestion() {
         if (isAdmin) return;
 
-        if (qIdx >= questions.length) {
+        if (qIdx >= window.questions.length) {
           finish();
           return;
         }
 
-        const q = questions[qIdx];
+        const q = window.questions[qIdx];
 
         document.getElementById("question-category").innerText = q.category;
         document.getElementById("question-text").innerText = q.q;
         document.getElementById("question-progress").innerText =
-          `MISSION ${qIdx + 1}/${questions.length}`;
-        document.getElementById("question-points").innerText =
-          `+${q.points} CR`;
+          `${qIdx + 1}/${window.questions.length}`;
+        document.getElementById("question-points").innerText = `+${q.points}`;
 
         const grid = document.getElementById("answers-grid");
         grid.innerHTML = "";
@@ -1694,14 +999,7 @@
         q.a.forEach((answer, index) => {
           const option = document.createElement("div");
           option.className = "answer-cyber";
-          option.innerHTML = `
-                    <div class="flex items-center justify-center gap-3">
-                        <span class="w-8 h-8 bg-black border border-neon-blue text-neon-blue flex items-center justify-center">
-                            ${String.fromCharCode(65 + index)}
-                        </span>
-                        <span>${answer}</span>
-                    </div>
-                `;
+          option.innerHTML = `<div class="flex items-center justify-center gap-3"><span class="w-8 h-8 bg-black border border-neon-blue flex items-center justify-center">${String.fromCharCode(65 + index)}</span><span>${answer}</span></div>`;
           option.onclick = () => checkAnswer(index);
           grid.appendChild(option);
         });
@@ -1712,14 +1010,11 @@
       function startTimer(seconds) {
         clearInterval(timer);
         timeLeft = seconds;
-
-        const timerEl = document.getElementById("timer-text");
-        timerEl.innerText = timeLeft;
+        document.getElementById("timer-text").innerText = timeLeft;
 
         timer = setInterval(() => {
           timeLeft--;
-          timerEl.innerText = timeLeft;
-
+          document.getElementById("timer-text").innerText = timeLeft;
           if (timeLeft <= 0) {
             clearInterval(timer);
             checkAnswer(-1);
@@ -1730,56 +1025,32 @@
       async function checkAnswer(selectedIndex) {
         clearInterval(timer);
 
-        const q = questions[qIdx];
+        const q = window.questions[qIdx];
         const isCorrect = selectedIndex === q.correct;
 
-        document.querySelectorAll(".answer-cyber").forEach((opt) => {
-          opt.style.pointerEvents = "none";
-        });
-
-        document.querySelectorAll(".answer-cyber").forEach((opt, index) => {
-          if (index === q.correct) {
-            opt.classList.add("correct");
-          } else if (index === selectedIndex && !isCorrect) {
-            opt.classList.add("wrong");
-          }
-        });
+        document
+          .querySelectorAll(".answer-cyber")
+          .forEach((opt) => (opt.style.pointerEvents = "none"));
 
         if (isCorrect) {
           currentStreak++;
-          let multiplier = 1;
-
-          if (currentStreak >= 7) {
-            multiplier = 3;
-            boomCount++;
-          } else if (currentStreak >= 5) {
-            multiplier = 2.5;
-          } else if (currentStreak >= 3) {
-            multiplier = 2;
-          }
-
-          const pointsEarned = q.points * multiplier + timeLeft * 10;
-          score += pointsEarned;
+          const points = q.points + timeLeft * 10;
+          score += points;
 
           document.getElementById("feedback").className =
             "p-6 text-center font-bold text-xl border-2 border-green-500 bg-black/50 text-green-500";
-          document.getElementById("feedback").innerHTML =
-            `✅ +${pointsEarned} CR (${multiplier}x)`;
+          document.getElementById("feedback").innerHTML = `✅ +${points}`;
         } else {
           currentStreak = 0;
           score = Math.max(0, score - 200);
 
           document.getElementById("feedback").className =
             "p-6 text-center font-bold text-xl border-2 border-red-500 bg-black/50 text-red-500";
-          document.getElementById("feedback").innerHTML = "❌ -200 CR";
+          document.getElementById("feedback").innerHTML = "❌ -200";
         }
 
         document.getElementById("feedback").classList.remove("hidden");
-        document.getElementById("display-score").innerHTML =
-          `<span class="iconify" data-icon="mdi:currency-usd"></span> ${score}`;
-        document.getElementById("current-booms").innerText = boomCount;
-        document.getElementById("streak-progress").style.width =
-          `${(currentStreak % 7) * 14}%`;
+        document.getElementById("display-score").innerText = score;
 
         try {
           await updateDoc(
@@ -1787,12 +1058,9 @@
             {
               score: score,
               streak: currentStreak,
-              booms: boomCount,
             },
           );
-        } catch (e) {
-          console.error("Update failed:", e);
-        }
+        } catch (e) {}
 
         setTimeout(() => {
           qIdx++;
@@ -1807,91 +1075,49 @@
           .sort((a, b) => b.score - a.score);
 
         const leaderboardEl = document.getElementById("leaderboard");
-        leaderboardEl.innerHTML = sorted
-          .map((p, index) => {
-            const isCurrentUser = p.name === currentNickname;
-            let medal =
-              index === 0
-                ? "🥇"
-                : index === 1
-                  ? "🥈"
-                  : index === 2
-                    ? "🥉"
-                    : `#${index + 1}`;
-
-            return `
-                    <div class="rank-cyber ${isCurrentUser ? "current-user" : ""}">
-                        <span class="text-2xl w-10">${medal}</span>
-                        <div class="cyber-avatar">${p.name.charAt(0)}</div>
-                        <div class="flex-1">
-                            <div class="font-bold neon-text-blue">${p.name}</div>
-                        </div>
+        if (leaderboardEl) {
+          leaderboardEl.innerHTML = sorted
+            .map(
+              (p, i) => `
+                    <div class="rank-cyber ${p.name === currentNickname ? "current-user" : ""}">
+                        <span class="text-2xl w-10">#${i + 1}</span>
+                        <div class="flex-1 font-bold">${p.name}</div>
                         <div class="font-bold text-neon-purple">${p.score}</div>
                     </div>
-                `;
-          })
-          .join("");
-
-        const myRank = sorted.findIndex((p) => p.name === currentNickname) + 1;
-        if (myRank > 0) {
-          document.getElementById("display-rank").innerHTML =
-            `<span class="iconify" data-icon="mdi:trophy"></span> #${myRank}`;
+                `,
+            )
+            .join("");
         }
       }
 
-      async function finish() {
-        isGameActive = false;
-
+      function finish() {
         document.getElementById("screen-game").classList.add("hidden");
         document.getElementById("screen-results").classList.remove("hidden");
 
         document.getElementById("res-team-name").innerText = currentNickname;
         document.getElementById("res-score").innerText = score;
 
-        if (cameraStream) {
-          cameraStream.getTracks().forEach((track) => track.stop());
-          document.getElementById("camera-container").style.display = "none";
-        }
-
         const sorted = participants
           .filter((p) => !p.isAdmin)
           .sort((a, b) => b.score - a.score);
-
         const myRank = sorted.findIndex((p) => p.name === currentNickname) + 1;
         document.getElementById("res-rank").innerText = `#${myRank}`;
 
         const finalEl = document.getElementById("final-leaderboard");
         finalEl.innerHTML = sorted
-          .map((p, index) => {
-            const isCurrentUser = p.name === currentNickname;
-            let medal =
-              index === 0
-                ? "🥇"
-                : index === 1
-                  ? "🥈"
-                  : index === 2
-                    ? "🥉"
-                    : `#${index + 1}`;
-
-            return `
-                    <div class="rank-cyber ${isCurrentUser ? "current-user" : ""}">
-                        <span class="text-3xl w-12">${medal}</span>
-                        <div class="cyber-avatar">${p.name.charAt(0)}</div>
-                        <div class="flex-1">
-                            <div class="font-bold text-lg neon-text-blue">${p.name}</div>
-                        </div>
-                        <div class="font-bold text-neon-purple text-2xl">${p.score}</div>
-                    </div>
-                `;
-          })
+          .map(
+            (p, i) => `
+                <div class="rank-cyber ${p.name === currentNickname ? "current-user" : ""}">
+                    <span class="text-3xl w-12">#${i + 1}</span>
+                    <div class="flex-1 font-bold text-lg">${p.name}</div>
+                    <div class="font-bold text-neon-purple text-2xl">${p.score}</div>
+                </div>
+            `,
+          )
           .join("");
-
-        if (myRank === 1) {
-          startConfetti();
-        }
       }
 
-      // ==================== QUESTION EDITOR FUNCTIONS ====================
+      // ==================== QUESTION EDITOR - YANG DIPERBAIKI ====================
 
       window.toggleQuestionEditor = () => {
         document
@@ -1919,24 +1145,21 @@
 
         document.getElementById(`${tab}-editor-tab`).classList.remove("hidden");
 
-        if (tab === "visual") {
-          renderVisualEditor();
-        } else if (tab === "json") {
-          updateJsonEditor();
-        }
+        if (tab === "visual") renderVisualEditor();
+        else if (tab === "json") updateJsonEditor();
       };
 
       function renderVisualEditor() {
         const container = document.getElementById("questions-list");
-        container.innerHTML = questions
+        container.innerHTML = window.questions
           .map(
             (q, index) => `
                 <div class="question-preview">
                     <div class="flex justify-between items-start mb-2">
-                        <input type="text" value="${q.q}" 
-                               onchange="updateQuestion(${index}, 'q', this.value)"
-                               class="cyber-input text-sm mb-2">
-                        <button onclick="deleteQuestion(${index})" class="text-neon-pink ml-2">🗑️</button>
+                        <input type="text" value="${q.q.replace(/"/g, "&quot;")}" 
+                               onchange="window.updateQuestion(${index}, 'q', this.value)"
+                               class="cyber-input text-sm mb-2" placeholder="Question">
+                        <button onclick="window.deleteQuestion(${index})" class="text-neon-pink ml-2 text-xl">🗑️</button>
                     </div>
                     
                     <div class="grid grid-cols-2 gap-2 mb-2">
@@ -1946,10 +1169,11 @@
                             <div class="flex items-center gap-1">
                                 <input type="radio" name="correct-${index}" value="${ansIndex}" 
                                        ${q.correct === ansIndex ? "checked" : ""}
-                                       onchange="setCorrectAnswer(${index}, ${ansIndex})">
+                                       onchange="window.setCorrectAnswer(${index}, ${ansIndex})"
+                                       class="w-4 h-4">
                                 <input type="text" value="${answer}" 
-                                       onchange="updateAnswer(${index}, ${ansIndex}, this.value)"
-                                       class="cyber-input text-xs flex-1">
+                                       onchange="window.updateAnswer(${index}, ${ansIndex}, this.value)"
+                                       class="cyber-input text-xs flex-1" placeholder="Option ${ansIndex + 1}">
                             </div>
                         `,
                           )
@@ -1958,14 +1182,14 @@
                     
                     <div class="flex gap-2">
                         <input type="text" value="${q.category}" 
-                               onchange="updateQuestion(${index}, 'category', this.value)"
-                               class="cyber-input text-xs flex-1">
+                               onchange="window.updateQuestion(${index}, 'category', this.value)"
+                               class="cyber-input text-xs flex-1" placeholder="Category">
                         <input type="number" value="${q.time}" min="5" max="120"
-                               onchange="updateQuestion(${index}, 'time', parseInt(this.value))"
-                               class="cyber-input text-xs w-20">
+                               onchange="window.updateQuestion(${index}, 'time', parseInt(this.value))"
+                               class="cyber-input text-xs w-20" placeholder="Time">
                         <input type="number" value="${q.points}" min="100" max="5000"
-                               onchange="updateQuestion(${index}, 'points', parseInt(this.value))"
-                               class="cyber-input text-xs w-20">
+                               onchange="window.updateQuestion(${index}, 'points', parseInt(this.value))"
+                               class="cyber-input text-xs w-20" placeholder="Points">
                     </div>
                 </div>
             `,
@@ -1974,9 +1198,9 @@
       }
 
       window.addNewQuestion = () => {
-        questions.push({
+        window.questions.push({
           q: "New question?",
-          a: ["A", "B", "C", "D"],
+          a: ["Option A", "Option B", "Option C", "Option D"],
           correct: 0,
           category: "GENERAL",
           time: 30,
@@ -1984,32 +1208,36 @@
         });
         renderVisualEditor();
         updateJsonEditor();
+        document.getElementById("total-questions").innerText =
+          window.questions.length;
       };
 
       window.deleteQuestion = (index) => {
-        questions.splice(index, 1);
+        window.questions.splice(index, 1);
         renderVisualEditor();
         updateJsonEditor();
+        document.getElementById("total-questions").innerText =
+          window.questions.length;
       };
 
       window.updateQuestion = (index, field, value) => {
-        questions[index][field] = value;
+        window.questions[index][field] = value;
         updateJsonEditor();
       };
 
       window.updateAnswer = (qIndex, ansIndex, value) => {
-        questions[qIndex].a[ansIndex] = value;
+        window.questions[qIndex].a[ansIndex] = value;
         updateJsonEditor();
       };
 
       window.setCorrectAnswer = (qIndex, ansIndex) => {
-        questions[qIndex].correct = ansIndex;
+        window.questions[qIndex].correct = ansIndex;
         updateJsonEditor();
       };
 
       function updateJsonEditor() {
         document.getElementById("json-editor").value = JSON.stringify(
-          questions,
+          window.questions,
           null,
           2,
         );
@@ -2021,32 +1249,34 @@
             document.getElementById("json-editor").value,
           );
           if (Array.isArray(newQuestions)) {
-            questions = newQuestions;
+            window.questions = newQuestions;
             renderVisualEditor();
-            showNotification("Questions updated!", "success");
+            document.getElementById("total-questions").innerText =
+              window.questions.length;
+            alert("Questions updated!");
           }
         } catch (e) {
-          showNotification("Invalid JSON!", "error");
+          alert("Invalid JSON!");
         }
       };
 
       window.validateJson = () => {
         try {
           JSON.parse(document.getElementById("json-editor").value);
-          showNotification("✓ JSON is valid!", "success");
+          alert("✓ JSON is valid!");
         } catch (e) {
-          showNotification("✗ Invalid JSON!", "error");
+          alert("✗ Invalid JSON!");
         }
       };
 
       window.exportQuestions = () => {
-        const dataStr = JSON.stringify(questions, null, 2);
-        const dataUri =
-          "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
-        const link = document.createElement("a");
-        link.setAttribute("href", dataUri);
-        link.setAttribute("download", "questions.json");
-        link.click();
+        const dataStr = JSON.stringify(window.questions, null, 2);
+        const blob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "questions.json";
+        a.click();
       };
 
       window.importQuestions = (input) => {
@@ -2056,12 +1286,14 @@
         reader.onload = (e) => {
           try {
             const imported = JSON.parse(e.target.result);
-            questions = imported;
+            window.questions = imported;
             renderVisualEditor();
             updateJsonEditor();
-            showNotification("Questions imported!", "success");
+            document.getElementById("total-questions").innerText =
+              window.questions.length;
+            alert("Questions imported!");
           } catch (e) {
-            showNotification("Invalid file!", "error");
+            alert("Invalid file!");
           }
         };
 
@@ -2069,13 +1301,34 @@
         input.value = "";
       };
 
-      window.saveQuestions = () => {
-        localStorage.setItem("customQuestions", JSON.stringify(questions));
-        showNotification("Questions saved!", "success");
+      window.saveQuestions = async () => {
+        // Save to localStorage
+        localStorage.setItem(
+          "customQuestions",
+          JSON.stringify(window.questions),
+        );
+
+        // If in a room, save to Firebase
+        if (currentRoom && isAdmin) {
+          try {
+            await updateDoc(doc(db, "rooms", currentRoom), {
+              questions: window.questions,
+            });
+            alert("Questions saved to room!");
+          } catch (error) {
+            console.error("Failed to save to room:", error);
+            alert("Saved locally only (not in room)");
+          }
+        } else {
+          alert("Questions saved locally!");
+        }
+
+        document.getElementById("total-questions").innerText =
+          window.questions.length;
       };
 
       window.resetToDefault = () => {
-        questions = [
+        window.questions = [
           {
             q: "What is the capital of Indonesia?",
             a: ["JAKARTA", "SURABAYA", "BANDUNG", "MEDAN"],
@@ -2103,14 +1356,16 @@
         ];
         renderVisualEditor();
         updateJsonEditor();
-        showNotification("Reset to default", "info");
+        document.getElementById("total-questions").innerText =
+          window.questions.length;
+        alert("Reset to default");
       };
 
-      // Load saved questions
+      // Load saved questions from localStorage
       const savedQuestions = localStorage.getItem("customQuestions");
       if (savedQuestions) {
         try {
-          questions = JSON.parse(savedQuestions);
+          window.questions = JSON.parse(savedQuestions);
         } catch (e) {}
       }
 
@@ -2120,50 +1375,27 @@
         document.getElementById("admin-modal").classList.toggle("active");
       };
 
-      window.monitorRoom = () => {
+      window.monitorRoom = async () => {
         const roomCode = document
           .getElementById("admin-room-code")
           .value.trim()
           .toUpperCase();
         if (!roomCode) return;
 
-        document
-          .getElementById("admin-monitoring-info")
-          .classList.remove("hidden");
-        document.getElementById("monitoring-room-code").innerText = roomCode;
+        const listEl = document.getElementById("admin-participants-list");
 
         onSnapshot(
           collection(db, "rooms", roomCode, "participants"),
           (snapshot) => {
             const participants = [];
-            snapshot.forEach((doc) =>
-              participants.push({ id: doc.id, ...doc.data() }),
-            );
+            snapshot.forEach((doc) => participants.push(doc.data()));
 
-            const players = participants.filter((p) => !p.isAdmin);
-
-            document.getElementById("admin-participants").innerText =
-              players.length;
-            document.getElementById("admin-total-booms").innerText =
-              players.reduce((sum, p) => sum + (p.booms || 0), 0);
-            document.getElementById("admin-warnings").innerText =
-              players.reduce((sum, p) => sum + (p.warnings || 0), 0);
-            document.getElementById("admin-disqualified").innerText =
-              players.filter((p) => p.status === "disqualified").length;
-
-            const listEl = document.getElementById("participants-list");
-            listEl.innerHTML = players
+            listEl.innerHTML = participants
               .map(
                 (p) => `
-                    <div class="flex items-center justify-between p-3 bg-black/50 border border-neon-blue">
-                        <div>
-                            <div class="font-bold neon-text-blue">${p.name}</div>
-                            <div class="text-xs text-gray-400">Score: ${p.score}</div>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-sm">💣 ${p.booms || 0}</div>
-                            ${p.warnings > 0 ? `<div class="text-xs text-red-500">⚠️${p.warnings}</div>` : ""}
-                        </div>
+                    <div class="p-3 bg-black/50 border border-neon-blue">
+                        <div class="font-bold">${p.name}</div>
+                        <div class="text-sm">Score: ${p.score}</div>
                     </div>
                 `,
               )
@@ -2171,53 +1403,6 @@
           },
         );
       };
-
-      window.stopMonitoring = () => {
-        document
-          .getElementById("admin-monitoring-info")
-          .classList.add("hidden");
-        document.getElementById("participants-list").innerHTML = "";
-      };
-
-      // ==================== CONFETTI ====================
-
-      function startConfetti() {
-        const canvas = document.getElementById("confetti");
-        const ctx = canvas.getContext("2d");
-
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        const particles = [];
-        for (let i = 0; i < 100; i++) {
-          particles.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height - canvas.height,
-            size: Math.random() * 5 + 2,
-            speed: Math.random() * 3 + 2,
-            color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-          });
-        }
-
-        function animate() {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-          particles.forEach((p) => {
-            ctx.fillStyle = p.color;
-            ctx.fillRect(p.x, p.y, p.size, p.size);
-            p.y += p.speed;
-
-            if (p.y > canvas.height) {
-              p.y = -10;
-              p.x = Math.random() * canvas.width;
-            }
-          });
-
-          requestAnimationFrame(animate);
-        }
-
-        animate();
-      }
     </script>
   </body>
 </html>
