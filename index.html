@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuizMaster: Fun Learning Battle</title>
+    <title>CYBERPUNK 2077: Database Warriors</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
         * {
@@ -14,240 +14,393 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Quicksand', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #2d3748;
+        :root {
+            --neon-pink: #ff00ff;
+            --neon-blue: #00ffff;
+            --neon-purple: #b300ff;
+            --neon-yellow: #ffff00;
+            --dark-bg: #0a0a0f;
+            --darker-bg: #050507;
+            --cyber-grid: #00ffcc;
         }
 
-        /* Friendly Card */
-        .friendly-card {
-            background: rgba(255, 255, 255, 0.95);
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--dark-bg);
+            color: #fff;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Cyber Grid Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Glitch Effect */
+        .glitch {
+            position: relative;
+            animation: glitch 1s linear infinite;
+        }
+
+        @keyframes glitch {
+            2%, 64% { transform: translate(2px, 0) skew(0deg); }
+            4%, 60% { transform: translate(-2px, 0) skew(0deg); }
+            62% { transform: translate(0, 0) skew(5deg); }
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark-bg);
+        }
+
+        .glitch::before {
+            animation: glitchTop 1s linear infinite;
+            clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+            -webkit-clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+        }
+
+        @keyframes glitchTop {
+            2%, 64% { transform: translate(2px, -2px); }
+            4%, 60% { transform: translate(-2px, 2px); }
+            62% { transform: translate(13px, -1px) skew(-13deg); }
+        }
+
+        .glitch::after {
+            animation: glitchBottom 1.5s linear infinite;
+            clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+            -webkit-clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+        }
+
+        @keyframes glitchBottom {
+            2%, 64% { transform: translate(-2px, 0); }
+            4%, 60% { transform: translate(-2px, 0); }
+            62% { transform: translate(-22px, 5px) skew(21deg); }
+        }
+
+        /* Cyber Card */
+        .cyber-card {
+            background: rgba(10, 10, 15, 0.8);
             backdrop-filter: blur(10px);
-            border-radius: 30px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2), 0 0 0 2px rgba(255, 255, 255, 0.5) inset;
+            border: 2px solid var(--neon-blue);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3),
+                        0 0 0 2px rgba(0, 255, 255, 0.1) inset;
+            border-radius: 0;
+            clip-path: polygon(0 0, 100% 0, 100% 95%, 95% 100%, 0 100%);
             padding: 24px;
             transition: all 0.3s;
-        }
-
-        .friendly-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Cute Button */
-        .cute-button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            font-weight: 700;
-            padding: 16px 32px;
-            border-radius: 60px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 18px;
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
             position: relative;
-            overflow: hidden;
+            z-index: 1;
         }
 
-        .cute-button::after {
+        .cyber-card::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(transparent, rgba(255, 255, 255, 0.3), transparent);
-            transform: rotate(30deg);
-            transition: transform 0.5s;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink), var(--neon-purple));
+            z-index: -1;
+            animation: borderRotate 4s linear infinite;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
-        .cute-button:hover::after {
-            transform: rotate(30deg) translate(100%, 100%);
+        .cyber-card:hover::before {
+            opacity: 1;
         }
 
-        .cute-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        @keyframes borderRotate {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
         }
 
-        .cute-button-outline {
+        .cyber-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 0 50px rgba(0, 255, 255, 0.5);
+        }
+
+        /* Cyber Button */
+        .cyber-button {
             background: transparent;
-            border: 3px solid #667eea;
-            color: #667eea;
+            color: var(--neon-blue);
+            font-family: 'Orbitron', sans-serif;
             font-weight: 700;
-            padding: 14px 28px;
-            border-radius: 60px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 16px 32px;
+            border: 2px solid var(--neon-blue);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
             cursor: pointer;
+            z-index: 1;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
+        }
+
+        .cyber-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+            z-index: -1;
+        }
+
+        .cyber-button:hover::before {
+            left: 100%;
+        }
+
+        .cyber-button:hover {
+            background: var(--neon-blue);
+            color: var(--dark-bg);
+            box-shadow: 0 0 30px var(--neon-blue);
+            text-shadow: none;
+        }
+
+        .cyber-button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            border-color: #666;
+        }
+
+        .cyber-button-outline {
+            background: transparent;
+            border: 2px solid var(--neon-pink);
+            color: var(--neon-pink);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 600;
+            padding: 14px 28px;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
             transition: all 0.3s;
         }
 
-        .cute-button-outline:hover {
-            background: #667eea;
-            color: white;
+        .cyber-button-outline:hover {
+            background: var(--neon-pink);
+            color: var(--dark-bg);
+            box-shadow: 0 0 30px var(--neon-pink);
         }
 
         /* Answer Option */
-        .answer-box {
-            background: white;
-            border: 3px solid #e2e8f0;
-            border-radius: 20px;
+        .answer-cyber {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid var(--neon-blue);
             padding: 20px;
             cursor: pointer;
             transition: all 0.2s;
-            text-align: center;
-            font-weight: 600;
             font-size: 18px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            font-weight: 500;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%);
         }
 
-        .answer-box:hover:not(.disabled) {
+        .answer-cyber::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .answer-cyber:hover::before {
+            left: 100%;
+        }
+
+        .answer-cyber:hover {
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 20px var(--neon-pink);
             transform: scale(1.02);
-            border-color: #667eea;
-            background: #f0f4ff;
         }
 
-        .answer-box.selected {
-            border-color: #667eea;
-            background: #e0e7ff;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+        .answer-cyber.selected {
+            border-color: var(--neon-yellow);
+            box-shadow: 0 0 30px var(--neon-yellow);
+            background: rgba(255, 255, 0, 0.1);
         }
 
-        .answer-box.correct {
-            border-color: #48bb78;
-            background: #c6f6d5;
+        .answer-cyber.correct {
+            border-color: #00ff00;
+            box-shadow: 0 0 30px #00ff00;
+            background: rgba(0, 255, 0, 0.1);
         }
 
-        .answer-box.wrong {
-            border-color: #f56565;
-            background: #fed7d7;
+        .answer-cyber.wrong {
+            border-color: #ff0000;
+            box-shadow: 0 0 30px #ff0000;
+            background: rgba(255, 0, 0, 0.1);
         }
 
         /* Timer */
-        .timer-badge {
-            background: white;
-            border-radius: 60px;
-            padding: 12px 24px;
-            font-size: 32px;
-            font-weight: 700;
-            color: #667eea;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
+        .cyber-timer {
+            background: rgba(0, 0, 0, 0.8);
+            border: 3px solid var(--neon-blue);
+            padding: 15px 30px;
+            font-size: 48px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            color: var(--neon-blue);
+            text-shadow: 0 0 20px var(--neon-blue);
+            position: relative;
+            clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
+        }
+
+        .cyber-timer::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border: 1px solid var(--neon-pink);
+            pointer-events: none;
+            clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
         }
 
         /* Room Code */
-        .room-code-badge {
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            padding: 15px 30px;
-            border-radius: 60px;
-            font-size: 36px;
-            font-weight: 800;
-            letter-spacing: 8px;
-            color: white;
-            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
-            box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3);
+        .room-code-cyber {
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            padding: 20px 40px;
+            font-size: 48px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            letter-spacing: 10px;
+            color: var(--dark-bg);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            position: relative;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
         }
 
         /* Avatar */
-        .avatar-cute {
+        .cyber-avatar {
             width: 50px;
             height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
             font-size: 20px;
-            color: white;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            color: var(--dark-bg);
+            clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
+            position: relative;
         }
 
-        /* Leaderboard Item */
-        .rank-item {
-            background: white;
-            border-radius: 20px;
+        .cyber-avatar::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            bottom: 2px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
+        }
+
+        /* Rank Item */
+        .rank-cyber {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--neon-blue);
             padding: 15px;
             margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: all 0.2s;
+            transition: all 0.3s;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
         }
 
-        .rank-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        .rank-cyber:hover {
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 20px var(--neon-pink);
+            transform: translateX(10px);
         }
 
-        .rank-item.current-user {
-            background: linear-gradient(135deg, #fef3c7, #fde68a);
-            border: 3px solid #fbbf24;
+        .rank-cyber.current-user {
+            border-color: var(--neon-yellow);
+            box-shadow: 0 0 30px var(--neon-yellow);
+            background: rgba(255, 255, 0, 0.1);
         }
 
         /* Medal */
-        .medal-gold {
-            color: #fbbf24;
-            font-size: 24px;
-        }
-
-        .medal-silver {
-            color: #a0aec0;
-            font-size: 24px;
-        }
-
-        .medal-bronze {
-            color: #b45309;
-            font-size: 24px;
-        }
+        .medal-gold { color: #ffd700; text-shadow: 0 0 20px #ffd700; }
+        .medal-silver { color: #c0c0c0; text-shadow: 0 0 20px #c0c0c0; }
+        .medal-bronze { color: #cd7f32; text-shadow: 0 0 20px #cd7f32; }
 
         /* Power-up */
-        .powerup-badge {
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            color: white;
+        .powerup-cyber {
+            background: linear-gradient(135deg, var(--neon-yellow), #ff6600);
+            color: var(--dark-bg);
             padding: 8px 16px;
-            border-radius: 60px;
-            font-size: 14px;
             font-weight: 700;
+            clip-path: polygon(0 0, 100% 0, 100% 75%, 75% 100%, 0 100%);
             display: inline-flex;
             align-items: center;
             gap: 5px;
-            box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
 
         /* Warning */
-        .warning-badge {
-            background: #fee2e2;
-            border: 3px solid #f56565;
-            border-radius: 60px;
+        .warning-cyber {
+            background: rgba(255, 0, 0, 0.2);
+            border: 2px solid #ff0000;
             padding: 10px 20px;
-            color: #c53030;
+            color: #ff0000;
             font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            text-shadow: 0 0 10px #ff0000;
+            clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
         }
 
         /* Input */
-        .cute-input {
-            border: 3px solid #e2e8f0;
-            border-radius: 60px;
+        .cyber-input {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--neon-blue);
             padding: 16px 24px;
             font-size: 18px;
             width: 100%;
-            transition: all 0.2s;
-            background: white;
+            color: var(--neon-blue);
+            font-family: 'Orbitron', sans-serif;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
         }
 
-        .cute-input:focus {
+        .cyber-input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 30px var(--neon-pink);
+        }
+
+        .cyber-input::placeholder {
+            color: rgba(0, 255, 255, 0.3);
         }
 
         /* Camera */
@@ -255,14 +408,14 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            width: 200px;
-            height: 150px;
-            border-radius: 20px;
+            width: 250px;
+            height: 180px;
+            border: 3px solid var(--neon-blue);
+            box-shadow: 0 0 30px var(--neon-blue);
             overflow: hidden;
-            border: 4px solid white;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             z-index: 1000;
             display: none;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%);
         }
 
         #camera-container video {
@@ -275,39 +428,46 @@
             position: absolute;
             top: 10px;
             left: 10px;
-            width: 12px;
-            height: 12px;
-            background: #48bb78;
-            border-radius: 50%;
-            border: 2px solid white;
+            width: 15px;
+            height: 15px;
+            background: #00ff00;
+            border-radius: 0;
+            box-shadow: 0 0 20px #00ff00;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
         }
 
         /* Modal */
-        .modal-overlay {
+        .cyber-modal {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 2000;
         }
 
-        .modal-overlay.active {
+        .cyber-modal.active {
             display: flex;
         }
 
-        .modal-cute {
-            background: white;
-            border-radius: 40px;
+        .cyber-modal-content {
+            background: var(--dark-bg);
+            border: 3px solid var(--neon-blue);
             padding: 40px;
             max-width: 500px;
             width: 90%;
-            text-align: center;
+            box-shadow: 0 0 50px var(--neon-blue);
+            clip-path: polygon(0 0, 100% 0, 100% 95%, 95% 100%, 0 100%);
         }
 
         /* Disqualified */
@@ -317,7 +477,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.95);
             display: none;
             align-items: center;
             justify-content: center;
@@ -328,35 +488,72 @@
             display: flex;
         }
 
-        /* Confetti */
-        #confetti {
-            position: fixed;
+        /* Scanner Line */
+        .scanner {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+            animation: scan 2s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { top: -10px; }
+            100% { top: 110%; }
+        }
+
+        /* Neon Text */
+        .neon-text-blue {
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue), 0 0 40px var(--neon-blue);
+        }
+
+        .neon-text-pink {
+            color: var(--neon-pink);
+            text-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink), 0 0 40px var(--neon-pink);
+        }
+
+        .neon-text-purple {
+            color: var(--neon-purple);
+            text-shadow: 0 0 10px var(--neon-purple), 0 0 20px var(--neon-purple), 0 0 40px var(--neon-purple);
+        }
+
+        /* Progress Bar */
+        .cyber-progress {
+            height: 10px;
+            background: rgba(0, 255, 255, 0.2);
+            border: 1px solid var(--neon-blue);
+            position: relative;
+        }
+
+        .cyber-progress-fill {
             height: 100%;
-            pointer-events: none;
-            z-index: 4000;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
+            width: 0%;
+            transition: width 0.3s;
+            position: relative;
         }
 
-        /* Animations */
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        .cyber-progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 5px;
+            height: 100%;
+            background: white;
+            box-shadow: 0 0 20px white;
+            animation: blink 0.5s infinite;
         }
 
-        .bounce {
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes wiggle {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(-5deg); }
-            75% { transform: rotate(5deg); }
-        }
-
-        .wiggle:hover {
-            animation: wiggle 0.3s;
+        /* Grid */
+        .cyber-grid {
+            display: grid;
+            gap: 2px;
+            background: rgba(0, 255, 255, 0.1);
+            padding: 2px;
         }
     </style>
 </head>
@@ -365,116 +562,122 @@
     <div id="camera-container">
         <video id="camera-feed" autoplay playsinline muted></video>
         <div class="camera-indicator"></div>
+        <div class="scanner"></div>
     </div>
 
     <!-- Disqualified Screen -->
     <div id="disqualified-screen">
-        <div class="modal-cute animate__animated animate__shake">
-            <div class="text-8xl mb-4">😢</div>
-            <h2 class="text-4xl font-bold text-red-500 mb-4">Oops!</h2>
-            <p class="text-xl mb-6" id="disqualify-reason">Kamu melakukan kecurangan</p>
-            <button onclick="location.reload()" class="cute-button">
-                Kembali ke Awal
+        <div class="cyber-modal-content text-center">
+            <div class="text-8xl mb-4 neon-text-pink glitch" data-text="⚠️">⚠️</div>
+            <h2 class="text-5xl font-bold mb-4 neon-text-pink glitch" data-text="DISKUALIFIKASI">DISKUALIFIKASI</h2>
+            <p class="text-xl mb-6 text-gray-300" id="disqualify-reason">Kecurangan terdeteksi</p>
+            <button onclick="location.reload()" class="cyber-button w-full">
+                REBOOT SYSTEM
             </button>
         </div>
     </div>
 
     <!-- Main Container -->
-    <div class="container mx-auto px-4 py-6 max-w-6xl">
+    <div class="container mx-auto px-4 py-6 max-w-6xl relative z-10">
         <!-- Header -->
-        <div class="friendly-card mb-6 flex justify-between items-center">
+        <div class="cyber-card mb-6 flex justify-between items-center">
             <div class="flex items-center gap-4">
-                <div class="avatar-cute text-2xl">📚</div>
+                <div class="cyber-avatar text-2xl">
+                    <span class="neon-text-blue">DB</span>
+                </div>
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-800">QuizMaster</h1>
-                    <p class="text-gray-600">Fun Learning Battle</p>
+                    <h1 class="text-3xl font-bold tracking-tighter glitch" data-text="CYBERPUNK 2077">
+                        <span class="neon-text-blue">CYBERPUNK</span>
+                        <span class="neon-text-pink"> 2077</span>
+                    </h1>
+                    <p class="text-xs text-gray-500 font-mono">DATABASE WARRIORS v7.0</p>
                 </div>
             </div>
             
             <!-- Game Stats -->
             <div id="stats-bar" class="hidden items-center gap-6">
                 <div class="text-right">
-                    <p class="text-gray-500 text-sm">Player</p>
-                    <p id="display-team-name" class="font-bold text-xl"></p>
+                    <p class="text-gray-500 text-xs font-mono">DESIGNATION</p>
+                    <p id="display-team-name" class="font-bold text-xl neon-text-blue"></p>
                 </div>
                 <div class="text-right">
-                    <p class="text-gray-500 text-sm">Score</p>
-                    <p id="display-score" class="font-bold text-2xl text-indigo-600">0</p>
+                    <p class="text-gray-500 text-xs font-mono">CREDITS</p>
+                    <p id="display-score" class="font-bold text-2xl neon-text-yellow">0</p>
                 </div>
                 <div class="text-right">
-                    <p class="text-gray-500 text-sm">Rank</p>
-                    <p id="display-rank" class="font-bold text-xl text-yellow-500">#0</p>
+                    <p class="text-gray-500 text-xs font-mono">RANK</p>
+                    <p id="display-rank" class="font-bold text-xl neon-text-purple">#0</p>
                 </div>
-                <div id="powerup-display" class="powerup-badge hidden">
-                    ⚡ <span id="powerup-count">0</span>
+                <div id="powerup-display" class="powerup-cyber hidden">
+                    💣 <span id="powerup-count">0</span>
                 </div>
             </div>
 
             <!-- Admin Badge -->
-            <div id="admin-badge" class="hidden powerup-badge bg-purple-500">
+            <div id="admin-badge" class="hidden powerup-cyber bg-purple-600">
                 👑 ADMIN MODE
             </div>
         </div>
 
         <!-- Lobby Screen -->
         <div id="screen-lobby" class="min-h-[600px] flex items-center justify-center">
-            <div class="friendly-card max-w-md w-full animate__animated animate__fadeInUp">
+            <div class="cyber-card max-w-md w-full animate__animated animate__fadeInUp">
                 <div class="text-center mb-8">
-                    <div class="text-6xl mb-4 bounce">🎮</div>
-                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Join Game</h2>
-                    <p class="text-gray-600">Masukkan kode room dan namamu</p>
+                    <div class="text-7xl mb-4 neon-text-blue glitch" data-text="⌨️">⌨️</div>
+                    <h2 class="text-4xl font-bold mb-2 glitch" data-text="INITIALIZE">
+                        <span class="neon-text-blue">INITIALIZE</span>
+                    </h2>
+                    <p class="text-gray-400 font-mono">Enter access credentials</p>
                 </div>
                 
                 <div class="space-y-4">
                     <!-- Room Code -->
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2 ml-2">KODE ROOM</label>
+                        <label class="block text-gray-400 font-mono text-sm mb-2 ml-2">ROOM CODE</label>
                         <div class="flex gap-2">
                             <input type="text" id="input-room-code" maxlength="6" 
-                                   placeholder="Contoh: ABC123" 
-                                   class="cute-input text-center text-2xl font-bold uppercase">
-                            <button onclick="generateRoomCode()" class="cute-button-outline px-6">
-                                Acak
+                                   placeholder="XXXXXX" 
+                                   class="cyber-input text-center text-2xl font-bold uppercase">
+                            <button onclick="generateRoomCode()" class="cyber-button-outline px-6">
+                                GEN
                             </button>
                         </div>
                     </div>
 
                     <!-- Nickname -->
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-2 ml-2">NAMA PANGGILAN</label>
-                        <input type="text" id="input-team-name" placeholder="Masukkan namamu..." 
-                               class="cute-input">
+                        <label class="block text-gray-400 font-mono text-sm mb-2 ml-2">DESIGNATION</label>
+                        <input type="text" id="input-team-name" placeholder="Enter your callsign..." 
+                               class="cyber-input">
                     </div>
 
                     <!-- Action Buttons -->
                     <div class="grid grid-cols-2 gap-3 pt-4">
-                        <button onclick="createRoom()" class="cute-button">
-                            Buat Room
+                        <button onclick="createRoom()" class="cyber-button">
+                            CREATE
                         </button>
-                        <button onclick="joinRoom()" class="cute-button-outline">
-                            Gabung
+                        <button onclick="joinRoom()" class="cyber-button-outline">
+                            JOIN
                         </button>
                     </div>
                     
                     <!-- Room Status -->
-                    <div id="room-status-display" class="hidden mt-6 p-6 bg-indigo-50 rounded-3xl">
+                    <div id="room-status-display" class="hidden mt-6 p-6 bg-black/50 border border-neon-blue">
                         <div class="text-center mb-4">
-                            <p class="text-gray-600 mb-2">KODE ROOM</p>
-                            <div class="room-code-badge" id="display-room-code">ABCDEF</div>
-                            <button onclick="copyRoomCode()" class="mt-3 text-indigo-600 hover:text-indigo-800 font-semibold">
-                                📋 Salin Kode
+                            <p class="text-gray-400 font-mono text-sm mb-2">ROOM CODE</p>
+                            <div class="room-code-cyber" id="display-room-code">DEFAULT</div>
+                            <button onclick="copyRoomCode()" class="mt-3 text-neon-blue hover:text-neon-pink font-mono text-sm">
+                                📋 COPY CODE
                             </button>
                         </div>
                         
-                        <div class="flex justify-between items-center mb-4">
-                            <span class="font-semibold">Status:</span>
-                            <span id="room-status-text" class="bg-yellow-100 text-yellow-700 px-4 py-1 rounded-full text-sm font-semibold">
-                                Menunggu Pemain...
-                            </span>
+                        <div class="flex justify-between items-center mb-4 font-mono">
+                            <span class="text-gray-400">STATUS:</span>
+                            <span id="room-status-text" class="text-neon-yellow">WAITING</span>
                         </div>
                         
                         <div class="mb-4">
-                            <h3 class="font-bold mb-3">Pemain yang Bergabung:</h3>
+                            <h3 class="font-mono text-neon-blue mb-3">ACTIVE OPERATORS:</h3>
                             <div id="participants-list-waiting" class="space-y-2 max-h-48 overflow-y-auto">
                                 <!-- Participants will be listed here -->
                             </div>
@@ -482,8 +685,8 @@
                         
                         <!-- Start Button -->
                         <button id="btn-start" onclick="startGame()" disabled 
-                                class="cute-button w-full text-lg disabled:opacity-50">
-                            MULAI GAME
+                                class="cyber-button w-full text-lg disabled:opacity-50">
+                            INITIALIZE MISSION
                         </button>
                     </div>
                 </div>
@@ -496,30 +699,29 @@
                 <!-- Main Game Area -->
                 <div class="lg:col-span-3 space-y-4">
                     <!-- Question Card -->
-                    <div class="friendly-card">
+                    <div class="cyber-card relative overflow-hidden">
+                        <div class="scanner"></div>
+                        
                         <!-- Header -->
                         <div class="flex justify-between items-center mb-6">
-                            <span id="question-category" class="bg-indigo-100 text-indigo-700 px-4 py-2 rounded-full font-semibold">
-                                Kategori
+                            <span id="question-category" class="bg-black/50 border border-neon-blue px-4 py-2 font-mono text-neon-blue">
+                                LOADING...
                             </span>
                             
-                            <div class="timer-badge">
-                                <span>⏱️</span>
+                            <div class="cyber-timer">
                                 <span id="timer-text">30</span>
                             </div>
                         </div>
                         
                         <!-- Question -->
-                        <p id="question-text" class="text-2xl font-bold text-gray-800 mb-8 leading-relaxed">
-                            Memuat soal...
+                        <p id="question-text" class="text-2xl font-bold mb-8 leading-relaxed glitch" data-text="Loading question...">
+                            Loading question...
                         </p>
 
                         <!-- Progress -->
-                        <div class="flex justify-between items-center text-gray-600">
-                            <span id="question-progress">Soal 0/10</span>
-                            <span id="question-points" class="bg-green-100 text-green-700 px-4 py-1 rounded-full font-semibold">
-                                +1000 pts
-                            </span>
+                        <div class="flex justify-between items-center font-mono text-sm">
+                            <span id="question-progress" class="text-gray-400">MISSION 0/10</span>
+                            <span id="question-points" class="text-neon-yellow">+1000 CR</span>
                         </div>
                     </div>
 
@@ -529,18 +731,18 @@
                     </div>
 
                     <!-- Feedback -->
-                    <div id="feedback" class="hidden rounded-3xl p-6 text-center font-bold text-xl animate__animated animate__bounceIn">
+                    <div id="feedback" class="hidden p-6 text-center font-bold text-xl animate__animated animate__bounceIn border-2">
                     </div>
 
                     <!-- Warning Message -->
-                    <div id="warning-container" class="hidden warning-badge">
+                    <div id="warning-container" class="hidden warning-cyber flex items-center gap-3">
                         <span>⚠️</span>
                         <span id="warning-text"></span>
                     </div>
 
                     <!-- Boom Targets -->
-                    <div id="boom-targets" class="hidden friendly-card">
-                        <h3 class="font-bold text-lg mb-3">Pilih Target Boom! 💣</h3>
+                    <div id="boom-targets" class="hidden cyber-card">
+                        <h3 class="font-bold text-lg mb-3 neon-text-pink">💣 SELECT TARGET</h3>
                         <div id="targets-list" class="grid grid-cols-2 md:grid-cols-3 gap-2">
                             <!-- Targets will be listed here -->
                         </div>
@@ -550,9 +752,9 @@
                 <!-- Sidebar -->
                 <div class="lg:col-span-1 space-y-4">
                     <!-- Live Rankings -->
-                    <div class="friendly-card">
-                        <h3 class="font-bold text-lg mb-4 flex items-center gap-2">
-                            <span>🏆</span> Peringkat Langsung
+                    <div class="cyber-card">
+                        <h3 class="font-bold text-lg mb-4 flex items-center gap-2 neon-text-purple">
+                            <span>🏆</span> LIVE RANKINGS
                         </h3>
                         
                         <div id="leaderboard" class="space-y-2 max-h-[500px] overflow-y-auto">
@@ -561,41 +763,48 @@
                     </div>
 
                     <!-- Power-ups Info -->
-                    <div class="friendly-card">
-                        <h3 class="font-bold text-lg mb-3">⚡ Power-ups</h3>
-                        <div class="space-y-2">
-                            <div class="flex justify-between items-center p-2 bg-orange-50 rounded-xl">
-                                <span>3 Streak</span>
-                                <span class="powerup-badge">2x Poin</span>
+                    <div class="cyber-card">
+                        <h3 class="font-bold text-lg mb-3 neon-text-yellow">⚡ POWER-UPS</h3>
+                        <div class="space-y-2 font-mono text-sm">
+                            <div class="flex justify-between items-center p-2 bg-black/50 border border-neon-blue">
+                                <span>3x STREAK</span>
+                                <span class="text-neon-blue">2x CREDITS</span>
                             </div>
-                            <div class="flex justify-between items-center p-2 bg-orange-50 rounded-xl">
-                                <span>5 Streak</span>
-                                <span class="powerup-badge">Perisai</span>
+                            <div class="flex justify-between items-center p-2 bg-black/50 border border-neon-blue">
+                                <span>5x STREAK</span>
+                                <span class="text-neon-purple">SHIELD</span>
                             </div>
-                            <div class="flex justify-between items-center p-2 bg-orange-50 rounded-xl">
-                                <span>7 Streak</span>
-                                <span class="powerup-badge">Boom +1</span>
+                            <div class="flex justify-between items-center p-2 bg-black/50 border border-neon-blue">
+                                <span>7x STREAK</span>
+                                <span class="text-neon-pink">BOOM +1</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Room Info -->
-                    <div class="friendly-card">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-gray-600">Room:</span>
-                            <span id="current-room-code" class="font-bold text-indigo-600">---</span>
+                    <div class="cyber-card">
+                        <div class="flex justify-between items-center mb-2 font-mono">
+                            <span class="text-gray-400">ROOM:</span>
+                            <span id="current-room-code" class="font-bold text-neon-blue">---</span>
                         </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-600">Pemain:</span>
-                            <span id="participant-count" class="font-bold">0</span>
+                        <div class="flex justify-between items-center mb-2 font-mono">
+                            <span class="text-gray-400">OPERATORS:</span>
+                            <span id="participant-count" class="font-bold text-neon-purple">0</span>
                         </div>
-                        <div class="flex justify-between items-center mt-2">
-                            <span class="text-gray-600">Streak:</span>
-                            <span id="current-streak" class="font-bold text-orange-500">0</span>
+                        <div class="flex justify-between items-center mb-2 font-mono">
+                            <span class="text-gray-400">STREAK:</span>
+                            <span id="current-streak" class="font-bold text-neon-yellow">0</span>
                         </div>
-                        <div class="flex justify-between items-center mt-2">
-                            <span class="text-gray-600">Boom:</span>
-                            <span id="current-booms" class="font-bold text-red-500">0</span>
+                        <div class="flex justify-between items-center font-mono">
+                            <span class="text-gray-400">BOOMS:</span>
+                            <span id="current-booms" class="font-bold text-neon-pink">0</span>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="cyber-card">
+                        <div class="cyber-progress">
+                            <div id="streak-progress" class="cyber-progress-fill" style="width: 0%"></div>
                         </div>
                     </div>
                 </div>
@@ -606,34 +815,37 @@
         <div id="screen-results" class="hidden">
             <div class="max-w-4xl mx-auto space-y-6">
                 <!-- Winner Celebration -->
-                <div class="friendly-card text-center p-12">
-                    <div class="text-7xl mb-4 animate__animated animate__bounceIn">🎉</div>
-                    <h2 class="text-5xl font-bold text-gray-800 mb-2">Game Selesai!</h2>
-                    <p class="text-xl text-gray-600">Selamat kepada semua peserta!</p>
+                <div class="cyber-card text-center p-12">
+                    <div class="text-8xl mb-4 animate__animated animate__bounceIn neon-text-blue glitch" data-text="🏆">🏆</div>
+                    <h2 class="text-6xl font-bold mb-2 glitch" data-text="MISSION COMPLETE">
+                        <span class="neon-text-blue">MISSION</span>
+                        <span class="neon-text-pink"> COMPLETE</span>
+                    </h2>
+                    <p class="text-xl text-gray-400 font-mono">All objectives accomplished</p>
                 </div>
 
                 <!-- Final Stats -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="friendly-card text-center p-8">
-                        <p class="text-gray-600 mb-2">Namamu</p>
-                        <p id="res-team-name" class="text-3xl font-bold text-gray-800">-</p>
+                    <div class="cyber-card text-center p-8">
+                        <p class="text-gray-400 font-mono text-sm mb-2">DESIGNATION</p>
+                        <p id="res-team-name" class="text-3xl font-bold neon-text-blue">-</p>
                     </div>
                     
-                    <div class="friendly-card text-center p-8">
-                        <p class="text-gray-600 mb-2">Skor Akhir</p>
-                        <p id="res-score" class="text-5xl font-bold text-indigo-600">0</p>
+                    <div class="cyber-card text-center p-8">
+                        <p class="text-gray-400 font-mono text-sm mb-2">FINAL CREDITS</p>
+                        <p id="res-score" class="text-5xl font-bold neon-text-yellow">0</p>
                     </div>
                     
-                    <div class="friendly-card text-center p-8">
-                        <p class="text-gray-600 mb-2">Peringkat</p>
-                        <p id="res-rank" class="text-4xl font-bold text-yellow-500">#0</p>
+                    <div class="cyber-card text-center p-8">
+                        <p class="text-gray-400 font-mono text-sm mb-2">FINAL RANK</p>
+                        <p id="res-rank" class="text-4xl font-bold neon-text-purple">#0</p>
                     </div>
                 </div>
 
                 <!-- Final Leaderboard -->
-                <div class="friendly-card p-8">
-                    <h3 class="text-2xl font-bold mb-6 flex items-center gap-3">
-                        <span>🏆</span> Papan Peringkat Akhir
+                <div class="cyber-card p-8">
+                    <h3 class="text-2xl font-bold mb-6 flex items-center gap-3 neon-text-purple">
+                        <span>🏆</span> FINAL RANKINGS
                     </h3>
                     
                     <div id="final-leaderboard" class="space-y-2">
@@ -641,8 +853,8 @@
                     </div>
 
                     <div class="mt-8 text-center">
-                        <button onclick="location.reload()" class="cute-button px-12">
-                            Main Lagi
+                        <button onclick="location.reload()" class="cyber-button px-12">
+                            REBOOT SYSTEM
                         </button>
                     </div>
                 </div>
@@ -650,65 +862,67 @@
         </div>
     </div>
 
-    <!-- Admin Monitoring Panel (Floating) -->
+    <!-- Admin Monitoring Panel -->
     <div class="fixed bottom-6 right-6 z-50">
-        <button onclick="toggleAdminPanel()" class="cute-button w-14 h-14 rounded-full p-0 text-2xl">
+        <button onclick="toggleAdminPanel()" class="cyber-button w-14 h-14 rounded-none p-0 text-2xl">
             👑
         </button>
     </div>
 
     <!-- Admin Modal -->
-    <div id="admin-modal" class="modal-overlay">
-        <div class="modal-cute max-w-4xl w-full">
+    <div id="admin-modal" class="cyber-modal">
+        <div class="cyber-modal-content max-w-4xl w-full">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold">👑 Admin Monitoring</h2>
-                <button onclick="toggleAdminPanel()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+                <h2 class="text-2xl font-bold neon-text-purple">👑 ADMIN OVERRIDE</h2>
+                <button onclick="toggleAdminPanel()" class="text-gray-500 hover:text-neon-pink text-2xl">&times;</button>
             </div>
 
             <div class="mb-4">
                 <div class="flex gap-2">
-                    <input type="text" id="admin-room-code" placeholder="Masukkan kode room..." 
-                           class="cute-input flex-1">
-                    <button onclick="monitorRoom()" class="cute-button px-6">
-                        Monitor
+                    <input type="text" id="admin-room-code" placeholder="ROOM CODE" 
+                           class="cyber-input flex-1">
+                    <button onclick="monitorRoom()" class="cyber-button px-6">
+                        MONITOR
                     </button>
                 </div>
             </div>
 
-            <div id="admin-monitoring-info" class="hidden mb-4 p-4 bg-indigo-50 rounded-2xl">
-                <span>Monitoring Room: <span id="monitoring-room-code" class="font-bold text-indigo-600"></span></span>
-                <button onclick="stopMonitoring()" class="ml-4 text-red-500 hover:text-red-700">Stop</button>
+            <div id="admin-monitoring-info" class="hidden mb-4 p-4 bg-black/50 border border-neon-blue">
+                <span class="font-mono">MONITORING: <span id="monitoring-room-code" class="text-neon-blue"></span></span>
+                <button onclick="stopMonitoring()" class="ml-4 text-neon-pink hover:text-neon-blue">[STOP]</button>
             </div>
 
             <!-- Stats -->
             <div class="grid grid-cols-4 gap-3 mb-6">
-                <div class="bg-indigo-50 p-3 rounded-2xl text-center">
-                    <div class="text-2xl font-bold text-indigo-600" id="admin-participants">0</div>
-                    <div class="text-xs text-gray-600">Pemain</div>
+                <div class="bg-black/50 border border-neon-blue p-3 text-center">
+                    <div class="text-2xl font-bold text-neon-blue" id="admin-participants">0</div>
+                    <div class="text-xs font-mono text-gray-400">OPERATORS</div>
                 </div>
-                <div class="bg-yellow-50 p-3 rounded-2xl text-center">
-                    <div class="text-2xl font-bold text-yellow-600" id="admin-total-booms">0</div>
-                    <div class="text-xs text-gray-600">Total Boom</div>
+                <div class="bg-black/50 border border-neon-purple p-3 text-center">
+                    <div class="text-2xl font-bold text-neon-purple" id="admin-total-booms">0</div>
+                    <div class="text-xs font-mono text-gray-400">BOOMS</div>
                 </div>
-                <div class="bg-orange-50 p-3 rounded-2xl text-center">
-                    <div class="text-2xl font-bold text-orange-600" id="admin-warnings">0</div>
-                    <div class="text-xs text-gray-600">Peringatan</div>
+                <div class="bg-black/50 border border-neon-yellow p-3 text-center">
+                    <div class="text-2xl font-bold text-neon-yellow" id="admin-warnings">0</div>
+                    <div class="text-xs font-mono text-gray-400">WARNINGS</div>
                 </div>
-                <div class="bg-red-50 p-3 rounded-2xl text-center">
-                    <div class="text-2xl font-bold text-red-600" id="admin-disqualified">0</div>
-                    <div class="text-xs text-gray-600">Diskualifikasi</div>
+                <div class="bg-black/50 border border-neon-pink p-3 text-center">
+                    <div class="text-2xl font-bold text-neon-pink" id="admin-disqualified">0</div>
+                    <div class="text-xs font-mono text-gray-400">TERMINATED</div>
                 </div>
             </div>
 
-            <h3 class="font-bold mb-3">Pemain Aktif</h3>
+            <h3 class="font-bold mb-3 neon-text-blue">ACTIVE OPERATORS</h3>
             <div id="participants-list" class="space-y-2 max-h-60 overflow-y-auto mb-6"></div>
 
-            <h3 class="font-bold mb-3">Aktivitas Terbaru</h3>
-            <div id="activity-log" class="space-y-2 max-h-40 overflow-y-auto bg-gray-50 p-3 rounded-2xl"></div>
+            <h3 class="font-bold mb-3 neon-text-purple">ACTIVITY LOG</h3>
+            <div id="activity-log" class="space-y-2 max-h-40 overflow-y-auto bg-black/50 p-3 border border-neon-blue font-mono text-sm"></div>
         </div>
     </div>
 
-    <!-- Firebase SDK -->
+    <!-- Confetti Canvas -->
+    <canvas id="confetti" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 4000;"></canvas>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -747,82 +961,82 @@
         // Quiz Questions
         const questions = [
             {
-                q: "Apa ibukota Indonesia?",
-                a: ["Jakarta", "Surabaya", "Bandung", "Medan"],
+                q: "ACCESSING DATABASE: What is the capital of Indonesia?",
+                a: ["JAKARTA", "SURABAYA", "BANDUNG", "MEDAN"],
                 correct: 0,
-                category: "🌍 Geografi",
+                category: "GEO-DATA",
                 time: 30,
                 points: 1000
             },
             {
-                q: "Siapa penemu bola lampu?",
-                a: ["Nikola Tesla", "Thomas Edison", "Alexander Bell", "Einstein"],
+                q: "HISTORY FILE: Who invented the light bulb?",
+                a: ["NIKOLA TESLA", "THOMAS EDISON", "ALEXANDER BELL", "ALBERT EINSTEIN"],
                 correct: 1,
-                category: "🔬 Sains",
+                category: "SCIENCE",
                 time: 30,
                 points: 1000
             },
             {
-                q: "Hewan apa yang bisa terbang?",
-                a: ["Kucing", "Anjing", "Burung", "Ikan"],
+                q: "BIOMETRIC SCAN: Which animal can fly?",
+                a: ["CAT", "DOG", "BIRD", "FISH"],
                 correct: 2,
-                category: "🐾 Biologi",
+                category: "BIOLOGY",
                 time: 20,
                 points: 800
             },
             {
-                q: "Planet terbesar di tata surya?",
-                a: ["Mars", "Saturnus", "Jupiter", "Bumi"],
+                q: "SPACE DATA: Largest planet in solar system?",
+                a: ["MARS", "SATURN", "JUPITER", "EARTH"],
                 correct: 2,
-                category: "🌠 Astronomi",
+                category: "ASTRONOMY",
                 time: 30,
                 points: 1000
             },
             {
-                q: "1 + 1 = ?",
+                q: "QUANTUM COMPUTING: 1 + 1 = ?",
                 a: ["1", "2", "3", "4"],
                 correct: 1,
-                category: "🔢 Matematika",
+                category: "MATH",
                 time: 15,
                 points: 500
             },
             {
-                q: "Apa warna daun?",
-                a: ["Merah", "Biru", "Kuning", "Hijau"],
+                q: "COLOR ANALYSIS: What color are leaves?",
+                a: ["RED", "BLUE", "YELLOW", "GREEN"],
                 correct: 3,
-                category: "🌿 Biologi",
+                category: "BIOLOGY",
                 time: 15,
                 points: 500
             },
             {
-                q: "Siapa presiden pertama RI?",
-                a: ["Soeharto", "Habibie", "Soekarno", "Megawati"],
+                q: "HISTORICAL DATA: First president of Indonesia?",
+                a: ["SOEHARTO", "HABIBIE", "SOEKARNO", "MEGAWATI"],
                 correct: 2,
-                category: "📜 Sejarah",
+                category: "HISTORY",
                 time: 25,
                 points: 900
             },
             {
-                q: "Mata uang Jepang?",
-                a: ["Won", "Yen", "Dollar", "Ringgit"],
+                q: "CURRENCY DATA: Japanese currency?",
+                a: ["WON", "YEN", "DOLLAR", "RINGGIT"],
                 correct: 1,
-                category: "💰 Ekonomi",
+                category: "ECONOMY",
                 time: 25,
                 points: 900
             },
             {
-                q: "Film tentang kapal Titanic?",
-                a: ["Avatar", "Titanic", "Inception", "Batman"],
+                q: "MEDIA FILE: Movie about Titanic?",
+                a: ["AVATAR", "TITANIC", "INCEPTION", "BATMAN"],
                 correct: 1,
-                category: "🎬 Film",
+                category: "MEDIA",
                 time: 20,
                 points: 800
             },
             {
-                q: "Alat melihat bintang?",
-                a: ["Mikroskop", "Teleskop", "Periskop", "Stetoskop"],
+                q: "SCANNING: Tool to see stars?",
+                a: ["MICROSCOPE", "TELESCOPE", "PERISCOPE", "STETHOSCOPE"],
                 correct: 1,
-                category: "🔭 Sains",
+                category: "SCIENCE",
                 time: 20,
                 points: 800
             }
@@ -853,7 +1067,7 @@
         window.copyRoomCode = () => {
             const code = document.getElementById('display-room-code').innerText;
             navigator.clipboard.writeText(code);
-            showNotification('Kode room disalin! ✨', 'success');
+            showNotification('ROOM CODE COPIED', 'success');
         };
 
         window.createRoom = async () => {
@@ -861,12 +1075,11 @@
             const nickname = document.getElementById('input-team-name').value.trim();
             
             if (!nickname) {
-                alert('Masukkan namamu dulu ya! 😊');
+                alert('INPUT DESIGNATION');
                 return;
             }
             
             try {
-                // Create room
                 await setDoc(doc(db, 'rooms', roomCode), {
                     createdBy: currentUser.uid,
                     createdByName: nickname,
@@ -878,7 +1091,6 @@
                     questions: questions
                 });
 
-                // Add creator as admin
                 await setDoc(doc(db, 'rooms', roomCode, 'participants', currentUser.uid), {
                     name: nickname,
                     uid: currentUser.uid,
@@ -895,7 +1107,6 @@
                 currentNickname = nickname;
                 isAdmin = true;
                 
-                // Update UI
                 document.getElementById('input-room-code').value = roomCode;
                 document.getElementById('display-team-name').innerText = nickname;
                 document.getElementById('display-room-code').innerText = roomCode;
@@ -903,13 +1114,13 @@
                 document.getElementById('btn-start').disabled = false;
                 document.getElementById('admin-badge').classList.remove('hidden');
                 
-                showNotification(`Room ${roomCode} dibuat! 🎉`, 'success');
+                showNotification(`ROOM ${roomCode} INITIALIZED`, 'success');
                 
                 listenToRoom(roomCode);
                 
             } catch (e) {
                 console.error('Failed to create room:', e);
-                alert('Gagal membuat room. Coba lagi ya! 😅');
+                alert('ROOM CREATION FAILED');
             }
         };
 
@@ -918,33 +1129,26 @@
             const nickname = document.getElementById('input-team-name').value.trim();
             
             if (!roomCode || !nickname) {
-                alert('Masukkan kode room dan namamu! 😊');
+                alert('INPUT ALL DATA');
                 return;
             }
             
             try {
-                // Check room exists
                 const roomRef = doc(db, 'rooms', roomCode);
                 const roomSnap = await getDoc(roomRef);
                 
                 if (!roomSnap.exists()) {
-                    alert('Room tidak ditemukan! 😢');
+                    alert('ROOM NOT FOUND');
                     return;
                 }
                 
                 const roomData = roomSnap.data();
                 
                 if (roomData.status === 'in-progress') {
-                    alert('Game sudah dimulai! 😅');
+                    alert('MISSION ALREADY ACTIVE');
                     return;
                 }
                 
-                if (roomData.participants >= roomData.maxParticipants) {
-                    alert('Room penuh! 🥲');
-                    return;
-                }
-                
-                // Join room
                 await setDoc(doc(db, 'rooms', roomCode, 'participants', currentUser.uid), {
                     name: nickname,
                     uid: currentUser.uid,
@@ -965,20 +1169,19 @@
                 currentNickname = nickname;
                 isAdmin = false;
                 
-                // Update UI
                 document.getElementById('display-team-name').innerText = nickname;
                 document.getElementById('display-room-code').innerText = roomCode;
                 document.getElementById('room-status-display').classList.remove('hidden');
                 document.getElementById('btn-start').disabled = true;
                 
-                showNotification(`Berhasil gabung room ${roomCode}! ✨`, 'success');
+                showNotification(`JOINED ROOM ${roomCode}`, 'success');
                 
                 listenToRoom(roomCode);
                 listenForGameStart(roomCode);
                 
             } catch (e) {
                 console.error('Failed to join room:', e);
-                alert('Gagal join room. Coba lagi! 😅');
+                alert('JOIN FAILED');
             }
         };
 
@@ -987,33 +1190,29 @@
                 roomUnsubscribe();
             }
             
-            // Listen to participants
             roomUnsubscribe = onSnapshot(collection(db, 'rooms', roomCode, 'participants'), (snapshot) => {
                 participants = [];
                 snapshot.forEach(doc => {
                     participants.push({ id: doc.id, ...doc.data() });
                 });
                 
-                // Update waiting list
                 const waitingList = document.getElementById('participants-list-waiting');
                 if (waitingList) {
                     waitingList.innerHTML = participants.map(p => `
-                        <div class="flex items-center gap-3 p-3 bg-white rounded-2xl shadow-sm">
-                            <div class="avatar-cute">
+                        <div class="flex items-center gap-3 p-3 bg-black/50 border border-neon-blue">
+                            <div class="cyber-avatar">
                                 ${p.name.charAt(0).toUpperCase()}
                             </div>
                             <div class="flex-1">
-                                <div class="font-bold">${p.name}</div>
-                                <div class="text-xs text-gray-500">${p.isAdmin ? '👑 Admin' : 'Pemain'}</div>
+                                <div class="font-bold neon-text-blue">${p.name}</div>
+                                <div class="text-xs font-mono text-gray-400">${p.isAdmin ? 'ADMIN' : 'OPERATOR'}</div>
                             </div>
                         </div>
                     `).join('');
                 }
                 
-                // Update participant count
                 document.getElementById('participant-count').innerText = participants.length;
                 
-                // Update leaderboard if in game
                 if (!document.getElementById('screen-lobby').classList.contains('hidden')) {
                     return;
                 }
@@ -1026,12 +1225,10 @@
             onSnapshot(doc(db, 'rooms', roomCode), (doc) => {
                 const data = doc.data();
                 if (data && data.status === 'in-progress' && !isAdmin) {
-                    // Game started
                     document.getElementById('screen-lobby').classList.add('hidden');
                     document.getElementById('screen-game').classList.remove('hidden');
                     document.getElementById('stats-bar').classList.remove('hidden');
                     
-                    // Reset game state
                     score = 0;
                     qIdx = 0;
                     currentStreak = 0;
@@ -1043,12 +1240,10 @@
                     document.getElementById('current-streak').innerText = '0';
                     document.getElementById('current-booms').innerText = '0';
                     
-                    // Start camera
                     startCamera();
-                    
                     loadQuestion();
                     
-                    showNotification('Game dimulai! Semangat! 🎉', 'success');
+                    showNotification('MISSION STARTED', 'success');
                 }
             });
         }
@@ -1066,28 +1261,26 @@
                 document.getElementById('screen-game').classList.remove('hidden');
                 document.getElementById('stats-bar').classList.remove('hidden');
                 
-                // Admin tidak main, hanya monitor
                 disableGameForAdmin();
                 
             } catch (e) {
                 console.error('Failed to start game:', e);
-                alert('Gagal memulai game 😅');
+                alert('MISSION START FAILED');
             }
         };
 
         function disableGameForAdmin() {
             document.getElementById('answers-grid').innerHTML = `
-                <div class="col-span-2 text-center p-12 bg-indigo-50 rounded-3xl">
-                    <div class="text-5xl mb-4">👑</div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Mode Admin</h3>
-                    <p class="text-gray-600">Kamu sedang dalam mode monitoring</p>
-                    <p class="text-sm text-gray-500 mt-4">Gunakan panel admin untuk melihat aktivitas pemain</p>
+                <div class="col-span-2 text-center p-12 bg-black/50 border border-neon-purple">
+                    <div class="text-5xl mb-4 neon-text-purple">👑</div>
+                    <h3 class="text-2xl font-bold mb-2 neon-text-purple">ADMIN MODE</h3>
+                    <p class="text-gray-400 font-mono">Monitoring active operators</p>
                 </div>
             `;
             
             document.getElementById('timer-text').innerText = '--';
-            document.getElementById('question-text').innerText = 'Admin tidak bisa menjawab soal';
-            document.getElementById('question-category').innerText = 'MONITORING';
+            document.getElementById('question-text').innerText = 'ADMIN OVERRIDE - MONITORING ONLY';
+            document.getElementById('question-category').innerText = 'ADMIN';
             document.getElementById('powerup-display').classList.add('hidden');
             document.getElementById('admin-badge').classList.remove('hidden');
         }
@@ -1104,33 +1297,31 @@
                 video.srcObject = cameraStream;
                 document.getElementById('camera-container').style.display = 'block';
                 
-                // Periodic camera check
                 setInterval(checkCamera, 5000);
             } catch (e) {
                 console.error('Camera error:', e);
-                recordCheat('NO_CAMERA', 'Kamera tidak terdeteksi');
+                recordCheat('NO_CAMERA', 'Camera not detected');
             }
         }
 
         function checkCamera() {
             const video = document.getElementById('camera-feed');
             if (!video || !video.srcObject) {
-                recordCheat('CAMERA_OFF', 'Kamera mati');
+                recordCheat('CAMERA_OFF', 'Camera disconnected');
             }
         }
 
-        // Anti-cheat detections
         document.addEventListener('visibilitychange', () => {
             if (!isGameActive || isAdmin) return;
             if (document.hidden) {
-                recordCheat('TAB_SWITCH', 'Pindah tab');
+                recordCheat('TAB_SWITCH', 'Tab switch detected');
             }
         });
 
         document.addEventListener('copy', (e) => {
             if (!isGameActive || isAdmin) return;
             e.preventDefault();
-            recordCheat('COPY', 'Mencoba copy');
+            recordCheat('COPY', 'Copy attempt');
             return false;
         });
 
@@ -1145,7 +1336,7 @@
             
             if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
                 e.preventDefault();
-                recordCheat('DEV_TOOLS', 'Membuka developer tools');
+                recordCheat('DEV_TOOLS', 'Developer tools detected');
             }
         });
 
@@ -1154,17 +1345,15 @@
             
             warningCount++;
             
-            // Show warning
             const warningEl = document.getElementById('warning-container');
             const warningText = document.getElementById('warning-text');
             warningEl.classList.remove('hidden');
-            warningText.innerText = `${details} (Peringatan ${warningCount}/3)`;
+            warningText.innerText = `${details} - WARNING ${warningCount}/3`;
             
             setTimeout(() => {
                 warningEl.classList.add('hidden');
             }, 3000);
 
-            // Record to Firebase
             try {
                 await updateDoc(doc(db, 'rooms', currentRoom, 'participants', currentUser.uid), {
                     warnings: warningCount,
@@ -1175,9 +1364,8 @@
                     }
                 });
 
-                // Check for disqualification
                 if (warningCount >= 3) {
-                    disqualifyUser('Kecurangan terdeteksi!');
+                    disqualifyUser('SYSTEM BREACH DETECTED');
                 }
             } catch (e) {
                 console.error('Failed to record cheat:', e);
@@ -1214,23 +1402,22 @@
             
             document.getElementById('question-category').innerText = q.category;
             document.getElementById('question-text').innerText = q.q;
-            document.getElementById('question-progress').innerText = `Soal ${qIdx + 1}/${questions.length}`;
-            document.getElementById('question-points').innerText = `+${q.points} pts`;
+            document.getElementById('question-progress').innerText = `MISSION ${qIdx + 1}/${questions.length}`;
+            document.getElementById('question-points').innerText = `+${q.points} CR`;
             
-            // Create answer options
             const grid = document.getElementById('answers-grid');
             grid.innerHTML = '';
             
             q.a.forEach((answer, index) => {
                 const option = document.createElement('div');
-                option.className = 'answer-box animate__animated animate__fadeIn';
+                option.className = 'answer-cyber animate__animated animate__fadeIn';
                 option.setAttribute('data-index', index);
                 option.innerHTML = `
                     <div class="flex items-center justify-center gap-3">
-                        <span class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold">
+                        <span class="w-8 h-8 rounded-none bg-black border border-neon-blue text-neon-blue flex items-center justify-center font-mono">
                             ${String.fromCharCode(65 + index)}
                         </span>
-                        <span>${answer}</span>
+                        <span class="font-mono">${answer}</span>
                     </div>
                 `;
                 option.onclick = () => checkAnswer(index);
@@ -1264,14 +1451,12 @@
             const q = questions[qIdx];
             const isCorrect = (selectedIndex === q.correct);
             
-            // Disable all options
-            document.querySelectorAll('.answer-box').forEach(opt => {
+            document.querySelectorAll('.answer-cyber').forEach(opt => {
                 opt.classList.add('disabled');
                 opt.style.pointerEvents = 'none';
             });
             
-            // Show correct/wrong
-            document.querySelectorAll('.answer-box').forEach((opt, index) => {
+            document.querySelectorAll('.answer-cyber').forEach((opt, index) => {
                 if (index === q.correct) {
                     opt.classList.add('correct');
                 } else if (index === selectedIndex && !isCorrect) {
@@ -1282,14 +1467,13 @@
             let pointsEarned = 0;
             
             if (isCorrect) {
-                // Streak multiplier
                 currentStreak++;
                 let multiplier = 1;
                 
                 if (currentStreak >= 7) {
                     multiplier = 3;
                     boomCount++;
-                    showNotification('🔥 BOOM +1! Dapat boom!', 'success');
+                    showNotification('💣 BOOM ACQUIRED', 'success');
                 } else if (currentStreak >= 5) {
                     multiplier = 2.5;
                 } else if (currentStreak >= 3) {
@@ -1299,30 +1483,30 @@
                 pointsEarned = q.points * multiplier + (timeLeft * 10);
                 score += pointsEarned;
                 
-                document.getElementById('feedback').className = 'rounded-3xl p-6 text-center font-bold text-xl animate__animated animate__bounceIn bg-green-100 text-green-700';
+                document.getElementById('feedback').className = 'p-6 text-center font-bold text-xl animate__animated animate__bounceIn border-2 border-green-500 bg-black/50 text-green-500';
                 document.getElementById('feedback').innerHTML = `
-                    ✅ BENAR!<br>
-                    <span class="text-sm">+${pointsEarned} pts (${multiplier}x multiplier)</span>
+                    ✅ ACCESS GRANTED<br>
+                    <span class="text-sm font-mono">+${pointsEarned} CR (${multiplier}x MULTIPLIER)</span>
                 `;
             } else {
                 currentStreak = 0;
                 score = Math.max(0, score - 200);
                 
-                document.getElementById('feedback').className = 'rounded-3xl p-6 text-center font-bold text-xl animate__animated animate__shakeX bg-red-100 text-red-700';
-                document.getElementById('feedback').innerHTML = '❌ SALAH! -200 pts';
+                document.getElementById('feedback').className = 'p-6 text-center font-bold text-xl animate__animated animate__shakeX border-2 border-red-500 bg-black/50 text-red-500';
+                document.getElementById('feedback').innerHTML = '❌ ACCESS DENIED -200 CR';
             }
             
             document.getElementById('feedback').classList.remove('hidden');
             document.getElementById('display-score').innerText = score.toLocaleString();
             document.getElementById('current-streak').innerText = currentStreak;
             document.getElementById('current-booms').innerText = boomCount;
+            document.getElementById('streak-progress').style.width = `${(currentStreak % 7) * 14}%`;
             
             if (boomCount > 0) {
                 document.getElementById('powerup-display').classList.remove('hidden');
                 document.getElementById('powerup-count').innerText = boomCount;
             }
             
-            // Update Firebase
             try {
                 await updateDoc(doc(db, 'rooms', currentRoom, 'participants', currentUser.uid), {
                     score: score,
@@ -1338,7 +1522,6 @@
                 console.error('Update failed:', e);
             }
             
-            // Next question
             setTimeout(() => {
                 qIdx++;
                 document.getElementById('feedback').classList.add('hidden');
@@ -1361,21 +1544,20 @@
                 else if (index === 2) medal = '🥉';
                 
                 return `
-                    <div class="rank-item ${isCurrentUser ? 'current-user' : ''}">
-                        <span class="text-2xl w-10">${medal || `#${index + 1}`}</span>
-                        <div class="avatar-cute">
+                    <div class="rank-cyber ${isCurrentUser ? 'current-user' : ''}">
+                        <span class="text-2xl w-10 ${medal ? `medal-${index === 0 ? 'gold' : index === 1 ? 'silver' : 'bronze'}` : ''}">${medal || `#${index + 1}`}</span>
+                        <div class="cyber-avatar">
                             ${p.name.charAt(0).toUpperCase()}
                         </div>
                         <div class="flex-1">
-                            <div class="font-bold">${p.name}</div>
-                            ${p.streak > 2 ? `<div class="text-xs text-orange-500">🔥 Streak ${p.streak}</div>` : ''}
+                            <div class="font-bold neon-text-blue">${p.name}</div>
+                            ${p.streak > 2 ? `<div class="text-xs font-mono text-neon-yellow">🔥 STREAK ${p.streak}</div>` : ''}
                         </div>
-                        <div class="font-bold text-indigo-600 text-xl">${p.score.toLocaleString()}</div>
+                        <div class="font-bold text-neon-purple text-xl">${p.score.toLocaleString()}</div>
                     </div>
                 `;
             }).join('');
             
-            // Update current rank
             const myRank = sorted.findIndex(p => p.name === currentNickname) + 1;
             if (myRank > 0) {
                 document.getElementById('display-rank').innerText = `#${myRank}`;
@@ -1391,13 +1573,11 @@
             document.getElementById('res-team-name').innerText = currentNickname;
             document.getElementById('res-score').innerText = score.toLocaleString();
             
-            // Stop camera
             if (cameraStream) {
                 cameraStream.getTracks().forEach(track => track.stop());
                 document.getElementById('camera-container').style.display = 'none';
             }
             
-            // Get final rankings
             const sorted = participants
                 .filter(p => !p.isAdmin)
                 .sort((a, b) => b.score - a.score);
@@ -1405,7 +1585,6 @@
             const myRank = sorted.findIndex(p => p.name === currentNickname) + 1;
             document.getElementById('res-rank').innerText = `#${myRank}`;
             
-            // Show final leaderboard
             const finalEl = document.getElementById('final-leaderboard');
             finalEl.innerHTML = sorted.map((p, index) => {
                 const isCurrentUser = p.name === currentNickname;
@@ -1416,20 +1595,19 @@
                 else if (index === 2) medal = '🥉';
                 
                 return `
-                    <div class="rank-item ${isCurrentUser ? 'current-user' : ''}">
-                        <span class="text-3xl w-12">${medal || `#${index + 1}`}</span>
-                        <div class="avatar-cute">
+                    <div class="rank-cyber ${isCurrentUser ? 'current-user' : ''}">
+                        <span class="text-3xl w-12 ${medal ? `medal-${index === 0 ? 'gold' : index === 1 ? 'silver' : 'bronze'}` : ''}">${medal || `#${index + 1}`}</span>
+                        <div class="cyber-avatar">
                             ${p.name.charAt(0).toUpperCase()}
                         </div>
                         <div class="flex-1">
-                            <div class="font-bold text-lg">${p.name}</div>
+                            <div class="font-bold text-lg neon-text-blue">${p.name}</div>
                         </div>
-                        <div class="font-bold text-indigo-600 text-2xl">${p.score.toLocaleString()}</div>
+                        <div class="font-bold text-neon-purple text-2xl">${p.score.toLocaleString()}</div>
                     </div>
                 `;
             }).join('');
             
-            // Confetti for winner
             if (myRank === 1) {
                 startConfetti();
             }
@@ -1458,9 +1636,9 @@
             const targetsList = document.getElementById('targets-list');
             targetsList.innerHTML = targets.map(t => `
                 <button onclick="useBoom('${t.id}', '${t.name}')" 
-                        class="bg-red-100 hover:bg-red-200 p-3 rounded-xl transition-all">
-                    <div class="font-bold">${t.name}</div>
-                    <div class="text-sm text-gray-600">${t.score} pts</div>
+                        class="bg-black/50 border border-neon-pink hover:bg-neon-pink/20 p-3 transition-all font-mono">
+                    <div class="font-bold neon-text-pink">${t.name}</div>
+                    <div class="text-sm text-gray-400">${t.score} CR</div>
                 </button>
             `).join('');
         }
@@ -1469,18 +1647,15 @@
             if (boomCount <= 0) return;
             
             try {
-                // Reduce target's score
                 await updateDoc(doc(db, 'rooms', currentRoom, 'participants', targetId), {
                     score: increment(-500)
                 });
                 
-                // Reduce user's boom
                 boomCount--;
                 await updateDoc(doc(db, 'rooms', currentRoom, 'participants', currentUser.uid), {
                     booms: boomCount
                 });
                 
-                // Show effect
                 const boomEffect = document.createElement('div');
                 boomEffect.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-8xl z-50 animate__animated animate__bounceIn';
                 boomEffect.innerText = '💥';
@@ -1495,7 +1670,7 @@
                     document.getElementById('powerup-display').classList.add('hidden');
                 }
                 
-                showNotification(`Boom! ${targetName} kehilangan 500 pts! 💥`, 'success');
+                showNotification(`BOOM! ${targetName} LOST 500 CR`, 'success');
                 
             } catch (e) {
                 console.error('Boom failed:', e);
@@ -1515,7 +1690,6 @@
             document.getElementById('admin-monitoring-info').classList.remove('hidden');
             document.getElementById('monitoring-room-code').innerText = roomCode;
             
-            // Listen to participants
             onSnapshot(collection(db, 'rooms', roomCode, 'participants'), (snapshot) => {
                 const participants = [];
                 snapshot.forEach(doc => participants.push({ id: doc.id, ...doc.data() }));
@@ -1535,17 +1709,17 @@
                 
                 const listEl = document.getElementById('participants-list');
                 listEl.innerHTML = players.map(p => `
-                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                    <div class="flex items-center justify-between p-3 bg-black/50 border border-neon-blue">
                         <div class="flex items-center gap-3">
-                            <div class="avatar-cute w-8 h-8 text-sm">${p.name.charAt(0)}</div>
+                            <div class="cyber-avatar w-8 h-8 text-sm">${p.name.charAt(0)}</div>
                             <div>
-                                <div class="font-bold">${p.name}</div>
-                                <div class="text-xs text-gray-500">${p.score} pts | 🔥${p.streak || 0}</div>
+                                <div class="font-bold neon-text-blue">${p.name}</div>
+                                <div class="text-xs font-mono text-gray-400">${p.score} CR | 🔥${p.streak || 0}</div>
                             </div>
                         </div>
                         <div class="text-right">
-                            <div class="text-sm">💣 ${p.booms || 0}</div>
-                            ${p.warnings > 0 ? `<div class="text-xs text-red-500">⚠️${p.warnings}</div>` : ''}
+                            <div class="text-sm text-neon-pink">💣 ${p.booms || 0}</div>
+                            ${p.warnings > 0 ? `<div class="text-xs text-neon-yellow">⚠️${p.warnings}</div>` : ''}
                         </div>
                     </div>
                 `).join('');
@@ -1561,16 +1735,16 @@
 
         function showNotification(message, type = 'info') {
             const notification = document.createElement('div');
-            notification.className = `fixed top-4 right-4 px-6 py-3 rounded-full text-white font-semibold z-50 animate__animated animate__slideInRight`;
+            notification.className = `fixed top-4 right-4 px-6 py-3 font-mono font-bold z-50 animate__animated animate__slideInRight border-2`;
             
             const colors = {
-                success: 'bg-green-500',
-                error: 'bg-red-500',
-                warning: 'bg-yellow-500',
-                info: 'bg-indigo-500'
+                success: 'border-green-500 bg-black text-green-500',
+                error: 'border-red-500 bg-black text-red-500',
+                warning: 'border-yellow-500 bg-black text-yellow-500',
+                info: 'border-blue-500 bg-black text-blue-500'
             };
             
-            notification.classList.add(colors[type] || colors.info);
+            notification.className += ` ${colors[type] || colors.info}`;
             notification.innerText = message;
             document.body.appendChild(notification);
             
