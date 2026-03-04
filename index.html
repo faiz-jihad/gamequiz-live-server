@@ -747,6 +747,7 @@
         width: 40px;
         height: 40px;
         animation: spin 1s linear infinite;
+        margin: 0 auto;
       }
 
       @keyframes spin {
@@ -882,13 +883,17 @@
               <span>#0</span>
             </p>
           </div>
+          <div id="powerup-display" class="powerup-cyber hidden">
+            <span class="iconify" data-icon="mdi:flash"></span>
+            <span id="powerup-count">0</span>
+          </div>
         </div>
 
-        <!-- Admin Badge - HANYA MUNCUL UNTUK ADMIN -->
+        <!-- Admin Badge - HANYA UNTUK ADMIN -->
         <div id="admin-badge-container" class="hidden">
           <span class="admin-badge flex items-center gap-2">
             <span class="iconify" data-icon="mdi:crown"></span>
-            ADMIN MODE
+            ADMIN
           </span>
         </div>
       </div>
@@ -1033,7 +1038,7 @@
           <div class="flex justify-end gap-3 mt-6">
             <button onclick="saveQuestions()" class="cyber-button">
               <span class="iconify" data-icon="mdi:content-save"></span>
-              SAVE TO ROOM
+              SAVE
             </button>
             <button onclick="resetToDefault()" class="cyber-button-outline">
               <span class="iconify" data-icon="mdi:restore"></span>
@@ -1233,7 +1238,7 @@
                   class="bg-black/50 border border-neon-blue px-4 py-2 font-mono text-neon-blue flex items-center gap-2"
                 >
                   <span class="iconify" data-icon="mdi:tag"></span>
-                  LOADING...
+                  <span id="category-text">LOADING...</span>
                 </span>
 
                 <div class="cyber-timer">
@@ -1242,14 +1247,15 @@
                 </div>
               </div>
 
-              <p
-                id="question-text"
-                class="text-2xl font-bold mb-8 leading-relaxed glitch flex items-center gap-3"
-                data-text="Loading question..."
-              >
-                <span class="iconify" data-icon="mdi:help-circle"></span>
-                Loading question...
-              </p>
+              <div id="question-container">
+                <p
+                  id="question-text"
+                  class="text-2xl font-bold mb-8 leading-relaxed flex items-center gap-3"
+                >
+                  <span class="iconify" data-icon="mdi:help-circle"></span>
+                  <span id="question-content">Loading question...</span>
+                </p>
+              </div>
 
               <div class="flex justify-between items-center font-mono text-sm">
                 <span
@@ -1257,14 +1263,14 @@
                   class="text-gray-400 flex items-center gap-2"
                 >
                   <span class="iconify" data-icon="mdi:progress-clock"></span>
-                  MISSION 0/10
+                  <span id="progress-text">MISSION 0/0</span>
                 </span>
                 <span
                   id="question-points"
                   class="text-neon-yellow flex items-center gap-2"
                 >
                   <span class="iconify" data-icon="mdi:currency-usd"></span>
-                  +1000 CR
+                  <span id="points-text">+0 CR</span>
                 </span>
               </div>
             </div>
@@ -1286,6 +1292,22 @@
               <span class="iconify" data-icon="mdi:alert"></span>
               <span id="warning-text"></span>
             </div>
+
+            <!-- Boom Targets -->
+            <div id="boom-targets" class="hidden cyber-card">
+              <h3
+                class="font-bold text-lg mb-3 neon-text-pink flex items-center gap-2"
+              >
+                <span class="iconify" data-icon="mdi:flash"></span>
+                SELECT TARGET
+              </h3>
+              <div
+                id="targets-list"
+                class="grid grid-cols-2 md:grid-cols-3 gap-2"
+              >
+                <!-- Targets will be listed here -->
+              </div>
+            </div>
           </div>
 
           <!-- Sidebar -->
@@ -1304,6 +1326,9 @@
                 class="space-y-2 max-h-[500px] overflow-y-auto"
               >
                 <!-- Leaderboard will be inserted here -->
+                <div class="text-center text-gray-500 py-4">
+                  Waiting for players...
+                </div>
               </div>
             </div>
 
@@ -1740,6 +1765,22 @@
           time: 20,
           points: 800,
         },
+        {
+          q: "What is the largest planet in our solar system?",
+          a: ["MARS", "SATURN", "JUPITER", "EARTH"],
+          correct: 2,
+          category: "ASTRONOMY",
+          time: 30,
+          points: 1000,
+        },
+        {
+          q: "What is the chemical symbol for water?",
+          a: ["O2", "CO2", "H2O", "NaCl"],
+          correct: 2,
+          category: "CHEMISTRY",
+          time: 25,
+          points: 900,
+        },
       ];
 
       // Auth
@@ -1808,8 +1849,7 @@
       window.createRoom = async () => {
         const createBtn = document.getElementById("create-room-btn");
         createBtn.disabled = true;
-        createBtn.innerHTML =
-          '<span class="loading-spinner"></span> CREATING...';
+        createBtn.innerHTML = '<span class="loading-spinner"></span>';
 
         try {
           const roomCode =
@@ -1895,7 +1935,7 @@
       window.joinRoom = async () => {
         const joinBtn = document.getElementById("join-room-btn");
         joinBtn.disabled = true;
-        joinBtn.innerHTML = '<span class="loading-spinner"></span> JOINING...';
+        joinBtn.innerHTML = '<span class="loading-spinner"></span>';
 
         try {
           const roomCode = document
@@ -2071,7 +2111,11 @@
             document.getElementById("current-booms").innerText = "0";
 
             startCamera();
-            loadQuestion();
+
+            // Load first question
+            setTimeout(() => {
+              loadQuestion();
+            }, 500);
 
             showNotification("MISSION STARTED", "success");
           }
@@ -2112,9 +2156,11 @@
             `;
 
         document.getElementById("timer-text").innerText = "--";
-        document.getElementById("question-text").innerHTML =
-          '<span class="iconify" data-icon="mdi:eye"></span> ADMIN OVERRIDE - MONITORING ONLY';
-        document.getElementById("question-category").innerText = "ADMIN";
+        document.getElementById("question-content").innerText =
+          "ADMIN OVERRIDE - MONITORING ONLY";
+        document.getElementById("category-text").innerText = "ADMIN";
+        document.getElementById("progress-text").innerText = "MISSION 0/0";
+        document.getElementById("points-text").innerText = "0 CR";
       }
 
       // ==================== CAMERA & ANTI-CHEAT ====================
@@ -2222,42 +2268,59 @@
       function loadQuestion() {
         if (isAdmin) return;
 
+        console.log(
+          "Loading question, qIdx:",
+          qIdx,
+          "Total:",
+          window.questions.length,
+        );
+
         if (qIdx >= window.questions.length) {
+          console.log("No more questions, finishing...");
           finish();
           return;
         }
 
         const q = window.questions[qIdx];
+        console.log("Question data:", q);
 
-        document.getElementById("question-category").innerHTML =
-          `<span class="iconify" data-icon="mdi:tag"></span> ${q.category}`;
-        document.getElementById("question-text").innerHTML =
-          `<span class="iconify" data-icon="mdi:help-circle"></span> ${q.q}`;
-        document.getElementById("question-progress").innerHTML =
-          `<span class="iconify" data-icon="mdi:progress-clock"></span> MISSION ${qIdx + 1}/${window.questions.length}`;
-        document.getElementById("question-points").innerHTML =
-          `<span class="iconify" data-icon="mdi:currency-usd"></span> +${q.points} CR`;
+        // Update UI dengan aman
+        document.getElementById("category-text").innerText =
+          q.category || "GENERAL";
+        document.getElementById("question-content").innerText =
+          q.q || "No question text";
+        document.getElementById("progress-text").innerText =
+          `MISSION ${qIdx + 1}/${window.questions.length}`;
+        document.getElementById("points-text").innerText =
+          `+${q.points || 1000} CR`;
 
+        // Create answer options
         const grid = document.getElementById("answers-grid");
         grid.innerHTML = "";
 
-        q.a.forEach((answer, index) => {
-          const option = document.createElement("div");
-          option.className = "answer-cyber animate__animated animate__fadeIn";
-          option.setAttribute("data-index", index);
-          option.innerHTML = `
-                    <div class="flex items-center justify-center gap-3">
-                        <span class="w-8 h-8 rounded-none bg-black border border-neon-blue text-neon-blue flex items-center justify-center font-mono">
-                            ${String.fromCharCode(65 + index)}
-                        </span>
-                        <span class="font-mono">${answer}</span>
-                    </div>
-                `;
-          option.onclick = () => checkAnswer(index);
-          grid.appendChild(option);
-        });
+        if (q.a && Array.isArray(q.a)) {
+          q.a.forEach((answer, index) => {
+            const option = document.createElement("div");
+            option.className = "answer-cyber animate__animated animate__fadeIn";
+            option.setAttribute("data-index", index);
+            option.innerHTML = `
+                        <div class="flex items-center justify-center gap-3">
+                            <span class="w-8 h-8 rounded-none bg-black border border-neon-blue text-neon-blue flex items-center justify-center font-mono">
+                                ${String.fromCharCode(65 + index)}
+                            </span>
+                            <span class="font-mono">${answer || "Option " + (index + 1)}</span>
+                        </div>
+                    `;
+            option.onclick = () => checkAnswer(index);
+            grid.appendChild(option);
+          });
+        } else {
+          console.error("Invalid answers array:", q.a);
+          grid.innerHTML =
+            '<div class="col-span-2 text-center text-red-500">Error loading answers</div>';
+        }
 
-        startTimer(q.time);
+        startTimer(q.time || 30);
       }
 
       function startTimer(seconds) {
@@ -2285,7 +2348,6 @@
         const isCorrect = selectedIndex === q.correct;
 
         document.querySelectorAll(".answer-cyber").forEach((opt) => {
-          opt.classList.add("disabled");
           opt.style.pointerEvents = "none";
         });
 
@@ -2313,7 +2375,7 @@
             multiplier = 2;
           }
 
-          pointsEarned = q.points * multiplier + timeLeft * 10;
+          pointsEarned = (q.points || 1000) * multiplier + timeLeft * 10;
           score += pointsEarned;
 
           document.getElementById("feedback").className =
@@ -2344,9 +2406,7 @@
           `${(currentStreak % 7) * 14}%`;
 
         if (boomCount > 0) {
-          document
-            .getElementById("powerup-display")
-            ?.classList.remove("hidden");
+          document.getElementById("powerup-display").classList.remove("hidden");
           document.getElementById("powerup-count").innerText = boomCount;
         }
 
@@ -2381,6 +2441,13 @@
           .sort((a, b) => b.score - a.score);
 
         const leaderboardEl = document.getElementById("leaderboard");
+
+        if (sorted.length === 0) {
+          leaderboardEl.innerHTML =
+            '<div class="text-center text-gray-500 py-4">Waiting for players...</div>';
+          return;
+        }
+
         leaderboardEl.innerHTML = sorted
           .map((p, index) => {
             const isCurrentUser = p.name === currentNickname;
@@ -2449,6 +2516,13 @@
           `<span class="iconify" data-icon="mdi:medal"></span> #${myRank}`;
 
         const finalEl = document.getElementById("final-leaderboard");
+
+        if (sorted.length === 0) {
+          finalEl.innerHTML =
+            '<div class="text-center text-gray-500 py-4">No players</div>';
+          return;
+        }
+
         finalEl.innerHTML = sorted
           .map((p, index) => {
             const isCurrentUser = p.name === currentNickname;
@@ -2535,7 +2609,7 @@
             (q, index) => `
                 <div class="question-preview">
                     <div class="flex justify-between items-start mb-2">
-                        <input type="text" value="${q.q.replace(/"/g, "&quot;")}" 
+                        <input type="text" value="${(q.q || "").replace(/"/g, "&quot;")}" 
                                onchange="window.updateQuestion(${index}, 'q', this.value)"
                                class="cyber-input text-sm mb-2" placeholder="Question">
                         <button onclick="window.deleteQuestion(${index})" class="text-neon-pink ml-2 text-xl">
@@ -2544,7 +2618,7 @@
                     </div>
                     
                     <div class="grid grid-cols-2 gap-2 mb-2">
-                        ${q.a
+                        ${(q.a || ["A", "B", "C", "D"])
                           .map(
                             (answer, ansIndex) => `
                             <div class="flex items-center gap-1">
@@ -2552,7 +2626,7 @@
                                        ${q.correct === ansIndex ? "checked" : ""}
                                        onchange="window.setCorrectAnswer(${index}, ${ansIndex})"
                                        class="w-4 h-4 accent-neon-pink">
-                                <input type="text" value="${answer}" 
+                                <input type="text" value="${answer || "Option " + (ansIndex + 1)}" 
                                        onchange="window.updateAnswer(${index}, ${ansIndex}, this.value)"
                                        class="cyber-input text-xs flex-1" placeholder="Option ${ansIndex + 1}">
                             </div>
@@ -2562,13 +2636,13 @@
                     </div>
                     
                     <div class="flex gap-2">
-                        <input type="text" value="${q.category}" 
+                        <input type="text" value="${q.category || "GENERAL"}" 
                                onchange="window.updateQuestion(${index}, 'category', this.value)"
                                class="cyber-input text-xs flex-1" placeholder="Category">
-                        <input type="number" value="${q.time}" min="5" max="120"
+                        <input type="number" value="${q.time || 30}" min="5" max="120"
                                onchange="window.updateQuestion(${index}, 'time', parseInt(this.value))"
                                class="cyber-input text-xs w-20" placeholder="Time">
-                        <input type="number" value="${q.points}" min="100" max="5000"
+                        <input type="number" value="${q.points || 1000}" min="100" max="5000"
                                onchange="window.updateQuestion(${index}, 'points', parseInt(this.value))"
                                class="cyber-input text-xs w-20" placeholder="Points">
                     </div>
