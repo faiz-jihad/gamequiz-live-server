@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Database Warriors: Premium Quiz Platform</title>
+    <title>QuizMaster: Fun Learning Battle</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
         * {
@@ -14,385 +14,476 @@
             box-sizing: border-box;
         }
 
-        :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary: #8b5cf6;
-            --accent: #ec4899;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --dark-1: #0f172a;
-            --dark-2: #1e293b;
-            --dark-3: #334155;
-        }
-
         body {
-            background: linear-gradient(135deg, var(--dark-1), var(--dark-2));
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            color: #ffffff;
-            overflow-x: hidden;
+            color: #2d3748;
         }
 
-        /* Modern Glassmorphism */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.05);
+        /* Friendly Card */
+        .friendly-card {
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-        }
-
-        .glass-card:hover {
-            border-color: rgba(99, 102, 241, 0.3);
-            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.15);
-        }
-
-        /* Modern Button */
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            font-weight: 600;
-            padding: 12px 24px;
-            border-radius: 12px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2), 0 0 0 2px rgba(255, 255, 255, 0.5) inset;
+            padding: 24px;
             transition: all 0.3s;
+        }
+
+        .friendly-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Cute Button */
+        .cute-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 700;
+            padding: 16px 32px;
+            border-radius: 60px;
             border: none;
             cursor: pointer;
+            transition: all 0.3s;
+            font-size: 18px;
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
             position: relative;
             overflow: hidden;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+        .cute-button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: rotate(30deg);
+            transition: transform 0.5s;
         }
 
-        .btn-primary:active {
-            transform: translateY(0);
+        .cute-button:hover::after {
+            transform: rotate(30deg) translate(100%, 100%);
         }
 
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-            font-weight: 600;
-            padding: 10px 20px;
-            border-radius: 12px;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .btn-outline:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        /* Answer Options */
-        .answer-option {
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .answer-option:hover:not(.disabled) {
-            transform: scale(1.02);
-            border-color: var(--primary);
-            background: rgba(99, 102, 241, 0.1);
-        }
-
-        .answer-option.selected {
-            border-color: var(--primary);
-            background: rgba(99, 102, 241, 0.2);
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
-        }
-
-        .answer-option.correct {
-            border-color: var(--success);
-            background: rgba(16, 185, 129, 0.2);
-        }
-
-        .answer-option.wrong {
-            border-color: var(--danger);
-            background: rgba(239, 68, 68, 0.2);
-        }
-
-        .answer-option.disabled {
-            opacity: 0.7;
+        .cute-button:disabled {
+            opacity: 0.5;
             cursor: not-allowed;
         }
 
-        /* Timer */
-        .timer-container {
-            position: relative;
-            width: 80px;
-            height: 80px;
-        }
-
-        .timer-circle {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: conic-gradient(var(--primary) 0deg, rgba(255,255,255,0.1) 0deg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        .timer-circle::before {
-            content: '';
-            position: absolute;
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            background: var(--dark-2);
-        }
-
-        .timer-text {
-            position: relative;
-            z-index: 1;
-            font-size: 24px;
+        .cute-button-outline {
+            background: transparent;
+            border: 3px solid #667eea;
+            color: #667eea;
             font-weight: 700;
-            color: var(--primary);
-        }
-
-        /* Room Code */
-        .room-code-display {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            padding: 20px 40px;
-            border-radius: 20px;
-            font-size: 48px;
-            font-weight: 800;
-            letter-spacing: 10px;
-            text-align: center;
-            box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
-        }
-
-        /* Avatar */
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            color: white;
-        }
-
-        /* Leaderboard */
-        .leaderboard-item {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 8px;
+            padding: 14px 28px;
+            border-radius: 60px;
+            cursor: pointer;
             transition: all 0.3s;
         }
 
-        .leaderboard-item:hover {
-            background: rgba(99, 102, 241, 0.1);
-            transform: translateX(5px);
+        .cute-button-outline:hover {
+            background: #667eea;
+            color: white;
         }
 
-        .leaderboard-item.current-user {
-            background: linear-gradient(90deg, rgba(99, 102, 241, 0.2), transparent);
-            border-left: 4px solid var(--primary);
+        /* Answer Option */
+        .answer-box {
+            background: white;
+            border: 3px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            font-weight: 600;
+            font-size: 18px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .answer-box:hover:not(.disabled) {
+            transform: scale(1.02);
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .answer-box.selected {
+            border-color: #667eea;
+            background: #e0e7ff;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+        }
+
+        .answer-box.correct {
+            border-color: #48bb78;
+            background: #c6f6d5;
+        }
+
+        .answer-box.wrong {
+            border-color: #f56565;
+            background: #fed7d7;
+        }
+
+        /* Timer */
+        .timer-badge {
+            background: white;
+            border-radius: 60px;
+            padding: 12px 24px;
+            font-size: 32px;
+            font-weight: 700;
+            color: #667eea;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Room Code */
+        .room-code-badge {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            padding: 15px 30px;
+            border-radius: 60px;
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: 8px;
+            color: white;
+            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3);
+        }
+
+        /* Avatar */
+        .avatar-cute {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 20px;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Leaderboard Item */
+        .rank-item {
+            background: white;
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s;
+        }
+
+        .rank-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .rank-item.current-user {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border: 3px solid #fbbf24;
         }
 
         /* Medal */
-        .medal-1 { color: #ffd700; }
-        .medal-2 { color: #c0c0c0; }
-        .medal-3 { color: #cd7f32; }
+        .medal-gold {
+            color: #fbbf24;
+            font-size: 24px;
+        }
+
+        .medal-silver {
+            color: #a0aec0;
+            font-size: 24px;
+        }
+
+        .medal-bronze {
+            color: #b45309;
+            font-size: 24px;
+        }
+
+        /* Power-up */
+        .powerup-badge {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 60px;
+            font-size: 14px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+        }
+
+        /* Warning */
+        .warning-badge {
+            background: #fee2e2;
+            border: 3px solid #f56565;
+            border-radius: 60px;
+            padding: 10px 20px;
+            color: #c53030;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Input */
+        .cute-input {
+            border: 3px solid #e2e8f0;
+            border-radius: 60px;
+            padding: 16px 24px;
+            font-size: 18px;
+            width: 100%;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .cute-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+        }
+
+        /* Camera */
+        #camera-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 200px;
+            height: 150px;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 4px solid white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+        }
+
+        #camera-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .camera-indicator {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 12px;
+            height: 12px;
+            background: #48bb78;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
 
         /* Modal */
-        .modal {
+        .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(5px);
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
+            z-index: 2000;
         }
 
-        .modal.active {
+        .modal-overlay.active {
             display: flex;
         }
 
-        .modal-content {
+        .modal-cute {
+            background: white;
+            border-radius: 40px;
+            padding: 40px;
             max-width: 500px;
             width: 90%;
-            padding: 30px;
+            text-align: center;
+        }
+
+        /* Disqualified */
+        #disqualified-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+        }
+
+        #disqualified-screen.active {
+            display: flex;
         }
 
         /* Confetti */
-        #confetti-canvas {
+        #confetti {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 9999;
-        }
-
-        /* Power-ups */
-        .power-up {
-            background: linear-gradient(135deg, var(--warning), var(--accent));
-            color: white;
-            padding: 8px 16px;
-            border-radius: 50px;
-            font-size: 14px;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
+            z-index: 4000;
         }
 
         /* Animations */
-        @keyframes slideIn {
-            from {
-                transform: translateY(50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
-        .slide-in {
-            animation: slideIn 0.5s ease forwards;
+        .bounce {
+            animation: bounce 2s infinite;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
         }
 
-        .pulse {
-            animation: pulse 2s infinite;
+        .wiggle:hover {
+            animation: wiggle 0.3s;
         }
     </style>
 </head>
 <body>
-    <!-- Confetti Canvas -->
-    <canvas id="confetti-canvas"></canvas>
+    <!-- Camera Container -->
+    <div id="camera-container">
+        <video id="camera-feed" autoplay playsinline muted></video>
+        <div class="camera-indicator"></div>
+    </div>
+
+    <!-- Disqualified Screen -->
+    <div id="disqualified-screen">
+        <div class="modal-cute animate__animated animate__shake">
+            <div class="text-8xl mb-4">😢</div>
+            <h2 class="text-4xl font-bold text-red-500 mb-4">Oops!</h2>
+            <p class="text-xl mb-6" id="disqualify-reason">Kamu melakukan kecurangan</p>
+            <button onclick="location.reload()" class="cute-button">
+                Kembali ke Awal
+            </button>
+        </div>
+    </div>
 
     <!-- Main Container -->
-    <div class="container mx-auto px-4 py-6 max-w-7xl">
+    <div class="container mx-auto px-4 py-6 max-w-6xl">
         <!-- Header -->
-        <header class="glass-card rounded-2xl p-4 mb-6 flex justify-between items-center">
+        <div class="friendly-card mb-6 flex justify-between items-center">
             <div class="flex items-center gap-4">
-                <div class="avatar text-2xl w-12 h-12">
-                    <span>DB</span>
-                </div>
+                <div class="avatar-cute text-2xl">📚</div>
                 <div>
-                    <h1 class="text-2xl font-extrabold tracking-tight">
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-pink-400">
-                            DATABASE WARRIORS
-                        </span>
-                    </h1>
-                    <p class="text-xs text-gray-400">Premium Quiz Platform</p>
+                    <h1 class="text-3xl font-bold text-gray-800">QuizMaster</h1>
+                    <p class="text-gray-600">Fun Learning Battle</p>
                 </div>
             </div>
             
             <!-- Game Stats -->
             <div id="stats-bar" class="hidden items-center gap-6">
                 <div class="text-right">
-                    <p class="text-gray-400 text-xs">Team</p>
-                    <p id="display-team-name" class="font-bold text-lg">--</p>
+                    <p class="text-gray-500 text-sm">Player</p>
+                    <p id="display-team-name" class="font-bold text-xl"></p>
                 </div>
                 <div class="text-right">
-                    <p class="text-gray-400 text-xs">Score</p>
-                    <p id="display-score" class="font-bold text-2xl text-indigo-400">0</p>
+                    <p class="text-gray-500 text-sm">Score</p>
+                    <p id="display-score" class="font-bold text-2xl text-indigo-600">0</p>
                 </div>
                 <div class="text-right">
-                    <p class="text-gray-400 text-xs">Rank</p>
-                    <p id="display-rank" class="font-bold text-lg text-yellow-400">#--</p>
+                    <p class="text-gray-500 text-sm">Rank</p>
+                    <p id="display-rank" class="font-bold text-xl text-yellow-500">#0</p>
                 </div>
-                <div class="power-up" id="powerup-container" style="display: none;">
-                    <span>⚡</span>
-                    <span id="powerup-count">0</span>
+                <div id="powerup-display" class="powerup-badge hidden">
+                    ⚡ <span id="powerup-count">0</span>
                 </div>
             </div>
-        </header>
+
+            <!-- Admin Badge -->
+            <div id="admin-badge" class="hidden powerup-badge bg-purple-500">
+                👑 ADMIN MODE
+            </div>
+        </div>
 
         <!-- Lobby Screen -->
-        <div id="screen-lobby" class="flex items-center justify-center min-h-[600px]">
-            <div class="glass-card rounded-3xl p-8 max-w-md w-full slide-in">
+        <div id="screen-lobby" class="min-h-[600px] flex items-center justify-center">
+            <div class="friendly-card max-w-md w-full animate__animated animate__fadeInUp">
                 <div class="text-center mb-8">
-                    <h2 class="text-4xl font-bold mb-2">Join Game</h2>
-                    <p class="text-gray-400">Enter room code and nickname</p>
+                    <div class="text-6xl mb-4 bounce">🎮</div>
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Join Game</h2>
+                    <p class="text-gray-600">Masukkan kode room dan namamu</p>
                 </div>
                 
                 <div class="space-y-4">
-                    <!-- Room Code Input -->
+                    <!-- Room Code -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-400 mb-2">ROOM CODE</label>
+                        <label class="block text-gray-700 font-semibold mb-2 ml-2">KODE ROOM</label>
                         <div class="flex gap-2">
                             <input type="text" id="input-room-code" maxlength="6" 
-                                   placeholder="Enter 6-digit code" 
-                                   class="flex-1 bg-dark-3 border border-gray-700 rounded-xl p-4 text-white focus:outline-none focus:border-indigo-400 text-center text-2xl font-bold uppercase tracking-widest">
-                            <button onclick="generateRoomCode()" class="btn-outline px-4">
-                                Generate
+                                   placeholder="Contoh: ABC123" 
+                                   class="cute-input text-center text-2xl font-bold uppercase">
+                            <button onclick="generateRoomCode()" class="cute-button-outline px-6">
+                                Acak
                             </button>
                         </div>
                     </div>
 
-                    <!-- Nickname Input -->
+                    <!-- Nickname -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-400 mb-2">NICKNAME</label>
-                        <input type="text" id="input-team-name" placeholder="Enter your nickname" 
-                               class="w-full bg-dark-3 border border-gray-700 rounded-xl p-4 text-white focus:outline-none focus:border-indigo-400">
+                        <label class="block text-gray-700 font-semibold mb-2 ml-2">NAMA PANGGILAN</label>
+                        <input type="text" id="input-team-name" placeholder="Masukkan namamu..." 
+                               class="cute-input">
                     </div>
 
                     <!-- Action Buttons -->
-                    <div class="grid grid-cols-2 gap-3">
-                        <button onclick="createRoom()" class="btn-primary">
-                            Create Room
+                    <div class="grid grid-cols-2 gap-3 pt-4">
+                        <button onclick="createRoom()" class="cute-button">
+                            Buat Room
                         </button>
-                        <button onclick="joinRoom()" class="btn-outline">
-                            Join Room
+                        <button onclick="joinRoom()" class="cute-button-outline">
+                            Gabung
                         </button>
                     </div>
                     
                     <!-- Room Status -->
-                    <div id="room-status-display" class="hidden mt-6 p-6 glass-card rounded-xl">
+                    <div id="room-status-display" class="hidden mt-6 p-6 bg-indigo-50 rounded-3xl">
                         <div class="text-center mb-4">
-                            <p class="text-sm text-gray-400 mb-2">ROOM CODE</p>
-                            <div class="room-code-display text-4xl" id="display-room-code">DEFAULT</div>
-                            <button onclick="copyRoomCode()" class="mt-3 text-sm text-indigo-400 hover:text-indigo-300">
-                                📋 Copy Code
+                            <p class="text-gray-600 mb-2">KODE ROOM</p>
+                            <div class="room-code-badge" id="display-room-code">ABCDEF</div>
+                            <button onclick="copyRoomCode()" class="mt-3 text-indigo-600 hover:text-indigo-800 font-semibold">
+                                📋 Salin Kode
                             </button>
                         </div>
                         
                         <div class="flex justify-between items-center mb-4">
-                            <span>Status:</span>
-                            <span id="room-status-text" class="text-yellow-400">Waiting for players...</span>
+                            <span class="font-semibold">Status:</span>
+                            <span id="room-status-text" class="bg-yellow-100 text-yellow-700 px-4 py-1 rounded-full text-sm font-semibold">
+                                Menunggu Pemain...
+                            </span>
                         </div>
                         
                         <div class="mb-4">
-                            <h3 class="font-bold mb-2">Players in room:</h3>
-                            <div id="participants-list-waiting" class="space-y-2 max-h-40 overflow-y-auto">
+                            <h3 class="font-bold mb-3">Pemain yang Bergabung:</h3>
+                            <div id="participants-list-waiting" class="space-y-2 max-h-48 overflow-y-auto">
                                 <!-- Participants will be listed here -->
                             </div>
                         </div>
                         
-                        <!-- Start Button (Admin only) -->
+                        <!-- Start Button -->
                         <button id="btn-start" onclick="startGame()" disabled 
-                                class="btn-primary w-full py-4 text-lg disabled:opacity-50 disabled:cursor-not-allowed">
-                            START GAME
+                                class="cute-button w-full text-lg disabled:opacity-50">
+                            MULAI GAME
                         </button>
                     </div>
                 </div>
@@ -405,85 +496,106 @@
                 <!-- Main Game Area -->
                 <div class="lg:col-span-3 space-y-4">
                     <!-- Question Card -->
-                    <div class="glass-card rounded-3xl p-8 relative overflow-hidden">
-                        <!-- Category Badge -->
+                    <div class="friendly-card">
+                        <!-- Header -->
                         <div class="flex justify-between items-center mb-6">
-                            <span id="question-category" class="px-4 py-2 bg-indigo-600/30 rounded-full text-sm font-semibold">
-                                LOADING...
+                            <span id="question-category" class="bg-indigo-100 text-indigo-700 px-4 py-2 rounded-full font-semibold">
+                                Kategori
                             </span>
                             
-                            <!-- Timer -->
-                            <div class="timer-container">
-                                <div class="timer-circle" id="timer-circle">
-                                    <span class="timer-text" id="timer-text">30</span>
-                                </div>
+                            <div class="timer-badge">
+                                <span>⏱️</span>
+                                <span id="timer-text">30</span>
                             </div>
                         </div>
                         
-                        <!-- Question Text -->
-                        <p id="question-text" class="text-2xl font-semibold leading-relaxed mb-8">
-                            Loading question...
+                        <!-- Question -->
+                        <p id="question-text" class="text-2xl font-bold text-gray-800 mb-8 leading-relaxed">
+                            Memuat soal...
                         </p>
 
                         <!-- Progress -->
-                        <div class="flex justify-between items-center text-sm text-gray-400">
-                            <span id="question-progress">Question 0/0</span>
-                            <span id="question-points" class="text-indigo-400">+1000 pts</span>
+                        <div class="flex justify-between items-center text-gray-600">
+                            <span id="question-progress">Soal 0/10</span>
+                            <span id="question-points" class="bg-green-100 text-green-700 px-4 py-1 rounded-full font-semibold">
+                                +1000 pts
+                            </span>
                         </div>
                     </div>
 
-                    <!-- Answer Options -->
+                    <!-- Answers -->
                     <div id="answers-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <!-- Answers will be inserted here -->
                     </div>
 
                     <!-- Feedback -->
-                    <div id="feedback" class="hidden rounded-2xl p-6 text-center font-bold text-xl animate__animated animate__bounceIn"></div>
+                    <div id="feedback" class="hidden rounded-3xl p-6 text-center font-bold text-xl animate__animated animate__bounceIn">
+                    </div>
+
+                    <!-- Warning Message -->
+                    <div id="warning-container" class="hidden warning-badge">
+                        <span>⚠️</span>
+                        <span id="warning-text"></span>
+                    </div>
+
+                    <!-- Boom Targets -->
+                    <div id="boom-targets" class="hidden friendly-card">
+                        <h3 class="font-bold text-lg mb-3">Pilih Target Boom! 💣</h3>
+                        <div id="targets-list" class="grid grid-cols-2 md:grid-cols-3 gap-2">
+                            <!-- Targets will be listed here -->
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Right Sidebar -->
+                <!-- Sidebar -->
                 <div class="lg:col-span-1 space-y-4">
-                    <!-- Live Leaderboard -->
-                    <div class="glass-card rounded-2xl p-6">
-                        <h3 class="font-bold text-indigo-400 mb-4 flex items-center gap-2">
-                            <span>🏆</span> LIVE RANKINGS
+                    <!-- Live Rankings -->
+                    <div class="friendly-card">
+                        <h3 class="font-bold text-lg mb-4 flex items-center gap-2">
+                            <span>🏆</span> Peringkat Langsung
                         </h3>
                         
                         <div id="leaderboard" class="space-y-2 max-h-[500px] overflow-y-auto">
-                            <!-- Leaderboard items will be inserted here -->
+                            <!-- Leaderboard will be inserted here -->
                         </div>
                     </div>
 
                     <!-- Power-ups Info -->
-                    <div class="glass-card rounded-2xl p-6">
-                        <h3 class="font-bold text-yellow-400 mb-3 flex items-center gap-2">
-                            <span>⚡</span> POWER-UPS
-                        </h3>
-                        <div class="space-y-2 text-sm">
-                            <div class="flex justify-between">
-                                <span>Streak 3x:</span>
-                                <span class="text-yellow-400">2x Points</span>
+                    <div class="friendly-card">
+                        <h3 class="font-bold text-lg mb-3">⚡ Power-ups</h3>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center p-2 bg-orange-50 rounded-xl">
+                                <span>3 Streak</span>
+                                <span class="powerup-badge">2x Poin</span>
                             </div>
-                            <div class="flex justify-between">
-                                <span>Streak 5x:</span>
-                                <span class="text-orange-400">Shield</span>
+                            <div class="flex justify-between items-center p-2 bg-orange-50 rounded-xl">
+                                <span>5 Streak</span>
+                                <span class="powerup-badge">Perisai</span>
                             </div>
-                            <div class="flex justify-between">
-                                <span>Streak 7x:</span>
-                                <span class="text-red-400">Time Freeze</span>
+                            <div class="flex justify-between items-center p-2 bg-orange-50 rounded-xl">
+                                <span>7 Streak</span>
+                                <span class="powerup-badge">Boom +1</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Room Info -->
-                    <div class="glass-card rounded-2xl p-6">
+                    <div class="friendly-card">
                         <div class="flex justify-between items-center mb-2">
-                            <span class="text-gray-400">Room:</span>
-                            <span id="current-room-code" class="font-bold text-indigo-400">---</span>
+                            <span class="text-gray-600">Room:</span>
+                            <span id="current-room-code" class="font-bold text-indigo-600">---</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-gray-400">Players:</span>
+                            <span class="text-gray-600">Pemain:</span>
                             <span id="participant-count" class="font-bold">0</span>
+                        </div>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="text-gray-600">Streak:</span>
+                            <span id="current-streak" class="font-bold text-orange-500">0</span>
+                        </div>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="text-gray-600">Boom:</span>
+                            <span id="current-booms" class="font-bold text-red-500">0</span>
                         </div>
                     </div>
                 </div>
@@ -494,48 +606,43 @@
         <div id="screen-results" class="hidden">
             <div class="max-w-4xl mx-auto space-y-6">
                 <!-- Winner Celebration -->
-                <div class="glass-card rounded-3xl p-12 text-center">
-                    <h2 class="text-6xl font-extrabold mb-4 animate__animated animate__bounceIn">
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-pink-400">
-                            GAME OVER
-                        </span>
-                    </h2>
-                    <p class="text-xl text-gray-400">Congratulations to all participants!</p>
+                <div class="friendly-card text-center p-12">
+                    <div class="text-7xl mb-4 animate__animated animate__bounceIn">🎉</div>
+                    <h2 class="text-5xl font-bold text-gray-800 mb-2">Game Selesai!</h2>
+                    <p class="text-xl text-gray-600">Selamat kepada semua peserta!</p>
                 </div>
 
                 <!-- Final Stats -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="glass-card rounded-2xl p-8 text-center">
-                        <p class="text-gray-400 text-sm mb-2">Your Team</p>
-                        <p id="res-team-name" class="text-3xl font-bold">-</p>
+                    <div class="friendly-card text-center p-8">
+                        <p class="text-gray-600 mb-2">Namamu</p>
+                        <p id="res-team-name" class="text-3xl font-bold text-gray-800">-</p>
                     </div>
                     
-                    <div class="glass-card rounded-2xl p-8 text-center">
-                        <p class="text-gray-400 text-sm mb-2">Final Score</p>
-                        <p id="res-score" class="text-5xl font-bold text-indigo-400">0</p>
+                    <div class="friendly-card text-center p-8">
+                        <p class="text-gray-600 mb-2">Skor Akhir</p>
+                        <p id="res-score" class="text-5xl font-bold text-indigo-600">0</p>
                     </div>
                     
-                    <div class="glass-card rounded-2xl p-8 text-center">
-                        <p class="text-gray-400 text-sm mb-2">Final Rank</p>
-                        <p id="res-rank" class="text-4xl font-bold text-yellow-400">#--</p>
+                    <div class="friendly-card text-center p-8">
+                        <p class="text-gray-600 mb-2">Peringkat</p>
+                        <p id="res-rank" class="text-4xl font-bold text-yellow-500">#0</p>
                     </div>
                 </div>
 
                 <!-- Final Leaderboard -->
-                <div class="glass-card rounded-2xl p-8">
+                <div class="friendly-card p-8">
                     <h3 class="text-2xl font-bold mb-6 flex items-center gap-3">
-                        <span>🏆</span> FINAL LEADERBOARD
+                        <span>🏆</span> Papan Peringkat Akhir
                     </h3>
                     
-                    <div class="space-y-3">
-                        <div id="final-leaderboard" class="space-y-2">
-                            <!-- Final leaderboard will be inserted here -->
-                        </div>
+                    <div id="final-leaderboard" class="space-y-2">
+                        <!-- Final leaderboard will be inserted here -->
                     </div>
 
                     <div class="mt-8 text-center">
-                        <button onclick="location.reload()" class="btn-primary px-12 py-4 text-lg">
-                            PLAY AGAIN
+                        <button onclick="location.reload()" class="cute-button px-12">
+                            Main Lagi
                         </button>
                     </div>
                 </div>
@@ -543,13 +650,65 @@
         </div>
     </div>
 
-    <!-- Join Notification -->
-    <div id="join-notification" class="fixed top-4 right-4 z-50 hidden">
-        <div class="glass-card rounded-lg p-4 animate__animated animate__slideInRight">
-            <p id="join-message" class="text-sm"></p>
+    <!-- Admin Monitoring Panel (Floating) -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <button onclick="toggleAdminPanel()" class="cute-button w-14 h-14 rounded-full p-0 text-2xl">
+            👑
+        </button>
+    </div>
+
+    <!-- Admin Modal -->
+    <div id="admin-modal" class="modal-overlay">
+        <div class="modal-cute max-w-4xl w-full">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">👑 Admin Monitoring</h2>
+                <button onclick="toggleAdminPanel()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+
+            <div class="mb-4">
+                <div class="flex gap-2">
+                    <input type="text" id="admin-room-code" placeholder="Masukkan kode room..." 
+                           class="cute-input flex-1">
+                    <button onclick="monitorRoom()" class="cute-button px-6">
+                        Monitor
+                    </button>
+                </div>
+            </div>
+
+            <div id="admin-monitoring-info" class="hidden mb-4 p-4 bg-indigo-50 rounded-2xl">
+                <span>Monitoring Room: <span id="monitoring-room-code" class="font-bold text-indigo-600"></span></span>
+                <button onclick="stopMonitoring()" class="ml-4 text-red-500 hover:text-red-700">Stop</button>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-4 gap-3 mb-6">
+                <div class="bg-indigo-50 p-3 rounded-2xl text-center">
+                    <div class="text-2xl font-bold text-indigo-600" id="admin-participants">0</div>
+                    <div class="text-xs text-gray-600">Pemain</div>
+                </div>
+                <div class="bg-yellow-50 p-3 rounded-2xl text-center">
+                    <div class="text-2xl font-bold text-yellow-600" id="admin-total-booms">0</div>
+                    <div class="text-xs text-gray-600">Total Boom</div>
+                </div>
+                <div class="bg-orange-50 p-3 rounded-2xl text-center">
+                    <div class="text-2xl font-bold text-orange-600" id="admin-warnings">0</div>
+                    <div class="text-xs text-gray-600">Peringatan</div>
+                </div>
+                <div class="bg-red-50 p-3 rounded-2xl text-center">
+                    <div class="text-2xl font-bold text-red-600" id="admin-disqualified">0</div>
+                    <div class="text-xs text-gray-600">Diskualifikasi</div>
+                </div>
+            </div>
+
+            <h3 class="font-bold mb-3">Pemain Aktif</h3>
+            <div id="participants-list" class="space-y-2 max-h-60 overflow-y-auto mb-6"></div>
+
+            <h3 class="font-bold mb-3">Aktivitas Terbaru</h3>
+            <div id="activity-log" class="space-y-2 max-h-40 overflow-y-auto bg-gray-50 p-3 rounded-2xl"></div>
         </div>
     </div>
 
+    <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -578,25 +737,28 @@
         let timer;
         let timeLeft;
         let currentStreak = 0;
-        let powerups = 0;
+        let boomCount = 0;
+        let warningCount = 0;
         let roomUnsubscribe = null;
+        let cameraStream = null;
+        let isGameActive = false;
         let participants = [];
 
-        // Quiz Questions (like Quizizz)
+        // Quiz Questions
         const questions = [
             {
                 q: "Apa ibukota Indonesia?",
                 a: ["Jakarta", "Surabaya", "Bandung", "Medan"],
                 correct: 0,
-                category: "GEOGRAFI",
+                category: "🌍 Geografi",
                 time: 30,
                 points: 1000
             },
             {
                 q: "Siapa penemu bola lampu?",
-                a: ["Nikola Tesla", "Thomas Edison", "Alexander Graham Bell", "Albert Einstein"],
+                a: ["Nikola Tesla", "Thomas Edison", "Alexander Bell", "Einstein"],
                 correct: 1,
-                category: "SAINS",
+                category: "🔬 Sains",
                 time: 30,
                 points: 1000
             },
@@ -604,7 +766,7 @@
                 q: "Hewan apa yang bisa terbang?",
                 a: ["Kucing", "Anjing", "Burung", "Ikan"],
                 correct: 2,
-                category: "BIOLOGI",
+                category: "🐾 Biologi",
                 time: 20,
                 points: 800
             },
@@ -612,7 +774,7 @@
                 q: "Planet terbesar di tata surya?",
                 a: ["Mars", "Saturnus", "Jupiter", "Bumi"],
                 correct: 2,
-                category: "ASTRONOMI",
+                category: "🌠 Astronomi",
                 time: 30,
                 points: 1000
             },
@@ -620,7 +782,7 @@
                 q: "1 + 1 = ?",
                 a: ["1", "2", "3", "4"],
                 correct: 1,
-                category: "MATEMATIKA",
+                category: "🔢 Matematika",
                 time: 15,
                 points: 500
             },
@@ -628,39 +790,39 @@
                 q: "Apa warna daun?",
                 a: ["Merah", "Biru", "Kuning", "Hijau"],
                 correct: 3,
-                category: "BIOLOGI",
+                category: "🌿 Biologi",
                 time: 15,
                 points: 500
             },
             {
-                q: "Siapa presiden pertama Indonesia?",
-                a: ["Soeharto", "BJ Habibie", "Soekarno", "Megawati"],
+                q: "Siapa presiden pertama RI?",
+                a: ["Soeharto", "Habibie", "Soekarno", "Megawati"],
                 correct: 2,
-                category: "SEJARAH",
+                category: "📜 Sejarah",
                 time: 25,
                 points: 900
             },
             {
-                q: "Apa nama mata uang Jepang?",
+                q: "Mata uang Jepang?",
                 a: ["Won", "Yen", "Dollar", "Ringgit"],
                 correct: 1,
-                category: "EKONOMI",
+                category: "💰 Ekonomi",
                 time: 25,
                 points: 900
             },
             {
-                q: "Film apa yang menceritakan tentang kapal Titanic?",
-                a: ["Avatar", "Titanic", "Inception", "The Dark Knight"],
+                q: "Film tentang kapal Titanic?",
+                a: ["Avatar", "Titanic", "Inception", "Batman"],
                 correct: 1,
-                category: "FILM",
+                category: "🎬 Film",
                 time: 20,
                 points: 800
             },
             {
-                q: "Apa nama alat untuk melihat bintang?",
+                q: "Alat melihat bintang?",
                 a: ["Mikroskop", "Teleskop", "Periskop", "Stetoskop"],
                 correct: 1,
-                category: "SAINS",
+                category: "🔭 Sains",
                 time: 20,
                 points: 800
             }
@@ -691,7 +853,7 @@
         window.copyRoomCode = () => {
             const code = document.getElementById('display-room-code').innerText;
             navigator.clipboard.writeText(code);
-            showNotification('Room code copied!', 'success');
+            showNotification('Kode room disalin! ✨', 'success');
         };
 
         window.createRoom = async () => {
@@ -699,7 +861,7 @@
             const nickname = document.getElementById('input-team-name').value.trim();
             
             if (!nickname) {
-                alert('Masukkan nickname!');
+                alert('Masukkan namamu dulu ya! 😊');
                 return;
             }
             
@@ -722,7 +884,8 @@
                     uid: currentUser.uid,
                     score: 0,
                     streak: 0,
-                    powerups: 0,
+                    booms: 0,
+                    warnings: 0,
                     joinedAt: Date.now(),
                     status: 'active',
                     isAdmin: true
@@ -738,15 +901,15 @@
                 document.getElementById('display-room-code').innerText = roomCode;
                 document.getElementById('room-status-display').classList.remove('hidden');
                 document.getElementById('btn-start').disabled = false;
-                document.getElementById('btn-start').innerText = 'START GAME';
+                document.getElementById('admin-badge').classList.remove('hidden');
                 
-                showNotification(`Room ${roomCode} created!`, 'success');
+                showNotification(`Room ${roomCode} dibuat! 🎉`, 'success');
                 
                 listenToRoom(roomCode);
                 
             } catch (e) {
                 console.error('Failed to create room:', e);
-                alert('Gagal membuat room');
+                alert('Gagal membuat room. Coba lagi ya! 😅');
             }
         };
 
@@ -755,7 +918,7 @@
             const nickname = document.getElementById('input-team-name').value.trim();
             
             if (!roomCode || !nickname) {
-                alert('Masukkan room code dan nickname!');
+                alert('Masukkan kode room dan namamu! 😊');
                 return;
             }
             
@@ -765,19 +928,19 @@
                 const roomSnap = await getDoc(roomRef);
                 
                 if (!roomSnap.exists()) {
-                    alert('Room tidak ditemukan!');
+                    alert('Room tidak ditemukan! 😢');
                     return;
                 }
                 
                 const roomData = roomSnap.data();
                 
                 if (roomData.status === 'in-progress') {
-                    alert('Game sudah dimulai!');
+                    alert('Game sudah dimulai! 😅');
                     return;
                 }
                 
                 if (roomData.participants >= roomData.maxParticipants) {
-                    alert('Room penuh!');
+                    alert('Room penuh! 🥲');
                     return;
                 }
                 
@@ -787,7 +950,8 @@
                     uid: currentUser.uid,
                     score: 0,
                     streak: 0,
-                    powerups: 0,
+                    booms: 0,
+                    warnings: 0,
                     joinedAt: Date.now(),
                     status: 'active',
                     isAdmin: false
@@ -806,16 +970,15 @@
                 document.getElementById('display-room-code').innerText = roomCode;
                 document.getElementById('room-status-display').classList.remove('hidden');
                 document.getElementById('btn-start').disabled = true;
-                document.getElementById('btn-start').innerText = 'WAITING FOR ADMIN';
                 
-                showNotification(`Joined room ${roomCode}`, 'success');
+                showNotification(`Berhasil gabung room ${roomCode}! ✨`, 'success');
                 
                 listenToRoom(roomCode);
                 listenForGameStart(roomCode);
                 
             } catch (e) {
                 console.error('Failed to join room:', e);
-                alert('Gagal join room');
+                alert('Gagal join room. Coba lagi! 😅');
             }
         };
 
@@ -835,13 +998,13 @@
                 const waitingList = document.getElementById('participants-list-waiting');
                 if (waitingList) {
                     waitingList.innerHTML = participants.map(p => `
-                        <div class="flex items-center gap-3 p-3 glass-card rounded-xl">
-                            <div class="avatar">
+                        <div class="flex items-center gap-3 p-3 bg-white rounded-2xl shadow-sm">
+                            <div class="avatar-cute">
                                 ${p.name.charAt(0).toUpperCase()}
                             </div>
                             <div class="flex-1">
-                                <div class="font-medium">${p.name}</div>
-                                <div class="text-xs text-gray-400">${p.isAdmin ? '👑 Admin' : 'Player'}</div>
+                                <div class="font-bold">${p.name}</div>
+                                <div class="text-xs text-gray-500">${p.isAdmin ? '👑 Admin' : 'Pemain'}</div>
                             </div>
                         </div>
                     `).join('');
@@ -872,13 +1035,20 @@
                     score = 0;
                     qIdx = 0;
                     currentStreak = 0;
-                    powerups = 0;
+                    boomCount = 0;
+                    warningCount = 0;
+                    isGameActive = true;
                     
                     document.getElementById('display-score').innerText = '0';
+                    document.getElementById('current-streak').innerText = '0';
+                    document.getElementById('current-booms').innerText = '0';
+                    
+                    // Start camera
+                    startCamera();
                     
                     loadQuestion();
                     
-                    showNotification('Game started!', 'success');
+                    showNotification('Game dimulai! Semangat! 🎉', 'success');
                 }
             });
         }
@@ -896,16 +1066,145 @@
                 document.getElementById('screen-game').classList.remove('hidden');
                 document.getElementById('stats-bar').classList.remove('hidden');
                 
-                loadQuestion();
+                // Admin tidak main, hanya monitor
+                disableGameForAdmin();
                 
             } catch (e) {
                 console.error('Failed to start game:', e);
+                alert('Gagal memulai game 😅');
             }
         };
+
+        function disableGameForAdmin() {
+            document.getElementById('answers-grid').innerHTML = `
+                <div class="col-span-2 text-center p-12 bg-indigo-50 rounded-3xl">
+                    <div class="text-5xl mb-4">👑</div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Mode Admin</h3>
+                    <p class="text-gray-600">Kamu sedang dalam mode monitoring</p>
+                    <p class="text-sm text-gray-500 mt-4">Gunakan panel admin untuk melihat aktivitas pemain</p>
+                </div>
+            `;
+            
+            document.getElementById('timer-text').innerText = '--';
+            document.getElementById('question-text').innerText = 'Admin tidak bisa menjawab soal';
+            document.getElementById('question-category').innerText = 'MONITORING';
+            document.getElementById('powerup-display').classList.add('hidden');
+            document.getElementById('admin-badge').classList.remove('hidden');
+        }
+
+        // ==================== CAMERA & ANTI-CHEAT ====================
+
+        async function startCamera() {
+            try {
+                cameraStream = await navigator.mediaDevices.getUserMedia({ 
+                    video: true,
+                    audio: false 
+                });
+                const video = document.getElementById('camera-feed');
+                video.srcObject = cameraStream;
+                document.getElementById('camera-container').style.display = 'block';
+                
+                // Periodic camera check
+                setInterval(checkCamera, 5000);
+            } catch (e) {
+                console.error('Camera error:', e);
+                recordCheat('NO_CAMERA', 'Kamera tidak terdeteksi');
+            }
+        }
+
+        function checkCamera() {
+            const video = document.getElementById('camera-feed');
+            if (!video || !video.srcObject) {
+                recordCheat('CAMERA_OFF', 'Kamera mati');
+            }
+        }
+
+        // Anti-cheat detections
+        document.addEventListener('visibilitychange', () => {
+            if (!isGameActive || isAdmin) return;
+            if (document.hidden) {
+                recordCheat('TAB_SWITCH', 'Pindah tab');
+            }
+        });
+
+        document.addEventListener('copy', (e) => {
+            if (!isGameActive || isAdmin) return;
+            e.preventDefault();
+            recordCheat('COPY', 'Mencoba copy');
+            return false;
+        });
+
+        document.addEventListener('contextmenu', (e) => {
+            if (!isGameActive || isAdmin) return;
+            e.preventDefault();
+            return false;
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (!isGameActive || isAdmin) return;
+            
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+                e.preventDefault();
+                recordCheat('DEV_TOOLS', 'Membuka developer tools');
+            }
+        });
+
+        async function recordCheat(type, details) {
+            if (!currentUser || !currentRoom || !isGameActive) return;
+            
+            warningCount++;
+            
+            // Show warning
+            const warningEl = document.getElementById('warning-container');
+            const warningText = document.getElementById('warning-text');
+            warningEl.classList.remove('hidden');
+            warningText.innerText = `${details} (Peringatan ${warningCount}/3)`;
+            
+            setTimeout(() => {
+                warningEl.classList.add('hidden');
+            }, 3000);
+
+            // Record to Firebase
+            try {
+                await updateDoc(doc(db, 'rooms', currentRoom, 'participants', currentUser.uid), {
+                    warnings: warningCount,
+                    lastCheat: {
+                        type: type,
+                        details: details,
+                        timestamp: Date.now()
+                    }
+                });
+
+                // Check for disqualification
+                if (warningCount >= 3) {
+                    disqualifyUser('Kecurangan terdeteksi!');
+                }
+            } catch (e) {
+                console.error('Failed to record cheat:', e);
+            }
+        }
+
+        async function disqualifyUser(reason) {
+            isGameActive = false;
+            
+            await updateDoc(doc(db, 'rooms', currentRoom, 'participants', currentUser.uid), {
+                status: 'disqualified',
+                disqualifyReason: reason
+            });
+            
+            document.getElementById('disqualify-reason').innerText = reason;
+            document.getElementById('disqualified-screen').classList.add('active');
+            
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+            }
+        }
 
         // ==================== GAME FUNCTIONS ====================
 
         function loadQuestion() {
+            if (isAdmin) return;
+            
             if (qIdx >= questions.length) {
                 finish();
                 return;
@@ -913,10 +1212,9 @@
 
             const q = questions[qIdx];
             
-            // Update UI
             document.getElementById('question-category').innerText = q.category;
             document.getElementById('question-text').innerText = q.q;
-            document.getElementById('question-progress').innerText = `Question ${qIdx + 1}/${questions.length}`;
+            document.getElementById('question-progress').innerText = `Soal ${qIdx + 1}/${questions.length}`;
             document.getElementById('question-points').innerText = `+${q.points} pts`;
             
             // Create answer options
@@ -925,21 +1223,20 @@
             
             q.a.forEach((answer, index) => {
                 const option = document.createElement('div');
-                option.className = 'answer-option animate__animated animate__fadeIn';
+                option.className = 'answer-box animate__animated animate__fadeIn';
                 option.setAttribute('data-index', index);
                 option.innerHTML = `
-                    <div class="flex items-center gap-4">
-                        <div class="w-8 h-8 rounded-full bg-indigo-600/30 flex items-center justify-center font-bold">
+                    <div class="flex items-center justify-center gap-3">
+                        <span class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold">
                             ${String.fromCharCode(65 + index)}
-                        </div>
-                        <span class="text-lg">${answer}</span>
+                        </span>
+                        <span>${answer}</span>
                     </div>
                 `;
                 option.onclick = () => checkAnswer(index);
                 grid.appendChild(option);
             });
             
-            // Start timer
             startTimer(q.time);
         }
 
@@ -947,20 +1244,12 @@
             clearInterval(timer);
             timeLeft = seconds;
             
-            const updateTimer = () => {
-                document.getElementById('timer-text').innerText = timeLeft;
-                
-                // Update circle
-                const degrees = (timeLeft / seconds) * 360;
-                document.getElementById('timer-circle').style.background = 
-                    `conic-gradient(var(--primary) ${degrees}deg, rgba(255,255,255,0.1) ${degrees}deg)`;
-            };
-            
-            updateTimer();
+            const timerEl = document.getElementById('timer-text');
+            timerEl.innerText = timeLeft;
             
             timer = setInterval(() => {
                 timeLeft--;
-                updateTimer();
+                timerEl.innerText = timeLeft;
                 
                 if (timeLeft <= 0) {
                     clearInterval(timer);
@@ -976,13 +1265,13 @@
             const isCorrect = (selectedIndex === q.correct);
             
             // Disable all options
-            document.querySelectorAll('.answer-option').forEach(opt => {
+            document.querySelectorAll('.answer-box').forEach(opt => {
                 opt.classList.add('disabled');
                 opt.style.pointerEvents = 'none';
             });
             
             // Show correct/wrong
-            document.querySelectorAll('.answer-option').forEach((opt, index) => {
+            document.querySelectorAll('.answer-box').forEach((opt, index) => {
                 if (index === q.correct) {
                     opt.classList.add('correct');
                 } else if (index === selectedIndex && !isCorrect) {
@@ -990,7 +1279,6 @@
                 }
             });
             
-            // Calculate points
             let pointsEarned = 0;
             
             if (isCorrect) {
@@ -1000,44 +1288,46 @@
                 
                 if (currentStreak >= 7) {
                     multiplier = 3;
-                    powerups++;
-                    showNotification('🔥 TRIPLE POINTS! +3x multiplier!', 'success');
+                    boomCount++;
+                    showNotification('🔥 BOOM +1! Dapat boom!', 'success');
                 } else if (currentStreak >= 5) {
                     multiplier = 2.5;
-                    showNotification('⚡ 2.5x multiplier!', 'success');
                 } else if (currentStreak >= 3) {
                     multiplier = 2;
-                    showNotification('✨ DOUBLE POINTS!', 'success');
                 }
                 
-                // Time bonus
-                const timeBonus = Math.floor(timeLeft * 10);
-                pointsEarned = q.points * multiplier + timeBonus;
+                pointsEarned = q.points * multiplier + (timeLeft * 10);
                 score += pointsEarned;
                 
-                // Show feedback
-                document.getElementById('feedback').className = 'rounded-2xl p-6 text-center font-bold text-xl animate__animated animate__bounceIn bg-green-600/30 text-green-400';
+                document.getElementById('feedback').className = 'rounded-3xl p-6 text-center font-bold text-xl animate__animated animate__bounceIn bg-green-100 text-green-700';
                 document.getElementById('feedback').innerHTML = `
-                    ✅ CORRECT!<br>
-                    <span class="text-sm">+${pointsEarned} pts (${multiplier}x multiplier + ${timeBonus} time bonus)</span>
+                    ✅ BENAR!<br>
+                    <span class="text-sm">+${pointsEarned} pts (${multiplier}x multiplier)</span>
                 `;
             } else {
                 currentStreak = 0;
                 score = Math.max(0, score - 200);
                 
-                document.getElementById('feedback').className = 'rounded-2xl p-6 text-center font-bold text-xl animate__animated animate__shakeX bg-red-600/30 text-red-400';
-                document.getElementById('feedback').innerHTML = '❌ WRONG! -200 pts';
+                document.getElementById('feedback').className = 'rounded-3xl p-6 text-center font-bold text-xl animate__animated animate__shakeX bg-red-100 text-red-700';
+                document.getElementById('feedback').innerHTML = '❌ SALAH! -200 pts';
             }
             
             document.getElementById('feedback').classList.remove('hidden');
             document.getElementById('display-score').innerText = score.toLocaleString();
+            document.getElementById('current-streak').innerText = currentStreak;
+            document.getElementById('current-booms').innerText = boomCount;
+            
+            if (boomCount > 0) {
+                document.getElementById('powerup-display').classList.remove('hidden');
+                document.getElementById('powerup-count').innerText = boomCount;
+            }
             
             // Update Firebase
             try {
                 await updateDoc(doc(db, 'rooms', currentRoom, 'participants', currentUser.uid), {
                     score: score,
                     streak: currentStreak,
-                    powerups: powerups,
+                    booms: boomCount,
                     lastAnswer: {
                         correct: isCorrect,
                         points: pointsEarned,
@@ -1058,43 +1348,29 @@
 
         function updateLeaderboard() {
             const sorted = [...participants]
-                .filter(p => !p.isAdmin) // Hide admin from leaderboard
+                .filter(p => !p.isAdmin)
                 .sort((a, b) => b.score - a.score);
             
             const leaderboardEl = document.getElementById('leaderboard');
             leaderboardEl.innerHTML = sorted.map((p, index) => {
                 const isCurrentUser = p.name === currentNickname;
-                let rankClass = '';
                 let medal = '';
                 
-                if (index === 0) {
-                    medal = '🥇';
-                    rankClass = 'medal-1';
-                } else if (index === 1) {
-                    medal = '🥈';
-                    rankClass = 'medal-2';
-                } else if (index === 2) {
-                    medal = '🥉';
-                    rankClass = 'medal-3';
-                }
+                if (index === 0) medal = '🥇';
+                else if (index === 1) medal = '🥈';
+                else if (index === 2) medal = '🥉';
                 
                 return `
-                    <div class="leaderboard-item ${isCurrentUser ? 'current-user' : ''}">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-3">
-                                <span class="font-bold ${rankClass} w-8">${medal || `#${index + 1}`}</span>
-                                <div class="avatar">
-                                    ${p.name.charAt(0).toUpperCase()}
-                                </div>
-                                <div>
-                                    <div class="font-medium">${p.name}</div>
-                                    ${p.streak > 2 ? `<div class="text-xs text-yellow-400">🔥 Streak ${p.streak}</div>` : ''}
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <div class="font-bold text-indigo-400">${p.score.toLocaleString()}</div>
-                            </div>
+                    <div class="rank-item ${isCurrentUser ? 'current-user' : ''}">
+                        <span class="text-2xl w-10">${medal || `#${index + 1}`}</span>
+                        <div class="avatar-cute">
+                            ${p.name.charAt(0).toUpperCase()}
                         </div>
+                        <div class="flex-1">
+                            <div class="font-bold">${p.name}</div>
+                            ${p.streak > 2 ? `<div class="text-xs text-orange-500">🔥 Streak ${p.streak}</div>` : ''}
+                        </div>
+                        <div class="font-bold text-indigo-600 text-xl">${p.score.toLocaleString()}</div>
                     </div>
                 `;
             }).join('');
@@ -1107,12 +1383,19 @@
         }
 
         async function finish() {
-            // Show results screen
+            isGameActive = false;
+            
             document.getElementById('screen-game').classList.add('hidden');
             document.getElementById('screen-results').classList.remove('hidden');
             
             document.getElementById('res-team-name').innerText = currentNickname;
             document.getElementById('res-score').innerText = score.toLocaleString();
+            
+            // Stop camera
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                document.getElementById('camera-container').style.display = 'none';
+            }
             
             // Get final rankings
             const sorted = participants
@@ -1133,39 +1416,171 @@
                 else if (index === 2) medal = '🥉';
                 
                 return `
-                    <div class="leaderboard-item ${isCurrentUser ? 'current-user' : ''}">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-3">
-                                <span class="font-bold w-8 text-xl">${medal || `#${index + 1}`}</span>
-                                <div class="avatar">
-                                    ${p.name.charAt(0).toUpperCase()}
-                                </div>
-                                <span class="font-medium">${p.name}</span>
-                            </div>
-                            <div class="font-bold text-indigo-400 text-xl">${p.score.toLocaleString()}</div>
+                    <div class="rank-item ${isCurrentUser ? 'current-user' : ''}">
+                        <span class="text-3xl w-12">${medal || `#${index + 1}`}</span>
+                        <div class="avatar-cute">
+                            ${p.name.charAt(0).toUpperCase()}
                         </div>
+                        <div class="flex-1">
+                            <div class="font-bold text-lg">${p.name}</div>
+                        </div>
+                        <div class="font-bold text-indigo-600 text-2xl">${p.score.toLocaleString()}</div>
                     </div>
                 `;
             }).join('');
             
-            // Show confetti for winner
+            // Confetti for winner
             if (myRank === 1) {
                 startConfetti();
             }
+        }
+
+        // ==================== BOOM SYSTEM ====================
+
+        window.activateBoom = () => {
+            if (boomCount <= 0) return;
             
-            // Update room status
-            if (isAdmin) {
-                await updateDoc(doc(db, 'rooms', currentRoom), {
-                    status: 'completed',
-                    completedAt: Date.now()
+            document.getElementById('boom-targets').classList.remove('hidden');
+            loadBoomTargets();
+        };
+
+        async function loadBoomTargets() {
+            const participantsRef = collection(db, 'rooms', currentRoom, 'participants');
+            const snapshot = await getDocs(participantsRef);
+            
+            const targets = [];
+            snapshot.forEach(doc => {
+                if (doc.id !== currentUser.uid && !doc.data().isAdmin) {
+                    targets.push({ id: doc.id, ...doc.data() });
+                }
+            });
+            
+            const targetsList = document.getElementById('targets-list');
+            targetsList.innerHTML = targets.map(t => `
+                <button onclick="useBoom('${t.id}', '${t.name}')" 
+                        class="bg-red-100 hover:bg-red-200 p-3 rounded-xl transition-all">
+                    <div class="font-bold">${t.name}</div>
+                    <div class="text-sm text-gray-600">${t.score} pts</div>
+                </button>
+            `).join('');
+        }
+
+        window.useBoom = async (targetId, targetName) => {
+            if (boomCount <= 0) return;
+            
+            try {
+                // Reduce target's score
+                await updateDoc(doc(db, 'rooms', currentRoom, 'participants', targetId), {
+                    score: increment(-500)
                 });
+                
+                // Reduce user's boom
+                boomCount--;
+                await updateDoc(doc(db, 'rooms', currentRoom, 'participants', currentUser.uid), {
+                    booms: boomCount
+                });
+                
+                // Show effect
+                const boomEffect = document.createElement('div');
+                boomEffect.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-8xl z-50 animate__animated animate__bounceIn';
+                boomEffect.innerText = '💥';
+                document.body.appendChild(boomEffect);
+                
+                setTimeout(() => boomEffect.remove(), 1000);
+                
+                document.getElementById('boom-targets').classList.add('hidden');
+                document.getElementById('current-booms').innerText = boomCount;
+                
+                if (boomCount === 0) {
+                    document.getElementById('powerup-display').classList.add('hidden');
+                }
+                
+                showNotification(`Boom! ${targetName} kehilangan 500 pts! 💥`, 'success');
+                
+            } catch (e) {
+                console.error('Boom failed:', e);
             }
+        };
+
+        // ==================== ADMIN MONITORING ====================
+
+        window.toggleAdminPanel = () => {
+            document.getElementById('admin-modal').classList.toggle('active');
+        };
+
+        window.monitorRoom = () => {
+            const roomCode = document.getElementById('admin-room-code').value.trim().toUpperCase();
+            if (!roomCode) return;
+            
+            document.getElementById('admin-monitoring-info').classList.remove('hidden');
+            document.getElementById('monitoring-room-code').innerText = roomCode;
+            
+            // Listen to participants
+            onSnapshot(collection(db, 'rooms', roomCode, 'participants'), (snapshot) => {
+                const participants = [];
+                snapshot.forEach(doc => participants.push({ id: doc.id, ...doc.data() }));
+                
+                const players = participants.filter(p => !p.isAdmin);
+                
+                document.getElementById('admin-participants').innerText = players.length;
+                
+                const totalBooms = players.reduce((sum, p) => sum + (p.booms || 0), 0);
+                document.getElementById('admin-total-booms').innerText = totalBooms;
+                
+                const totalWarnings = players.reduce((sum, p) => sum + (p.warnings || 0), 0);
+                document.getElementById('admin-warnings').innerText = totalWarnings;
+                
+                const disqualified = players.filter(p => p.status === 'disqualified').length;
+                document.getElementById('admin-disqualified').innerText = disqualified;
+                
+                const listEl = document.getElementById('participants-list');
+                listEl.innerHTML = players.map(p => `
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                        <div class="flex items-center gap-3">
+                            <div class="avatar-cute w-8 h-8 text-sm">${p.name.charAt(0)}</div>
+                            <div>
+                                <div class="font-bold">${p.name}</div>
+                                <div class="text-xs text-gray-500">${p.score} pts | 🔥${p.streak || 0}</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm">💣 ${p.booms || 0}</div>
+                            ${p.warnings > 0 ? `<div class="text-xs text-red-500">⚠️${p.warnings}</div>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            });
+        };
+
+        window.stopMonitoring = () => {
+            document.getElementById('admin-monitoring-info').classList.add('hidden');
+            document.getElementById('participants-list').innerHTML = '';
+        };
+
+        // ==================== NOTIFICATIONS ====================
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 px-6 py-3 rounded-full text-white font-semibold z-50 animate__animated animate__slideInRight`;
+            
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                warning: 'bg-yellow-500',
+                info: 'bg-indigo-500'
+            };
+            
+            notification.classList.add(colors[type] || colors.info);
+            notification.innerText = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.remove(), 3000);
         }
 
         // ==================== CONFETTI ====================
 
         function startConfetti() {
-            const canvas = document.getElementById('confetti-canvas');
+            const canvas = document.getElementById('confetti');
             const ctx = canvas.getContext('2d');
             
             canvas.width = window.innerWidth;
@@ -1188,7 +1603,6 @@
                 particles.forEach(p => {
                     ctx.fillStyle = p.color;
                     ctx.fillRect(p.x, p.y, p.size, p.size);
-                    
                     p.y += p.speed;
                     
                     if (p.y > canvas.height) {
@@ -1201,21 +1615,6 @@
             }
             
             animate();
-        }
-
-        // ==================== NOTIFICATIONS ====================
-
-        function showNotification(message, type = 'info') {
-            const notification = document.getElementById('join-notification');
-            const messageEl = document.getElementById('join-message');
-            
-            messageEl.innerText = message;
-            notification.classList.remove('hidden');
-            notification.classList.add('animate__animated', 'animate__slideInRight');
-            
-            setTimeout(() => {
-                notification.classList.add('hidden');
-            }, 3000);
         }
 
         // ==================== CLEANUP ====================
