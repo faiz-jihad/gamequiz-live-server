@@ -1,1445 +1,2395 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CYBERPUNK 2077: Database Warriors</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Iconify -->
     <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --neon-pink: #ff00ff;
-            --neon-blue: #00ffff;
-            --neon-purple: #b300ff;
-            --neon-yellow: #ffff00;
-            --dark-bg: #0a0a0f;
-            --darker-bg: #050507;
-            --cyber-grid: #00ffcc;
-        }
-
-        body {
-            font-family: 'Rajdhani', sans-serif;
-            background: var(--dark-bg);
-            color: #fff;
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        /* Cyber Grid Background */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
-            background-size: 50px 50px;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* Glitch Effect */
-        .glitch {
-            position: relative;
-            animation: glitch 1s linear infinite;
-        }
-
-        @keyframes glitch {
-            2%, 64% { transform: translate(2px, 0) skew(0deg); }
-            4%, 60% { transform: translate(-2px, 0) skew(0deg); }
-            62% { transform: translate(0, 0) skew(5deg); }
-        }
-
-        .glitch::before,
-        .glitch::after {
-            content: attr(data-text);
-            position: absolute;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--dark-bg);
-        }
-
-        .glitch::before {
-            animation: glitchTop 1s linear infinite;
-            clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
-            -webkit-clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
-        }
-
-        @keyframes glitchTop {
-            2%, 64% { transform: translate(2px, -2px); }
-            4%, 60% { transform: translate(-2px, 2px); }
-            62% { transform: translate(13px, -1px) skew(-13deg); }
-        }
-
-        .glitch::after {
-            animation: glitchBottom 1.5s linear infinite;
-            clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
-            -webkit-clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
-        }
-
-        @keyframes glitchBottom {
-            2%, 64% { transform: translate(-2px, 0); }
-            4%, 60% { transform: translate(-2px, 0); }
-            62% { transform: translate(-22px, 5px) skew(21deg); }
-        }
-
-        /* Cyber Card */
-        .cyber-card {
-            background: rgba(10, 10, 15, 0.8);
-            backdrop-filter: blur(10px);
-            border: 2px solid var(--neon-blue);
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3),
-                        0 0 0 2px rgba(0, 255, 255, 0.1) inset;
-            border-radius: 0;
-            clip-path: polygon(0 0, 100% 0, 100% 95%, 95% 100%, 0 100%);
-            padding: 24px;
-            transition: all 0.3s;
-            position: relative;
-            z-index: 1;
-        }
-
-        .cyber-card::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink), var(--neon-purple));
-            z-index: -1;
-            animation: borderRotate 4s linear infinite;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .cyber-card:hover::before {
-            opacity: 1;
-        }
-
-        @keyframes borderRotate {
-            0% { filter: hue-rotate(0deg); }
-            100% { filter: hue-rotate(360deg); }
-        }
-
-        .cyber-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 0 50px rgba(0, 255, 255, 0.5);
-        }
-
-        /* Cyber Button */
-        .cyber-button {
-            background: transparent;
-            color: var(--neon-blue);
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            padding: 16px 32px;
-            border: 2px solid var(--neon-blue);
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s;
-            cursor: pointer;
-            z-index: 1;
-            clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .cyber-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
-            z-index: -1;
-        }
-
-        .cyber-button:hover::before {
-            left: 100%;
-        }
-
-        .cyber-button:hover {
-            background: var(--neon-blue);
-            color: var(--dark-bg);
-            box-shadow: 0 0 30px var(--neon-blue);
-            text-shadow: none;
-        }
-
-        .cyber-button:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-            border-color: #666;
-        }
-
-        .cyber-button-outline {
-            background: transparent;
-            border: 2px solid var(--neon-pink);
-            color: var(--neon-pink);
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 600;
-            padding: 14px 28px;
-            clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .cyber-button-outline:hover {
-            background: var(--neon-pink);
-            color: var(--dark-bg);
-            box-shadow: 0 0 30px var(--neon-pink);
-        }
-
-        /* Answer Option */
-        .answer-cyber {
-            background: rgba(0, 0, 0, 0.6);
-            border: 2px solid var(--neon-blue);
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 18px;
-            font-weight: 500;
-            letter-spacing: 1px;
-            position: relative;
-            overflow: hidden;
-            clip-path: polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%);
-        }
-
-        .answer-cyber::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .answer-cyber:hover::before {
-            left: 100%;
-        }
-
-        .answer-cyber:hover {
-            border-color: var(--neon-pink);
-            box-shadow: 0 0 20px var(--neon-pink);
-            transform: scale(1.02);
-        }
-
-        .answer-cyber.selected {
-            border-color: var(--neon-yellow);
-            box-shadow: 0 0 30px var(--neon-yellow);
-            background: rgba(255, 255, 0, 0.1);
-        }
-
-        .answer-cyber.correct {
-            border-color: #00ff00;
-            box-shadow: 0 0 30px #00ff00;
-            background: rgba(0, 255, 0, 0.1);
-        }
-
-        .answer-cyber.wrong {
-            border-color: #ff0000;
-            box-shadow: 0 0 30px #ff0000;
-            background: rgba(255, 0, 0, 0.1);
-        }
-
-        /* Timer */
-        .cyber-timer {
-            background: rgba(0, 0, 0, 0.8);
-            border: 3px solid var(--neon-blue);
-            padding: 15px 30px;
-            font-size: 48px;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            color: var(--neon-blue);
-            text-shadow: 0 0 20px var(--neon-blue);
-            position: relative;
-            clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .cyber-timer::after {
-            content: '';
-            position: absolute;
-            top: 5px;
-            left: 5px;
-            right: 5px;
-            bottom: 5px;
-            border: 1px solid var(--neon-pink);
-            pointer-events: none;
-            clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
-        }
-
-        /* Room Code */
-        .room-code-cyber {
-            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
-            padding: 20px 40px;
-            font-size: 48px;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            letter-spacing: 10px;
-            color: var(--dark-bg);
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-            position: relative;
-            clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
-        }
-
-        /* Avatar */
-        .cyber-avatar {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 20px;
-            color: var(--dark-bg);
-            clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
-            position: relative;
-        }
-
-        .cyber-avatar::after {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            right: 2px;
-            bottom: 2px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
-        }
-
-        /* Rank Item */
-        .rank-cyber {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--neon-blue);
-            padding: 15px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            transition: all 0.3s;
-            clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
-        }
-
-        .rank-cyber:hover {
-            border-color: var(--neon-pink);
-            box-shadow: 0 0 20px var(--neon-pink);
-            transform: translateX(10px);
-        }
-
-        .rank-cyber.current-user {
-            border-color: var(--neon-yellow);
-            box-shadow: 0 0 30px var(--neon-yellow);
-            background: rgba(255, 255, 0, 0.1);
-        }
-
-        /* Medal */
-        .medal-gold { color: #ffd700; text-shadow: 0 0 20px #ffd700; }
-        .medal-silver { color: #c0c0c0; text-shadow: 0 0 20px #c0c0c0; }
-        .medal-bronze { color: #cd7f32; text-shadow: 0 0 20px #cd7f32; }
-
-        /* Power-up */
-        .powerup-cyber {
-            background: linear-gradient(135deg, var(--neon-yellow), #ff6600);
-            color: var(--dark-bg);
-            padding: 8px 16px;
-            font-weight: 700;
-            clip-path: polygon(0 0, 100% 0, 100% 75%, 75% 100%, 0 100%);
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        /* Warning */
-        .warning-cyber {
-            background: rgba(255, 0, 0, 0.2);
-            border: 2px solid #ff0000;
-            padding: 10px 20px;
-            color: #ff0000;
-            font-weight: 700;
-            text-shadow: 0 0 10px #ff0000;
-            clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Input */
-        .cyber-input {
-            background: rgba(0, 0, 0, 0.5);
-            border: 2px solid var(--neon-blue);
-            padding: 16px 24px;
-            font-size: 18px;
-            width: 100%;
-            color: var(--neon-blue);
-            font-family: 'Orbitron', sans-serif;
-            clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
-        }
-
-        .cyber-input:focus {
-            outline: none;
-            border-color: var(--neon-pink);
-            box-shadow: 0 0 30px var(--neon-pink);
-        }
-
-        .cyber-input::placeholder {
-            color: rgba(0, 255, 255, 0.3);
-        }
-
-        /* Camera */
-        #camera-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 250px;
-            height: 180px;
-            border: 3px solid var(--neon-blue);
-            box-shadow: 0 0 30px var(--neon-blue);
-            overflow: hidden;
-            z-index: 1000;
-            display: none;
-            clip-path: polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%);
-        }
-
-        #camera-container video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .camera-indicator {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            width: 15px;
-            height: 15px;
-            background: #00ff00;
-            border-radius: 0;
-            box-shadow: 0 0 20px #00ff00;
-            animation: blink 1s infinite;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-
-        /* Modal */
-        .cyber-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(10px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-        }
-
-        .cyber-modal.active {
-            display: flex;
-        }
-
-        .cyber-modal-content {
-            background: var(--dark-bg);
-            border: 3px solid var(--neon-blue);
-            padding: 40px;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 0 50px var(--neon-blue);
-            clip-path: polygon(0 0, 100% 0, 100% 95%, 95% 100%, 0 100%);
-        }
-
-        /* Disqualified */
-        #disqualified-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.95);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 3000;
-        }
-
-        #disqualified-screen.active {
-            display: flex;
-        }
-
-        /* Scanner Line */
-        .scanner {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
-            animation: scan 2s linear infinite;
-        }
-
-        @keyframes scan {
-            0% { top: -10px; }
-            100% { top: 110%; }
-        }
-
-        /* Neon Text */
-        .neon-text-blue {
-            color: var(--neon-blue);
-            text-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue), 0 0 40px var(--neon-blue);
-        }
-
-        .neon-text-pink {
-            color: var(--neon-pink);
-            text-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink), 0 0 40px var(--neon-pink);
-        }
-
-        .neon-text-purple {
-            color: var(--neon-purple);
-            text-shadow: 0 0 10px var(--neon-purple), 0 0 20px var(--neon-purple), 0 0 40px var(--neon-purple);
-        }
-
-        .neon-text-yellow {
-            color: var(--neon-yellow);
-            text-shadow: 0 0 10px var(--neon-yellow), 0 0 20px var(--neon-yellow), 0 0 40px var(--neon-yellow);
-        }
-
-        /* Progress Bar */
-        .cyber-progress {
-            height: 10px;
-            background: rgba(0, 255, 255, 0.2);
-            border: 1px solid var(--neon-blue);
-            position: relative;
-        }
-
-        .cyber-progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
-            width: 0%;
-            transition: width 0.3s;
-            position: relative;
-        }
-
-        .cyber-progress-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 5px;
-            height: 100%;
-            background: white;
-            box-shadow: 0 0 20px white;
-            animation: blink 0.5s infinite;
-        }
-
-        /* Icon styles */
-        .icon {
-            width: 1.2em;
-            height: 1.2em;
-            display: inline-block;
-            vertical-align: middle;
-        }
-
-        .icon-lg {
-            width: 2em;
-            height: 2em;
-        }
-
-        .icon-xl {
-            width: 3em;
-            height: 3em;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --neon-pink: #ff00ff;
+        --neon-blue: #00ffff;
+        --neon-purple: #b300ff;
+        --neon-yellow: #ffff00;
+        --dark-bg: #0a0a0f;
+        --darker-bg: #050507;
+        --cyber-grid: #00ffcc;
+      }
+
+      body {
+        font-family: "Rajdhani", sans-serif;
+        background: var(--dark-bg);
+        color: #fff;
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      /* Cyber Grid Background */
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image:
+          linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+        background-size: 50px 50px;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* Glitch Effect */
+      .glitch {
+        position: relative;
+        animation: glitch 1s linear infinite;
+      }
+
+      @keyframes glitch {
+        2%,
+        64% {
+          transform: translate(2px, 0) skew(0deg);
+        }
+        4%,
+        60% {
+          transform: translate(-2px, 0) skew(0deg);
+        }
+        62% {
+          transform: translate(0, 0) skew(5deg);
+        }
+      }
+
+      .glitch::before,
+      .glitch::after {
+        content: attr(data-text);
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--dark-bg);
+      }
+
+      .glitch::before {
+        animation: glitchTop 1s linear infinite;
+        clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+        -webkit-clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+      }
+
+      @keyframes glitchTop {
+        2%,
+        64% {
+          transform: translate(2px, -2px);
+        }
+        4%,
+        60% {
+          transform: translate(-2px, 2px);
+        }
+        62% {
+          transform: translate(13px, -1px) skew(-13deg);
+        }
+      }
+
+      .glitch::after {
+        animation: glitchBottom 1.5s linear infinite;
+        clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+        -webkit-clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+      }
+
+      @keyframes glitchBottom {
+        2%,
+        64% {
+          transform: translate(-2px, 0);
+        }
+        4%,
+        60% {
+          transform: translate(-2px, 0);
+        }
+        62% {
+          transform: translate(-22px, 5px) skew(21deg);
+        }
+      }
+
+      /* Cyber Card */
+      .cyber-card {
+        background: rgba(10, 10, 15, 0.8);
+        backdrop-filter: blur(10px);
+        border: 2px solid var(--neon-blue);
+        box-shadow:
+          0 0 30px rgba(0, 255, 255, 0.3),
+          0 0 0 2px rgba(0, 255, 255, 0.1) inset;
+        border-radius: 0;
+        clip-path: polygon(0 0, 100% 0, 100% 95%, 95% 100%, 0 100%);
+        padding: 24px;
+        transition: all 0.3s;
+        position: relative;
+        z-index: 1;
+      }
+
+      .cyber-card::before {
+        content: "";
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(
+          45deg,
+          var(--neon-blue),
+          var(--neon-pink),
+          var(--neon-purple)
+        );
+        z-index: -1;
+        animation: borderRotate 4s linear infinite;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+
+      .cyber-card:hover::before {
+        opacity: 1;
+      }
+
+      @keyframes borderRotate {
+        0% {
+          filter: hue-rotate(0deg);
+        }
+        100% {
+          filter: hue-rotate(360deg);
+        }
+      }
+
+      .cyber-card:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 0 50px rgba(0, 255, 255, 0.5);
+      }
+
+      /* Cyber Button */
+      .cyber-button {
+        background: transparent;
+        color: var(--neon-blue);
+        font-family: "Orbitron", sans-serif;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        padding: 16px 32px;
+        border: 2px solid var(--neon-blue);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s;
+        cursor: pointer;
+        z-index: 1;
+        clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .cyber-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(0, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s;
+        z-index: -1;
+      }
+
+      .cyber-button:hover::before {
+        left: 100%;
+      }
+
+      .cyber-button:hover {
+        background: var(--neon-blue);
+        color: var(--dark-bg);
+        box-shadow: 0 0 30px var(--neon-blue);
+        text-shadow: none;
+      }
+
+      .cyber-button:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+        border-color: #666;
+      }
+
+      .cyber-button-outline {
+        background: transparent;
+        border: 2px solid var(--neon-pink);
+        color: var(--neon-pink);
+        font-family: "Orbitron", sans-serif;
+        font-weight: 600;
+        padding: 14px 28px;
+        clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .cyber-button-outline:hover {
+        background: var(--neon-pink);
+        color: var(--dark-bg);
+        box-shadow: 0 0 30px var(--neon-pink);
+      }
+
+      /* Answer Option */
+      .answer-cyber {
+        background: rgba(0, 0, 0, 0.6);
+        border: 2px solid var(--neon-blue);
+        padding: 20px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 18px;
+        font-weight: 500;
+        letter-spacing: 1px;
+        position: relative;
+        overflow: hidden;
+        clip-path: polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%);
+      }
+
+      .answer-cyber::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(0, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .answer-cyber:hover::before {
+        left: 100%;
+      }
+
+      .answer-cyber:hover {
+        border-color: var(--neon-pink);
+        box-shadow: 0 0 20px var(--neon-pink);
+        transform: scale(1.02);
+      }
+
+      .answer-cyber.selected {
+        border-color: var(--neon-yellow);
+        box-shadow: 0 0 30px var(--neon-yellow);
+        background: rgba(255, 255, 0, 0.1);
+      }
+
+      .answer-cyber.correct {
+        border-color: #00ff00;
+        box-shadow: 0 0 30px #00ff00;
+        background: rgba(0, 255, 0, 0.1);
+      }
+
+      .answer-cyber.wrong {
+        border-color: #ff0000;
+        box-shadow: 0 0 30px #ff0000;
+        background: rgba(255, 0, 0, 0.1);
+      }
+
+      /* Timer */
+      .cyber-timer {
+        background: rgba(0, 0, 0, 0.8);
+        border: 3px solid var(--neon-blue);
+        padding: 15px 30px;
+        font-size: 48px;
+        font-family: "Orbitron", sans-serif;
+        font-weight: 900;
+        color: var(--neon-blue);
+        text-shadow: 0 0 20px var(--neon-blue);
+        position: relative;
+        clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .cyber-timer::after {
+        content: "";
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        right: 5px;
+        bottom: 5px;
+        border: 1px solid var(--neon-pink);
+        pointer-events: none;
+        clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
+      }
+
+      /* Room Code */
+      .room-code-cyber {
+        background: linear-gradient(
+          135deg,
+          var(--neon-blue),
+          var(--neon-purple)
+        );
+        padding: 20px 40px;
+        font-size: 48px;
+        font-family: "Orbitron", sans-serif;
+        font-weight: 900;
+        letter-spacing: 10px;
+        color: var(--dark-bg);
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        position: relative;
+        clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
+      }
+
+      /* Avatar */
+      .cyber-avatar {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(
+          135deg,
+          var(--neon-blue),
+          var(--neon-purple)
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 20px;
+        color: var(--dark-bg);
+        clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
+        position: relative;
+      }
+
+      .cyber-avatar::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        right: 2px;
+        bottom: 2px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
+      }
+
+      /* Rank Item */
+      .rank-cyber {
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid var(--neon-blue);
+        padding: 15px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        transition: all 0.3s;
+        clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
+      }
+
+      .rank-cyber:hover {
+        border-color: var(--neon-pink);
+        box-shadow: 0 0 20px var(--neon-pink);
+        transform: translateX(10px);
+      }
+
+      .rank-cyber.current-user {
+        border-color: var(--neon-yellow);
+        box-shadow: 0 0 30px var(--neon-yellow);
+        background: rgba(255, 255, 0, 0.1);
+      }
+
+      /* Medal */
+      .medal-gold {
+        color: #ffd700;
+        text-shadow: 0 0 20px #ffd700;
+      }
+      .medal-silver {
+        color: #c0c0c0;
+        text-shadow: 0 0 20px #c0c0c0;
+      }
+      .medal-bronze {
+        color: #cd7f32;
+        text-shadow: 0 0 20px #cd7f32;
+      }
+
+      /* Power-up */
+      .powerup-cyber {
+        background: linear-gradient(135deg, var(--neon-yellow), #ff6600);
+        color: var(--dark-bg);
+        padding: 8px 16px;
+        font-weight: 700;
+        clip-path: polygon(0 0, 100% 0, 100% 75%, 75% 100%, 0 100%);
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        animation: pulse 1.5s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
+
+      /* Warning */
+      .warning-cyber {
+        background: rgba(255, 0, 0, 0.2);
+        border: 2px solid #ff0000;
+        padding: 10px 20px;
+        color: #ff0000;
+        font-weight: 700;
+        text-shadow: 0 0 10px #ff0000;
+        clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      /* Input */
+      .cyber-input {
+        background: rgba(0, 0, 0, 0.5);
+        border: 2px solid var(--neon-blue);
+        padding: 16px 24px;
+        font-size: 18px;
+        width: 100%;
+        color: var(--neon-blue);
+        font-family: "Orbitron", sans-serif;
+        clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
+      }
+
+      .cyber-input:focus {
+        outline: none;
+        border-color: var(--neon-pink);
+        box-shadow: 0 0 30px var(--neon-pink);
+      }
+
+      .cyber-input::placeholder {
+        color: rgba(0, 255, 255, 0.3);
+      }
+
+      /* Camera */
+      #camera-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 250px;
+        height: 180px;
+        border: 3px solid var(--neon-blue);
+        box-shadow: 0 0 30px var(--neon-blue);
+        overflow: hidden;
+        z-index: 1000;
+        display: none;
+        clip-path: polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%);
+      }
+
+      #camera-container video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .camera-indicator {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        width: 15px;
+        height: 15px;
+        background: #00ff00;
+        border-radius: 0;
+        box-shadow: 0 0 20px #00ff00;
+        animation: blink 1s infinite;
+      }
+
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+
+      /* Modal */
+      .cyber-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(10px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+      }
+
+      .cyber-modal.active {
+        display: flex;
+      }
+
+      .cyber-modal-content {
+        background: var(--dark-bg);
+        border: 3px solid var(--neon-blue);
+        padding: 40px;
+        max-width: 600px;
+        width: 90%;
+        box-shadow: 0 0 50px var(--neon-blue);
+        clip-path: polygon(0 0, 100% 0, 100% 95%, 95% 100%, 0 100%);
+      }
+
+      /* Disqualified */
+      #disqualified-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.95);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 3000;
+      }
+
+      #disqualified-screen.active {
+        display: flex;
+      }
+
+      /* Scanner Line */
+      .scanner {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--neon-blue),
+          transparent
+        );
+        animation: scan 2s linear infinite;
+      }
+
+      @keyframes scan {
+        0% {
+          top: -10px;
+        }
+        100% {
+          top: 110%;
+        }
+      }
+
+      /* Neon Text */
+      .neon-text-blue {
+        color: var(--neon-blue);
+        text-shadow:
+          0 0 10px var(--neon-blue),
+          0 0 20px var(--neon-blue),
+          0 0 40px var(--neon-blue);
+      }
+
+      .neon-text-pink {
+        color: var(--neon-pink);
+        text-shadow:
+          0 0 10px var(--neon-pink),
+          0 0 20px var(--neon-pink),
+          0 0 40px var(--neon-pink);
+      }
+
+      .neon-text-purple {
+        color: var(--neon-purple);
+        text-shadow:
+          0 0 10px var(--neon-purple),
+          0 0 20px var(--neon-purple),
+          0 0 40px var(--neon-purple);
+      }
+
+      .neon-text-yellow {
+        color: var(--neon-yellow);
+        text-shadow:
+          0 0 10px var(--neon-yellow),
+          0 0 20px var(--neon-yellow),
+          0 0 40px var(--neon-yellow);
+      }
+
+      /* Progress Bar */
+      .cyber-progress {
+        height: 10px;
+        background: rgba(0, 255, 255, 0.2);
+        border: 1px solid var(--neon-blue);
+        position: relative;
+      }
+
+      .cyber-progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
+        width: 0%;
+        transition: width 0.3s;
+        position: relative;
+      }
+
+      .cyber-progress-fill::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 5px;
+        height: 100%;
+        background: white;
+        box-shadow: 0 0 20px white;
+        animation: blink 0.5s infinite;
+      }
+
+      /* Icon styles */
+      .icon {
+        width: 1.2em;
+        height: 1.2em;
+        display: inline-block;
+        vertical-align: middle;
+      }
+
+      .icon-lg {
+        width: 2em;
+        height: 2em;
+      }
+
+      .icon-xl {
+        width: 3em;
+        height: 3em;
+      }
+
+      /* JSON Editor */
+      .json-editor {
+        background: #1e1e1e;
+        border: 2px solid var(--neon-blue);
+        color: #00ff00;
+        font-family: "Courier New", monospace;
+        font-size: 14px;
+        line-height: 1.5;
+        padding: 15px;
+        width: 100%;
+        min-height: 400px;
+        resize: vertical;
+        clip-path: polygon(0 0, 100% 0, 100% 95%, 95% 100%, 0 100%);
+      }
+
+      .json-editor:focus {
+        outline: none;
+        border-color: var(--neon-pink);
+        box-shadow: 0 0 30px var(--neon-pink);
+      }
+
+      .tab-button {
+        background: transparent;
+        border: 2px solid var(--neon-blue);
+        color: var(--neon-blue);
+        padding: 10px 20px;
+        font-family: "Orbitron", sans-serif;
+        cursor: pointer;
+        transition: all 0.3s;
+        clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
+      }
+
+      .tab-button.active {
+        background: var(--neon-blue);
+        color: var(--dark-bg);
+      }
+
+      .tab-button:hover {
+        border-color: var(--neon-pink);
+        color: var(--neon-pink);
+      }
+
+      .question-preview {
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--neon-blue);
+        padding: 15px;
+        margin-bottom: 10px;
+        clip-path: polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%);
+      }
+
+      .question-preview:hover {
+        border-color: var(--neon-pink);
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <!-- Camera Container -->
     <div id="camera-container">
-        <video id="camera-feed" autoplay playsinline muted></video>
-        <div class="camera-indicator"></div>
-        <div class="scanner"></div>
+      <video id="camera-feed" autoplay playsinline muted></video>
+      <div class="camera-indicator"></div>
+      <div class="scanner"></div>
     </div>
 
     <!-- Disqualified Screen -->
     <div id="disqualified-screen">
-        <div class="cyber-modal-content text-center">
-            <div class="text-8xl mb-4 neon-text-pink glitch" data-text="⚠️">
-                <span class="iconify" data-icon="mdi:alert-circle" data-width="80" data-height="80"></span>
-            </div>
-            <h2 class="text-5xl font-bold mb-4 neon-text-pink glitch" data-text="DISKUALIFIKASI">DISKUALIFIKASI</h2>
-            <p class="text-xl mb-6 text-gray-300" id="disqualify-reason">Kecurangan terdeteksi</p>
-            <button onclick="location.reload()" class="cyber-button w-full">
-                <span class="iconify" data-icon="mdi:restart"></span>
-                REBOOT SYSTEM
-            </button>
+      <div class="cyber-modal-content text-center">
+        <div class="text-8xl mb-4 neon-text-pink glitch" data-text="⚠️">
+          <span
+            class="iconify"
+            data-icon="mdi:alert-circle"
+            data-width="80"
+            data-height="80"
+          ></span>
         </div>
+        <h2
+          class="text-5xl font-bold mb-4 neon-text-pink glitch"
+          data-text="DISKUALIFIKASI"
+        >
+          DISKUALIFIKASI
+        </h2>
+        <p class="text-xl mb-6 text-gray-300" id="disqualify-reason">
+          Kecurangan terdeteksi
+        </p>
+        <button onclick="location.reload()" class="cyber-button w-full">
+          <span class="iconify" data-icon="mdi:restart"></span>
+          REBOOT SYSTEM
+        </button>
+      </div>
     </div>
 
     <!-- Main Container -->
     <div class="container mx-auto px-4 py-6 max-w-6xl relative z-10">
-        <!-- Header -->
-        <div class="cyber-card mb-6 flex justify-between items-center">
-            <div class="flex items-center gap-4">
-                <div class="cyber-avatar text-2xl">
-                    <span class="iconify" data-icon="mdi:database" data-width="30" data-height="30"></span>
-                </div>
-                <div>
-                    <h1 class="text-3xl font-bold tracking-tighter glitch" data-text="CYBERPUNK 2077">
-                        <span class="neon-text-blue">CYBERPUNK</span>
-                        <span class="neon-text-pink"> 2077</span>
-                    </h1>
-                    <p class="text-xs text-gray-500 font-mono">DATABASE WARRIORS v7.0</p>
-                </div>
+      <!-- Header -->
+      <div class="cyber-card mb-6 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+          <div class="cyber-avatar text-2xl">
+            <span
+              class="iconify"
+              data-icon="mdi:database"
+              data-width="30"
+              data-height="30"
+            ></span>
+          </div>
+          <div>
+            <h1
+              class="text-3xl font-bold tracking-tighter glitch"
+              data-text="CYBERPUNK 2077"
+            >
+              <span class="neon-text-blue">CYBERPUNK</span>
+              <span class="neon-text-pink"> 2077</span>
+            </h1>
+            <p class="text-xs text-gray-500 font-mono">
+              DATABASE WARRIORS v8.0
+            </p>
+          </div>
+        </div>
+
+        <!-- Game Stats -->
+        <div id="stats-bar" class="hidden items-center gap-6">
+          <div class="text-right">
+            <p class="text-gray-500 text-xs font-mono">DESIGNATION</p>
+            <p
+              id="display-team-name"
+              class="font-bold text-xl neon-text-blue flex items-center gap-2"
+            >
+              <span class="iconify" data-icon="mdi:account"></span>
+              <span></span>
+            </p>
+          </div>
+          <div class="text-right">
+            <p class="text-gray-500 text-xs font-mono">CREDITS</p>
+            <p
+              id="display-score"
+              class="font-bold text-2xl neon-text-yellow flex items-center gap-2"
+            >
+              <span class="iconify" data-icon="mdi:currency-usd"></span>
+              <span>0</span>
+            </p>
+          </div>
+          <div class="text-right">
+            <p class="text-gray-500 text-xs font-mono">RANK</p>
+            <p
+              id="display-rank"
+              class="font-bold text-xl neon-text-purple flex items-center gap-2"
+            >
+              <span class="iconify" data-icon="mdi:trophy"></span>
+              <span>#0</span>
+            </p>
+          </div>
+          <div id="powerup-display" class="powerup-cyber hidden">
+            <span class="iconify" data-icon="mdi:flash"></span>
+            <span id="powerup-count">0</span>
+          </div>
+        </div>
+
+        <!-- Admin Badge -->
+        <div id="admin-badge" class="hidden powerup-cyber bg-purple-600">
+          <span class="iconify" data-icon="mdi:crown"></span>
+          ADMIN MODE
+        </div>
+
+        <!-- Question Editor Button -->
+        <button
+          onclick="toggleQuestionEditor()"
+          class="cyber-button-outline px-4 py-2 text-sm"
+        >
+          <span class="iconify" data-icon="mdi:file-document-edit"></span>
+          EDIT QUESTIONS
+        </button>
+      </div>
+
+      <!-- Question Editor Modal -->
+      <div id="question-editor-modal" class="cyber-modal">
+        <div class="cyber-modal-content max-w-4xl w-full">
+          <div class="flex justify-between items-center mb-6">
+            <h2
+              class="text-2xl font-bold neon-text-purple flex items-center gap-2"
+            >
+              <span class="iconify" data-icon="mdi:file-document-edit"></span>
+              QUESTION EDITOR
+            </h2>
+            <button
+              onclick="toggleQuestionEditor()"
+              class="text-gray-500 hover:text-neon-pink text-2xl"
+            >
+              &times;
+            </button>
+          </div>
+
+          <!-- Tabs -->
+          <div class="flex gap-2 mb-6">
+            <button
+              class="tab-button active"
+              onclick="switchEditorTab('visual')"
+              id="tab-visual"
+            >
+              <span class="iconify" data-icon="mdi:eye"></span> VISUAL EDITOR
+            </button>
+            <button
+              class="tab-button"
+              onclick="switchEditorTab('json')"
+              id="tab-json"
+            >
+              <span class="iconify" data-icon="mdi:code-json"></span> JSON
+              EDITOR
+            </button>
+            <button
+              class="tab-button"
+              onclick="switchEditorTab('import')"
+              id="tab-import"
+            >
+              <span class="iconify" data-icon="mdi:file-import"></span>
+              IMPORT/EXPORT
+            </button>
+          </div>
+
+          <!-- Visual Editor Tab -->
+          <div id="visual-editor-tab" class="space-y-4">
+            <div
+              id="questions-list"
+              class="space-y-3 max-h-96 overflow-y-auto pr-2"
+            >
+              <!-- Questions will be dynamically added here -->
             </div>
-            
-            <!-- Game Stats -->
-            <div id="stats-bar" class="hidden items-center gap-6">
-                <div class="text-right">
-                    <p class="text-gray-500 text-xs font-mono">DESIGNATION</p>
-                    <p id="display-team-name" class="font-bold text-xl neon-text-blue flex items-center gap-2">
-                        <span class="iconify" data-icon="mdi:account"></span>
-                        <span></span>
-                    </p>
+
+            <button onclick="addNewQuestion()" class="cyber-button w-full">
+              <span class="iconify" data-icon="mdi:plus-circle"></span>
+              ADD NEW QUESTION
+            </button>
+          </div>
+
+          <!-- JSON Editor Tab -->
+          <div id="json-editor-tab" class="hidden">
+            <textarea
+              id="json-editor"
+              class="json-editor"
+              spellcheck="false"
+            ></textarea>
+            <div class="flex gap-3 mt-4">
+              <button onclick="applyJsonChanges()" class="cyber-button flex-1">
+                <span class="iconify" data-icon="mdi:check"></span>
+                APPLY CHANGES
+              </button>
+              <button
+                onclick="validateJson()"
+                class="cyber-button-outline flex-1"
+              >
+                <span class="iconify" data-icon="mdi:check-decagram"></span>
+                VALIDATE
+              </button>
+            </div>
+          </div>
+
+          <!-- Import/Export Tab -->
+          <div id="import-export-tab" class="hidden">
+            <div class="space-y-4">
+              <div>
+                <h3 class="font-bold mb-2 neon-text-blue">EXPORT QUESTIONS</h3>
+                <button onclick="exportQuestions()" class="cyber-button w-full">
+                  <span class="iconify" data-icon="mdi:download"></span>
+                  DOWNLOAD JSON FILE
+                </button>
+              </div>
+
+              <div>
+                <h3 class="font-bold mb-2 neon-text-pink">IMPORT QUESTIONS</h3>
+                <input
+                  type="file"
+                  id="import-file"
+                  accept=".json"
+                  class="hidden"
+                  onchange="importQuestions(this)"
+                />
+                <button
+                  onclick="document.getElementById('import-file').click()"
+                  class="cyber-button-outline w-full"
+                >
+                  <span class="iconify" data-icon="mdi:upload"></span>
+                  SELECT JSON FILE
+                </button>
+              </div>
+
+              <div class="mt-4 p-4 bg-black/50 border border-neon-blue">
+                <h4 class="font-bold mb-2 neon-text-yellow">
+                  JSON FORMAT EXAMPLE:
+                </h4>
+                <pre class="text-xs text-green-400 font-mono overflow-x-auto">
+[
+  {
+    "q": "What is the capital of Indonesia?",
+    "a": ["Jakarta", "Surabaya", "Bandung", "Medan"],
+    "correct": 0,
+    "category": "GEOGRAPHY",
+    "time": 30,
+    "points": 1000
+  }
+]</pre
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-end gap-3 mt-6">
+            <button onclick="saveQuestions()" class="cyber-button">
+              <span class="iconify" data-icon="mdi:content-save"></span>
+              SAVE TO ROOM
+            </button>
+            <button onclick="resetToDefault()" class="cyber-button-outline">
+              <span class="iconify" data-icon="mdi:restore"></span>
+              RESET DEFAULT
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lobby Screen -->
+      <div
+        id="screen-lobby"
+        class="min-h-[600px] flex items-center justify-center"
+      >
+        <div
+          class="cyber-card max-w-md w-full animate__animated animate__fadeInUp"
+        >
+          <div class="text-center mb-8">
+            <div class="text-7xl mb-4 neon-text-blue glitch" data-text="⌨️">
+              <span
+                class="iconify"
+                data-icon="mdi:keyboard"
+                data-width="80"
+                data-height="80"
+              ></span>
+            </div>
+            <h2 class="text-4xl font-bold mb-2 glitch" data-text="INITIALIZE">
+              <span class="neon-text-blue">INITIALIZE</span>
+            </h2>
+            <p class="text-gray-400 font-mono">Enter access credentials</p>
+          </div>
+
+          <div class="space-y-4">
+            <!-- Room Code -->
+            <div>
+              <label
+                class="block text-gray-400 font-mono text-sm mb-2 ml-2 flex items-center gap-2"
+              >
+                <span class="iconify" data-icon="mdi:key-variant"></span>
+                ROOM CODE
+              </label>
+              <div class="flex gap-2">
+                <input
+                  type="text"
+                  id="input-room-code"
+                  maxlength="6"
+                  placeholder="XXXXXX"
+                  class="cyber-input text-center text-2xl font-bold uppercase"
+                />
+                <button
+                  onclick="generateRoomCode()"
+                  class="cyber-button-outline px-6 flex items-center gap-2"
+                >
+                  <span class="iconify" data-icon="mdi:refresh"></span>
+                  GEN
+                </button>
+              </div>
+            </div>
+
+            <!-- Nickname -->
+            <div>
+              <label
+                class="block text-gray-400 font-mono text-sm mb-2 ml-2 flex items-center gap-2"
+              >
+                <span class="iconify" data-icon="mdi:badge-account"></span>
+                DESIGNATION
+              </label>
+              <input
+                type="text"
+                id="input-team-name"
+                placeholder="Enter your callsign..."
+                class="cyber-input"
+              />
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="grid grid-cols-2 gap-3 pt-4">
+              <button onclick="createRoom()" class="cyber-button">
+                <span class="iconify" data-icon="mdi:plus-circle"></span>
+                CREATE
+              </button>
+              <button onclick="joinRoom()" class="cyber-button-outline">
+                <span class="iconify" data-icon="mdi:login"></span>
+                JOIN
+              </button>
+            </div>
+
+            <!-- Room Status -->
+            <div
+              id="room-status-display"
+              class="hidden mt-6 p-6 bg-black/50 border border-neon-blue"
+            >
+              <div class="text-center mb-4">
+                <p
+                  class="text-gray-400 font-mono text-sm mb-2 flex items-center justify-center gap-2"
+                >
+                  <span class="iconify" data-icon="mdi:key-variant"></span>
+                  ROOM CODE
+                </p>
+                <div class="room-code-cyber" id="display-room-code">
+                  DEFAULT
                 </div>
-                <div class="text-right">
-                    <p class="text-gray-500 text-xs font-mono">CREDITS</p>
-                    <p id="display-score" class="font-bold text-2xl neon-text-yellow flex items-center gap-2">
-                        <span class="iconify" data-icon="mdi:currency-usd"></span>
-                        <span>0</span>
-                    </p>
+                <button
+                  onclick="copyRoomCode()"
+                  class="mt-3 text-neon-blue hover:text-neon-pink font-mono text-sm flex items-center gap-2 mx-auto"
+                >
+                  <span class="iconify" data-icon="mdi:content-copy"></span>
+                  COPY CODE
+                </button>
+              </div>
+
+              <div class="flex justify-between items-center mb-4 font-mono">
+                <span class="text-gray-400 flex items-center gap-2">
+                  <span class="iconify" data-icon="mdi:information"></span>
+                  STATUS:
+                </span>
+                <span
+                  id="room-status-text"
+                  class="text-neon-yellow flex items-center gap-2"
+                >
+                  <span class="iconify" data-icon="mdi:clock-outline"></span>
+                  WAITING
+                </span>
+              </div>
+
+              <!-- Question Info -->
+              <div class="mb-4 p-3 bg-black/50 border border-neon-purple">
+                <h3
+                  class="font-mono text-neon-purple mb-2 flex items-center gap-2"
+                >
+                  <span class="iconify" data-icon="mdi:file-question"></span>
+                  QUESTION BANK
+                </h3>
+                <div class="flex justify-between text-sm">
+                  <span>Total Questions:</span>
+                  <span id="total-questions" class="text-neon-yellow">0</span>
                 </div>
-                <div class="text-right">
-                    <p class="text-gray-500 text-xs font-mono">RANK</p>
-                    <p id="display-rank" class="font-bold text-xl neon-text-purple flex items-center gap-2">
-                        <span class="iconify" data-icon="mdi:trophy"></span>
-                        <span>#0</span>
-                    </p>
+                <div class="flex justify-between text-sm mt-1">
+                  <span>Categories:</span>
+                  <span id="question-categories" class="text-neon-blue">-</span>
                 </div>
-                <div id="powerup-display" class="powerup-cyber hidden">
+              </div>
+
+              <div class="mb-4">
+                <h3
+                  class="font-mono text-neon-blue mb-3 flex items-center gap-2"
+                >
+                  <span class="iconify" data-icon="mdi:account-group"></span>
+                  ACTIVE OPERATORS:
+                </h3>
+                <div
+                  id="participants-list-waiting"
+                  class="space-y-2 max-h-48 overflow-y-auto"
+                >
+                  <!-- Participants will be listed here -->
+                </div>
+              </div>
+
+              <!-- Start Button -->
+              <button
+                id="btn-start"
+                onclick="startGame()"
+                disabled
+                class="cyber-button w-full text-lg disabled:opacity-50"
+              >
+                <span class="iconify" data-icon="mdi:play-circle"></span>
+                INITIALIZE MISSION
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Game Screen -->
+      <div id="screen-game" class="hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <!-- Main Game Area -->
+          <div class="lg:col-span-3 space-y-4">
+            <!-- Question Card -->
+            <div class="cyber-card relative overflow-hidden">
+              <div class="scanner"></div>
+
+              <!-- Header -->
+              <div class="flex justify-between items-center mb-6">
+                <span
+                  id="question-category"
+                  class="bg-black/50 border border-neon-blue px-4 py-2 font-mono text-neon-blue flex items-center gap-2"
+                >
+                  <span class="iconify" data-icon="mdi:tag"></span>
+                  LOADING...
+                </span>
+
+                <div class="cyber-timer">
+                  <span class="iconify" data-icon="mdi:timer"></span>
+                  <span id="timer-text">30</span>
+                </div>
+              </div>
+
+              <!-- Question -->
+              <p
+                id="question-text"
+                class="text-2xl font-bold mb-8 leading-relaxed glitch flex items-center gap-3"
+                data-text="Loading question..."
+              >
+                <span class="iconify" data-icon="mdi:help-circle"></span>
+                Loading question...
+              </p>
+
+              <!-- Progress -->
+              <div class="flex justify-between items-center font-mono text-sm">
+                <span
+                  id="question-progress"
+                  class="text-gray-400 flex items-center gap-2"
+                >
+                  <span class="iconify" data-icon="mdi:progress-clock"></span>
+                  MISSION 0/10
+                </span>
+                <span
+                  id="question-points"
+                  class="text-neon-yellow flex items-center gap-2"
+                >
+                  <span class="iconify" data-icon="mdi:currency-usd"></span>
+                  +1000 CR
+                </span>
+              </div>
+            </div>
+
+            <!-- Answers -->
+            <div
+              id="answers-grid"
+              class="grid grid-cols-1 md:grid-cols-2 gap-4"
+            >
+              <!-- Answers will be inserted here -->
+            </div>
+
+            <!-- Feedback -->
+            <div
+              id="feedback"
+              class="hidden p-6 text-center font-bold text-xl animate__animated animate__bounceIn border-2 flex items-center justify-center gap-3"
+            ></div>
+
+            <!-- Warning Message -->
+            <div id="warning-container" class="hidden warning-cyber">
+              <span class="iconify" data-icon="mdi:alert"></span>
+              <span id="warning-text"></span>
+            </div>
+
+            <!-- Boom Targets -->
+            <div id="boom-targets" class="hidden cyber-card">
+              <h3
+                class="font-bold text-lg mb-3 neon-text-pink flex items-center gap-2"
+              >
+                <span class="iconify" data-icon="mdi:flash"></span>
+                SELECT TARGET
+              </h3>
+              <div
+                id="targets-list"
+                class="grid grid-cols-2 md:grid-cols-3 gap-2"
+              >
+                <!-- Targets will be listed here -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Sidebar -->
+          <div class="lg:col-span-1 space-y-4">
+            <!-- Live Rankings -->
+            <div class="cyber-card">
+              <h3
+                class="font-bold text-lg mb-4 flex items-center gap-2 neon-text-purple"
+              >
+                <span class="iconify" data-icon="mdi:trophy"></span>
+                LIVE RANKINGS
+              </h3>
+
+              <div
+                id="leaderboard"
+                class="space-y-2 max-h-[500px] overflow-y-auto"
+              >
+                <!-- Leaderboard will be inserted here -->
+              </div>
+            </div>
+
+            <!-- Power-ups Info -->
+            <div class="cyber-card">
+              <h3
+                class="font-bold text-lg mb-3 neon-text-yellow flex items-center gap-2"
+              >
+                <span class="iconify" data-icon="mdi:flash"></span>
+                POWER-UPS
+              </h3>
+              <div class="space-y-2 font-mono text-sm">
+                <div
+                  class="flex justify-between items-center p-2 bg-black/50 border border-neon-blue"
+                >
+                  <span class="flex items-center gap-2">
+                    <span class="iconify" data-icon="mdi:numeric-3-box"></span>
+                    3x STREAK
+                  </span>
+                  <span class="text-neon-blue flex items-center gap-1">
+                    <span class="iconify" data-icon="mdi:currency-usd"></span>
+                    2x CREDITS
+                  </span>
+                </div>
+                <div
+                  class="flex justify-between items-center p-2 bg-black/50 border border-neon-blue"
+                >
+                  <span class="flex items-center gap-2">
+                    <span class="iconify" data-icon="mdi:numeric-5-box"></span>
+                    5x STREAK
+                  </span>
+                  <span class="text-neon-purple flex items-center gap-1">
+                    <span class="iconify" data-icon="mdi:shield"></span>
+                    SHIELD
+                  </span>
+                </div>
+                <div
+                  class="flex justify-between items-center p-2 bg-black/50 border border-neon-blue"
+                >
+                  <span class="flex items-center gap-2">
+                    <span class="iconify" data-icon="mdi:numeric-7-box"></span>
+                    7x STREAK
+                  </span>
+                  <span class="text-neon-pink flex items-center gap-1">
                     <span class="iconify" data-icon="mdi:flash"></span>
-                    <span id="powerup-count">0</span>
+                    BOOM +1
+                  </span>
                 </div>
+              </div>
             </div>
 
-            <!-- Admin Badge -->
-            <div id="admin-badge" class="hidden powerup-cyber bg-purple-600">
-                <span class="iconify" data-icon="mdi:crown"></span>
-                ADMIN MODE
+            <!-- Room Info -->
+            <div class="cyber-card">
+              <div class="flex justify-between items-center mb-2 font-mono">
+                <span class="text-gray-400 flex items-center gap-2">
+                  <span class="iconify" data-icon="mdi:key-variant"></span>
+                  ROOM:
+                </span>
+                <span id="current-room-code" class="font-bold text-neon-blue"
+                  >---</span
+                >
+              </div>
+              <div class="flex justify-between items-center mb-2 font-mono">
+                <span class="text-gray-400 flex items-center gap-2">
+                  <span class="iconify" data-icon="mdi:account-group"></span>
+                  OPERATORS:
+                </span>
+                <span id="participant-count" class="font-bold text-neon-purple"
+                  >0</span
+                >
+              </div>
+              <div class="flex justify-between items-center mb-2 font-mono">
+                <span class="text-gray-400 flex items-center gap-2">
+                  <span class="iconify" data-icon="mdi:fire"></span>
+                  STREAK:
+                </span>
+                <span id="current-streak" class="font-bold text-neon-yellow"
+                  >0</span
+                >
+              </div>
+              <div class="flex justify-between items-center font-mono">
+                <span class="text-gray-400 flex items-center gap-2">
+                  <span class="iconify" data-icon="mdi:flash"></span>
+                  BOOMS:
+                </span>
+                <span id="current-booms" class="font-bold text-neon-pink"
+                  >0</span
+                >
+              </div>
             </div>
+
+            <!-- Progress Bar -->
+            <div class="cyber-card">
+              <div class="cyber-progress">
+                <div
+                  id="streak-progress"
+                  class="cyber-progress-fill"
+                  style="width: 0%"
+                ></div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <!-- Lobby Screen -->
-        <div id="screen-lobby" class="min-h-[600px] flex items-center justify-center">
-            <div class="cyber-card max-w-md w-full animate__animated animate__fadeInUp">
-                <div class="text-center mb-8">
-                    <div class="text-7xl mb-4 neon-text-blue glitch" data-text="⌨️">
-                        <span class="iconify" data-icon="mdi:keyboard" data-width="80" data-height="80"></span>
-                    </div>
-                    <h2 class="text-4xl font-bold mb-2 glitch" data-text="INITIALIZE">
-                        <span class="neon-text-blue">INITIALIZE</span>
-                    </h2>
-                    <p class="text-gray-400 font-mono">Enter access credentials</p>
-                </div>
-                
-                <div class="space-y-4">
-                    <!-- Room Code -->
-                    <div>
-                        <label class="block text-gray-400 font-mono text-sm mb-2 ml-2 flex items-center gap-2">
-                            <span class="iconify" data-icon="mdi:key-variant"></span>
-                            ROOM CODE
-                        </label>
-                        <div class="flex gap-2">
-                            <input type="text" id="input-room-code" maxlength="6" 
-                                   placeholder="XXXXXX" 
-                                   class="cyber-input text-center text-2xl font-bold uppercase">
-                            <button onclick="generateRoomCode()" class="cyber-button-outline px-6 flex items-center gap-2">
-                                <span class="iconify" data-icon="mdi:refresh"></span>
-                                GEN
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Nickname -->
-                    <div>
-                        <label class="block text-gray-400 font-mono text-sm mb-2 ml-2 flex items-center gap-2">
-                            <span class="iconify" data-icon="mdi:badge-account"></span>
-                            DESIGNATION
-                        </label>
-                        <input type="text" id="input-team-name" placeholder="Enter your callsign..." 
-                               class="cyber-input">
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div class="grid grid-cols-2 gap-3 pt-4">
-                        <button onclick="createRoom()" class="cyber-button">
-                            <span class="iconify" data-icon="mdi:plus-circle"></span>
-                            CREATE
-                        </button>
-                        <button onclick="joinRoom()" class="cyber-button-outline">
-                            <span class="iconify" data-icon="mdi:login"></span>
-                            JOIN
-                        </button>
-                    </div>
-                    
-                    <!-- Room Status -->
-                    <div id="room-status-display" class="hidden mt-6 p-6 bg-black/50 border border-neon-blue">
-                        <div class="text-center mb-4">
-                            <p class="text-gray-400 font-mono text-sm mb-2 flex items-center justify-center gap-2">
-                                <span class="iconify" data-icon="mdi:key-variant"></span>
-                                ROOM CODE
-                            </p>
-                            <div class="room-code-cyber" id="display-room-code">DEFAULT</div>
-                            <button onclick="copyRoomCode()" class="mt-3 text-neon-blue hover:text-neon-pink font-mono text-sm flex items-center gap-2 mx-auto">
-                                <span class="iconify" data-icon="mdi:content-copy"></span>
-                                COPY CODE
-                            </button>
-                        </div>
-                        
-                        <div class="flex justify-between items-center mb-4 font-mono">
-                            <span class="text-gray-400 flex items-center gap-2">
-                                <span class="iconify" data-icon="mdi:information"></span>
-                                STATUS:
-                            </span>
-                            <span id="room-status-text" class="text-neon-yellow flex items-center gap-2">
-                                <span class="iconify" data-icon="mdi:clock-outline"></span>
-                                WAITING
-                            </span>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <h3 class="font-mono text-neon-blue mb-3 flex items-center gap-2">
-                                <span class="iconify" data-icon="mdi:account-group"></span>
-                                ACTIVE OPERATORS:
-                            </h3>
-                            <div id="participants-list-waiting" class="space-y-2 max-h-48 overflow-y-auto">
-                                <!-- Participants will be listed here -->
-                            </div>
-                        </div>
-                        
-                        <!-- Start Button -->
-                        <button id="btn-start" onclick="startGame()" disabled 
-                                class="cyber-button w-full text-lg disabled:opacity-50">
-                            <span class="iconify" data-icon="mdi:play-circle"></span>
-                            INITIALIZE MISSION
-                        </button>
-                    </div>
-                </div>
+      <!-- Results Screen -->
+      <div id="screen-results" class="hidden">
+        <div class="max-w-4xl mx-auto space-y-6">
+          <!-- Winner Celebration -->
+          <div class="cyber-card text-center p-12">
+            <div
+              class="text-8xl mb-4 animate__animated animate__bounceIn neon-text-blue glitch"
+              data-text="🏆"
+            >
+              <span
+                class="iconify"
+                data-icon="mdi:trophy"
+                data-width="80"
+                data-height="80"
+              ></span>
             </div>
-        </div>
+            <h2
+              class="text-6xl font-bold mb-2 glitch"
+              data-text="MISSION COMPLETE"
+            >
+              <span class="neon-text-blue">MISSION</span>
+              <span class="neon-text-pink"> COMPLETE</span>
+            </h2>
+            <p
+              class="text-xl text-gray-400 font-mono flex items-center justify-center gap-2"
+            >
+              <span class="iconify" data-icon="mdi:check-circle"></span>
+              All objectives accomplished
+            </p>
+          </div>
 
-        <!-- Game Screen -->
-        <div id="screen-game" class="hidden">
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                <!-- Main Game Area -->
-                <div class="lg:col-span-3 space-y-4">
-                    <!-- Question Card -->
-                    <div class="cyber-card relative overflow-hidden">
-                        <div class="scanner"></div>
-                        
-                        <!-- Header -->
-                        <div class="flex justify-between items-center mb-6">
-                            <span id="question-category" class="bg-black/50 border border-neon-blue px-4 py-2 font-mono text-neon-blue flex items-center gap-2">
-                                <span class="iconify" data-icon="mdi:tag"></span>
-                                LOADING...
-                            </span>
-                            
-                            <div class="cyber-timer">
-                                <span class="iconify" data-icon="mdi:timer"></span>
-                                <span id="timer-text">30</span>
-                            </div>
-                        </div>
-                        
-                        <!-- Question -->
-                        <p id="question-text" class="text-2xl font-bold mb-8 leading-relaxed glitch flex items-center gap-3" data-text="Loading question...">
-                            <span class="iconify" data-icon="mdi:help-circle"></span>
-                            Loading question...
-                        </p>
-
-                        <!-- Progress -->
-                        <div class="flex justify-between items-center font-mono text-sm">
-                            <span id="question-progress" class="text-gray-400 flex items-center gap-2">
-                                <span class="iconify" data-icon="mdi:progress-clock"></span>
-                                MISSION 0/10
-                            </span>
-                            <span id="question-points" class="text-neon-yellow flex items-center gap-2">
-                                <span class="iconify" data-icon="mdi:currency-usd"></span>
-                                +1000 CR
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- Answers -->
-                    <div id="answers-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Answers will be inserted here -->
-                    </div>
-
-                    <!-- Feedback -->
-                    <div id="feedback" class="hidden p-6 text-center font-bold text-xl animate__animated animate__bounceIn border-2 flex items-center justify-center gap-3">
-                    </div>
-
-                    <!-- Warning Message -->
-                    <div id="warning-container" class="hidden warning-cyber">
-                        <span class="iconify" data-icon="mdi:alert"></span>
-                        <span id="warning-text"></span>
-                    </div>
-
-                    <!-- Boom Targets -->
-                    <div id="boom-targets" class="hidden cyber-card">
-                        <h3 class="font-bold text-lg mb-3 neon-text-pink flex items-center gap-2">
-                            <span class="iconify" data-icon="mdi:flash"></span>
-                            SELECT TARGET
-                        </h3>
-                        <div id="targets-list" class="grid grid-cols-2 md:grid-cols-3 gap-2">
-                            <!-- Targets will be listed here -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sidebar -->
-                <div class="lg:col-span-1 space-y-4">
-                    <!-- Live Rankings -->
-                    <div class="cyber-card">
-                        <h3 class="font-bold text-lg mb-4 flex items-center gap-2 neon-text-purple">
-                            <span class="iconify" data-icon="mdi:trophy"></span>
-                            LIVE RANKINGS
-                        </h3>
-                        
-                        <div id="leaderboard" class="space-y-2 max-h-[500px] overflow-y-auto">
-                            <!-- Leaderboard will be inserted here -->
-                        </div>
-                    </div>
-
-                    <!-- Power-ups Info -->
-                    <div class="cyber-card">
-                        <h3 class="font-bold text-lg mb-3 neon-text-yellow flex items-center gap-2">
-                            <span class="iconify" data-icon="mdi:flash"></span>
-                            POWER-UPS
-                        </h3>
-                        <div class="space-y-2 font-mono text-sm">
-                            <div class="flex justify-between items-center p-2 bg-black/50 border border-neon-blue">
-                                <span class="flex items-center gap-2">
-                                    <span class="iconify" data-icon="mdi:numeric-3-box"></span>
-                                    3x STREAK
-                                </span>
-                                <span class="text-neon-blue flex items-center gap-1">
-                                    <span class="iconify" data-icon="mdi:currency-usd"></span>
-                                    2x CREDITS
-                                </span>
-                            </div>
-                            <div class="flex justify-between items-center p-2 bg-black/50 border border-neon-blue">
-                                <span class="flex items-center gap-2">
-                                    <span class="iconify" data-icon="mdi:numeric-5-box"></span>
-                                    5x STREAK
-                                </span>
-                                <span class="text-neon-purple flex items-center gap-1">
-                                    <span class="iconify" data-icon="mdi:shield"></span>
-                                    SHIELD
-                                </span>
-                            </div>
-                            <div class="flex justify-between items-center p-2 bg-black/50 border border-neon-blue">
-                                <span class="flex items-center gap-2">
-                                    <span class="iconify" data-icon="mdi:numeric-7-box"></span>
-                                    7x STREAK
-                                </span>
-                                <span class="text-neon-pink flex items-center gap-1">
-                                    <span class="iconify" data-icon="mdi:flash"></span>
-                                    BOOM +1
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Room Info -->
-                    <div class="cyber-card">
-                        <div class="flex justify-between items-center mb-2 font-mono">
-                            <span class="text-gray-400 flex items-center gap-2">
-                                <span class="iconify" data-icon="mdi:key-variant"></span>
-                                ROOM:
-                            </span>
-                            <span id="current-room-code" class="font-bold text-neon-blue">---</span>
-                        </div>
-                        <div class="flex justify-between items-center mb-2 font-mono">
-                            <span class="text-gray-400 flex items-center gap-2">
-                                <span class="iconify" data-icon="mdi:account-group"></span>
-                                OPERATORS:
-                            </span>
-                            <span id="participant-count" class="font-bold text-neon-purple">0</span>
-                        </div>
-                        <div class="flex justify-between items-center mb-2 font-mono">
-                            <span class="text-gray-400 flex items-center gap-2">
-                                <span class="iconify" data-icon="mdi:fire"></span>
-                                STREAK:
-                            </span>
-                            <span id="current-streak" class="font-bold text-neon-yellow">0</span>
-                        </div>
-                        <div class="flex justify-between items-center font-mono">
-                            <span class="text-gray-400 flex items-center gap-2">
-                                <span class="iconify" data-icon="mdi:flash"></span>
-                                BOOMS:
-                            </span>
-                            <span id="current-booms" class="font-bold text-neon-pink">0</span>
-                        </div>
-                    </div>
-
-                    <!-- Progress Bar -->
-                    <div class="cyber-card">
-                        <div class="cyber-progress">
-                            <div id="streak-progress" class="cyber-progress-fill" style="width: 0%"></div>
-                        </div>
-                    </div>
-                </div>
+          <!-- Final Stats -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="cyber-card text-center p-8">
+              <p
+                class="text-gray-400 font-mono text-sm mb-2 flex items-center justify-center gap-2"
+              >
+                <span class="iconify" data-icon="mdi:badge-account"></span>
+                DESIGNATION
+              </p>
+              <p
+                id="res-team-name"
+                class="text-3xl font-bold neon-text-blue flex items-center justify-center gap-2"
+              >
+                <span class="iconify" data-icon="mdi:account"></span>
+                <span>-</span>
+              </p>
             </div>
-        </div>
 
-        <!-- Results Screen -->
-        <div id="screen-results" class="hidden">
-            <div class="max-w-4xl mx-auto space-y-6">
-                <!-- Winner Celebration -->
-                <div class="cyber-card text-center p-12">
-                    <div class="text-8xl mb-4 animate__animated animate__bounceIn neon-text-blue glitch" data-text="🏆">
-                        <span class="iconify" data-icon="mdi:trophy" data-width="80" data-height="80"></span>
-                    </div>
-                    <h2 class="text-6xl font-bold mb-2 glitch" data-text="MISSION COMPLETE">
-                        <span class="neon-text-blue">MISSION</span>
-                        <span class="neon-text-pink"> COMPLETE</span>
-                    </h2>
-                    <p class="text-xl text-gray-400 font-mono flex items-center justify-center gap-2">
-                        <span class="iconify" data-icon="mdi:check-circle"></span>
-                        All objectives accomplished
-                    </p>
-                </div>
-
-                <!-- Final Stats -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="cyber-card text-center p-8">
-                        <p class="text-gray-400 font-mono text-sm mb-2 flex items-center justify-center gap-2">
-                            <span class="iconify" data-icon="mdi:badge-account"></span>
-                            DESIGNATION
-                        </p>
-                        <p id="res-team-name" class="text-3xl font-bold neon-text-blue flex items-center justify-center gap-2">
-                            <span class="iconify" data-icon="mdi:account"></span>
-                            <span>-</span>
-                        </p>
-                    </div>
-                    
-                    <div class="cyber-card text-center p-8">
-                        <p class="text-gray-400 font-mono text-sm mb-2 flex items-center justify-center gap-2">
-                            <span class="iconify" data-icon="mdi:currency-usd"></span>
-                            FINAL CREDITS
-                        </p>
-                        <p id="res-score" class="text-5xl font-bold neon-text-yellow flex items-center justify-center gap-2">
-                            <span class="iconify" data-icon="mdi:currency-usd"></span>
-                            <span>0</span>
-                        </p>
-                    </div>
-                    
-                    <div class="cyber-card text-center p-8">
-                        <p class="text-gray-400 font-mono text-sm mb-2 flex items-center justify-center gap-2">
-                            <span class="iconify" data-icon="mdi:trophy"></span>
-                            FINAL RANK
-                        </p>
-                        <p id="res-rank" class="text-4xl font-bold neon-text-purple flex items-center justify-center gap-2">
-                            <span class="iconify" data-icon="mdi:medal"></span>
-                            <span>#0</span>
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Final Leaderboard -->
-                <div class="cyber-card p-8">
-                    <h3 class="text-2xl font-bold mb-6 flex items-center gap-3 neon-text-purple">
-                        <span class="iconify" data-icon="mdi:trophy"></span>
-                        FINAL RANKINGS
-                    </h3>
-                    
-                    <div id="final-leaderboard" class="space-y-2">
-                        <!-- Final leaderboard will be inserted here -->
-                    </div>
-
-                    <div class="mt-8 text-center">
-                        <button onclick="location.reload()" class="cyber-button px-12">
-                            <span class="iconify" data-icon="mdi:restart"></span>
-                            REBOOT SYSTEM
-                        </button>
-                    </div>
-                </div>
+            <div class="cyber-card text-center p-8">
+              <p
+                class="text-gray-400 font-mono text-sm mb-2 flex items-center justify-center gap-2"
+              >
+                <span class="iconify" data-icon="mdi:currency-usd"></span>
+                FINAL CREDITS
+              </p>
+              <p
+                id="res-score"
+                class="text-5xl font-bold neon-text-yellow flex items-center justify-center gap-2"
+              >
+                <span class="iconify" data-icon="mdi:currency-usd"></span>
+                <span>0</span>
+              </p>
             </div>
+
+            <div class="cyber-card text-center p-8">
+              <p
+                class="text-gray-400 font-mono text-sm mb-2 flex items-center justify-center gap-2"
+              >
+                <span class="iconify" data-icon="mdi:trophy"></span>
+                FINAL RANK
+              </p>
+              <p
+                id="res-rank"
+                class="text-4xl font-bold neon-text-purple flex items-center justify-center gap-2"
+              >
+                <span class="iconify" data-icon="mdi:medal"></span>
+                <span>#0</span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Final Leaderboard -->
+          <div class="cyber-card p-8">
+            <h3
+              class="text-2xl font-bold mb-6 flex items-center gap-3 neon-text-purple"
+            >
+              <span class="iconify" data-icon="mdi:trophy"></span>
+              FINAL RANKINGS
+            </h3>
+
+            <div id="final-leaderboard" class="space-y-2">
+              <!-- Final leaderboard will be inserted here -->
+            </div>
+
+            <div class="mt-8 text-center">
+              <button onclick="location.reload()" class="cyber-button px-12">
+                <span class="iconify" data-icon="mdi:restart"></span>
+                REBOOT SYSTEM
+              </button>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
 
     <!-- Admin Monitoring Panel -->
-    <div class="fixed bottom-6 right-6 z-50">
-        <button onclick="toggleAdminPanel()" class="cyber-button w-14 h-14 rounded-none p-0 text-2xl">
-            <span class="iconify" data-icon="mdi:crown"></span>
-        </button>
+    <div class="fixed bottom-6 right-6 z-50 flex gap-3">
+      <button
+        onclick="toggleQuestionEditor()"
+        class="cyber-button w-14 h-14 rounded-none p-0 text-2xl"
+      >
+        <span class="iconify" data-icon="mdi:file-document-edit"></span>
+      </button>
+      <button
+        onclick="toggleAdminPanel()"
+        class="cyber-button w-14 h-14 rounded-none p-0 text-2xl"
+      >
+        <span class="iconify" data-icon="mdi:crown"></span>
+      </button>
     </div>
 
     <!-- Admin Modal -->
     <div id="admin-modal" class="cyber-modal">
-        <div class="cyber-modal-content max-w-4xl w-full">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold neon-text-purple flex items-center gap-2">
-                    <span class="iconify" data-icon="mdi:crown"></span>
-                    ADMIN OVERRIDE
-                </h2>
-                <button onclick="toggleAdminPanel()" class="text-gray-500 hover:text-neon-pink text-2xl">&times;</button>
-            </div>
-
-            <div class="mb-4">
-                <div class="flex gap-2">
-                    <input type="text" id="admin-room-code" placeholder="ROOM CODE" 
-                           class="cyber-input flex-1">
-                    <button onclick="monitorRoom()" class="cyber-button px-6">
-                        <span class="iconify" data-icon="mdi:monitor"></span>
-                        MONITOR
-                    </button>
-                </div>
-            </div>
-
-            <div id="admin-monitoring-info" class="hidden mb-4 p-4 bg-black/50 border border-neon-blue flex items-center justify-between">
-                <span class="font-mono flex items-center gap-2">
-                    <span class="iconify" data-icon="mdi:eye"></span>
-                    MONITORING: <span id="monitoring-room-code" class="text-neon-blue"></span>
-                </span>
-                <button onclick="stopMonitoring()" class="text-neon-pink hover:text-neon-blue flex items-center gap-1">
-                    <span class="iconify" data-icon="mdi:stop"></span>
-                    STOP
-                </button>
-            </div>
-
-            <!-- Stats -->
-            <div class="grid grid-cols-4 gap-3 mb-6">
-                <div class="bg-black/50 border border-neon-blue p-3 text-center">
-                    <div class="text-2xl font-bold text-neon-blue flex items-center justify-center gap-1">
-                        <span class="iconify" data-icon="mdi:account-group"></span>
-                        <span id="admin-participants">0</span>
-                    </div>
-                    <div class="text-xs font-mono text-gray-400">OPERATORS</div>
-                </div>
-                <div class="bg-black/50 border border-neon-purple p-3 text-center">
-                    <div class="text-2xl font-bold text-neon-purple flex items-center justify-center gap-1">
-                        <span class="iconify" data-icon="mdi:flash"></span>
-                        <span id="admin-total-booms">0</span>
-                    </div>
-                    <div class="text-xs font-mono text-gray-400">BOOMS</div>
-                </div>
-                <div class="bg-black/50 border border-neon-yellow p-3 text-center">
-                    <div class="text-2xl font-bold text-neon-yellow flex items-center justify-center gap-1">
-                        <span class="iconify" data-icon="mdi:alert"></span>
-                        <span id="admin-warnings">0</span>
-                    </div>
-                    <div class="text-xs font-mono text-gray-400">WARNINGS</div>
-                </div>
-                <div class="bg-black/50 border border-neon-pink p-3 text-center">
-                    <div class="text-2xl font-bold text-neon-pink flex items-center justify-center gap-1">
-                        <span class="iconify" data-icon="mdi:close-circle"></span>
-                        <span id="admin-disqualified">0</span>
-                    </div>
-                    <div class="text-xs font-mono text-gray-400">TERMINATED</div>
-                </div>
-            </div>
-
-            <h3 class="font-bold mb-3 neon-text-blue flex items-center gap-2">
-                <span class="iconify" data-icon="mdi:account-group"></span>
-                ACTIVE OPERATORS
-            </h3>
-            <div id="participants-list" class="space-y-2 max-h-60 overflow-y-auto mb-6"></div>
-
-            <h3 class="font-bold mb-3 neon-text-purple flex items-center gap-2">
-                <span class="iconify" data-icon="mdi:history"></span>
-                ACTIVITY LOG
-            </h3>
-            <div id="activity-log" class="space-y-2 max-h-40 overflow-y-auto bg-black/50 p-3 border border-neon-blue font-mono text-sm"></div>
+      <div class="cyber-modal-content max-w-4xl w-full">
+        <div class="flex justify-between items-center mb-6">
+          <h2
+            class="text-2xl font-bold neon-text-purple flex items-center gap-2"
+          >
+            <span class="iconify" data-icon="mdi:crown"></span>
+            ADMIN OVERRIDE
+          </h2>
+          <button
+            onclick="toggleAdminPanel()"
+            class="text-gray-500 hover:text-neon-pink text-2xl"
+          >
+            &times;
+          </button>
         </div>
+
+        <div class="mb-4">
+          <div class="flex gap-2">
+            <input
+              type="text"
+              id="admin-room-code"
+              placeholder="ROOM CODE"
+              class="cyber-input flex-1"
+            />
+            <button onclick="monitorRoom()" class="cyber-button px-6">
+              <span class="iconify" data-icon="mdi:monitor"></span>
+              MONITOR
+            </button>
+          </div>
+        </div>
+
+        <div
+          id="admin-monitoring-info"
+          class="hidden mb-4 p-4 bg-black/50 border border-neon-blue flex items-center justify-between"
+        >
+          <span class="font-mono flex items-center gap-2">
+            <span class="iconify" data-icon="mdi:eye"></span>
+            MONITORING:
+            <span id="monitoring-room-code" class="text-neon-blue"></span>
+          </span>
+          <button
+            onclick="stopMonitoring()"
+            class="text-neon-pink hover:text-neon-blue flex items-center gap-1"
+          >
+            <span class="iconify" data-icon="mdi:stop"></span>
+            STOP
+          </button>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-4 gap-3 mb-6">
+          <div class="bg-black/50 border border-neon-blue p-3 text-center">
+            <div
+              class="text-2xl font-bold text-neon-blue flex items-center justify-center gap-1"
+            >
+              <span class="iconify" data-icon="mdi:account-group"></span>
+              <span id="admin-participants">0</span>
+            </div>
+            <div class="text-xs font-mono text-gray-400">OPERATORS</div>
+          </div>
+          <div class="bg-black/50 border border-neon-purple p-3 text-center">
+            <div
+              class="text-2xl font-bold text-neon-purple flex items-center justify-center gap-1"
+            >
+              <span class="iconify" data-icon="mdi:flash"></span>
+              <span id="admin-total-booms">0</span>
+            </div>
+            <div class="text-xs font-mono text-gray-400">BOOMS</div>
+          </div>
+          <div class="bg-black/50 border border-neon-yellow p-3 text-center">
+            <div
+              class="text-2xl font-bold text-neon-yellow flex items-center justify-center gap-1"
+            >
+              <span class="iconify" data-icon="mdi:alert"></span>
+              <span id="admin-warnings">0</span>
+            </div>
+            <div class="text-xs font-mono text-gray-400">WARNINGS</div>
+          </div>
+          <div class="bg-black/50 border border-neon-pink p-3 text-center">
+            <div
+              class="text-2xl font-bold text-neon-pink flex items-center justify-center gap-1"
+            >
+              <span class="iconify" data-icon="mdi:close-circle"></span>
+              <span id="admin-disqualified">0</span>
+            </div>
+            <div class="text-xs font-mono text-gray-400">TERMINATED</div>
+          </div>
+        </div>
+
+        <h3 class="font-bold mb-3 neon-text-blue flex items-center gap-2">
+          <span class="iconify" data-icon="mdi:account-group"></span>
+          ACTIVE OPERATORS
+        </h3>
+        <div
+          id="participants-list"
+          class="space-y-2 max-h-60 overflow-y-auto mb-6"
+        ></div>
+
+        <h3 class="font-bold mb-3 neon-text-purple flex items-center gap-2">
+          <span class="iconify" data-icon="mdi:history"></span>
+          ACTIVITY LOG
+        </h3>
+        <div
+          id="activity-log"
+          class="space-y-2 max-h-40 overflow-y-auto bg-black/50 p-3 border border-neon-blue font-mono text-sm"
+        ></div>
+      </div>
     </div>
 
     <!-- Confetti Canvas -->
-    <canvas id="confetti" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 4000;"></canvas>
+    <canvas
+      id="confetti"
+      style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 4000;
+      "
+    ></canvas>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, updateDoc, collection, onSnapshot, increment, arrayUnion, getDoc, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      import {
+        getAuth,
+        signInAnonymously,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+      import {
+        getFirestore,
+        doc,
+        setDoc,
+        updateDoc,
+        collection,
+        onSnapshot,
+        increment,
+        arrayUnion,
+        getDoc,
+        getDocs,
+        deleteDoc,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyD73uPU8es-9EK2EXl3zj8hpcXPwpAu_xk",
-            authDomain: "game-basis-data.firebaseapp.com",
-            projectId: "game-basis-data",
-            storageBucket: "game-basis-data.firebasestorage.app",
-            messagingSenderId: "645027573181",
-            appId: "1:645027573181:web:79f2388ebd4849c6a8f6d4"
-        };
+      const firebaseConfig = {
+        apiKey: "AIzaSyD73uPU8es-9EK2EXl3zj8hpcXPwpAu_xk",
+        authDomain: "game-basis-data.firebaseapp.com",
+        projectId: "game-basis-data",
+        storageBucket: "game-basis-data.firebasestorage.app",
+        messagingSenderId: "645027573181",
+        appId: "1:645027573181:web:79f2388ebd4849c6a8f6d4",
+      };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
 
-        // Game State
-        let currentUser = null;
-        let currentRoom = null;
-        let currentNickname = '';
-        let isAdmin = false;
-        let score = 0;
-        let qIdx = 0;
-        let timer;
-        let timeLeft;
-        let currentStreak = 0;
-        let boomCount = 0;
-        let warningCount = 0;
-        let roomUnsubscribe = null;
-        let cameraStream = null;
-        let isGameActive = false;
-        let participants = [];
+      // Game State
+      let currentUser = null;
+      let currentRoom = null;
+      let currentNickname = "";
+      let isAdmin = false;
+      let score = 0;
+      let qIdx = 0;
+      let timer;
+      let timeLeft;
+      let currentStreak = 0;
+      let boomCount = 0;
+      let warningCount = 0;
+      let roomUnsubscribe = null;
+      let cameraStream = null;
+      let isGameActive = false;
+      let participants = [];
 
-        // Quiz Questions
-        const questions = [
-            {
-                q: "ACCESSING DATABASE: What is the capital of Indonesia?",
-                a: ["JAKARTA", "SURABAYA", "BANDUNG", "MEDAN"],
-                correct: 0,
-                category: "GEO-DATA",
-                time: 30,
-                points: 1000
-            },
-            {
-                q: "HISTORY FILE: Who invented the light bulb?",
-                a: ["NIKOLA TESLA", "THOMAS EDISON", "ALEXANDER BELL", "ALBERT EINSTEIN"],
-                correct: 1,
-                category: "SCIENCE",
-                time: 30,
-                points: 1000
-            },
-            {
-                q: "BIOMETRIC SCAN: Which animal can fly?",
-                a: ["CAT", "DOG", "BIRD", "FISH"],
-                correct: 2,
-                category: "BIOLOGY",
-                time: 20,
-                points: 800
-            },
-            {
-                q: "SPACE DATA: Largest planet in solar system?",
-                a: ["MARS", "SATURN", "JUPITER", "EARTH"],
-                correct: 2,
-                category: "ASTRONOMY",
-                time: 30,
-                points: 1000
-            },
-            {
-                q: "QUANTUM COMPUTING: 1 + 1 = ?",
-                a: ["1", "2", "3", "4"],
-                correct: 1,
-                category: "MATH",
-                time: 15,
-                points: 500
-            },
-            {
-                q: "COLOR ANALYSIS: What color are leaves?",
-                a: ["RED", "BLUE", "YELLOW", "GREEN"],
-                correct: 3,
-                category: "BIOLOGY",
-                time: 15,
-                points: 500
-            },
-            {
-                q: "HISTORICAL DATA: First president of Indonesia?",
-                a: ["SOEHARTO", "HABIBIE", "SOEKARNO", "MEGAWATI"],
-                correct: 2,
-                category: "HISTORY",
-                time: 25,
-                points: 900
-            },
-            {
-                q: "CURRENCY DATA: Japanese currency?",
-                a: ["WON", "YEN", "DOLLAR", "RINGGIT"],
-                correct: 1,
-                category: "ECONOMY",
-                time: 25,
-                points: 900
-            },
-            {
-                q: "MEDIA FILE: Movie about Titanic?",
-                a: ["AVATAR", "TITANIC", "INCEPTION", "BATMAN"],
-                correct: 1,
-                category: "MEDIA",
-                time: 20,
-                points: 800
-            },
-            {
-                q: "SCANNING: Tool to see stars?",
-                a: ["MICROSCOPE", "TELESCOPE", "PERISCOPE", "STETHOSCOPE"],
-                correct: 1,
-                category: "SCIENCE",
-                time: 20,
-                points: 800
-            }
-        ];
+      // Default Quiz Questions
+      let questions = [
+        {
+          q: "ACCESSING DATABASE: What is the capital of Indonesia?",
+          a: ["JAKARTA", "SURABAYA", "BANDUNG", "MEDAN"],
+          correct: 0,
+          category: "GEO-DATA",
+          time: 30,
+          points: 1000,
+        },
+        {
+          q: "HISTORY FILE: Who invented the light bulb?",
+          a: [
+            "NIKOLA TESLA",
+            "THOMAS EDISON",
+            "ALEXANDER BELL",
+            "ALBERT EINSTEIN",
+          ],
+          correct: 1,
+          category: "SCIENCE",
+          time: 30,
+          points: 1000,
+        },
+        {
+          q: "BIOMETRIC SCAN: Which animal can fly?",
+          a: ["CAT", "DOG", "BIRD", "FISH"],
+          correct: 2,
+          category: "BIOLOGY",
+          time: 20,
+          points: 800,
+        },
+        {
+          q: "SPACE DATA: Largest planet in solar system?",
+          a: ["MARS", "SATURN", "JUPITER", "EARTH"],
+          correct: 2,
+          category: "ASTRONOMY",
+          time: 30,
+          points: 1000,
+        },
+        {
+          q: "QUANTUM COMPUTING: 1 + 1 = ?",
+          a: ["1", "2", "3", "4"],
+          correct: 1,
+          category: "MATH",
+          time: 15,
+          points: 500,
+        },
+        {
+          q: "COLOR ANALYSIS: What color are leaves?",
+          a: ["RED", "BLUE", "YELLOW", "GREEN"],
+          correct: 3,
+          category: "BIOLOGY",
+          time: 15,
+          points: 500,
+        },
+        {
+          q: "HISTORICAL DATA: First president of Indonesia?",
+          a: ["SOEHARTO", "HABIBIE", "SOEKARNO", "MEGAWATI"],
+          correct: 2,
+          category: "HISTORY",
+          time: 25,
+          points: 900,
+        },
+        {
+          q: "CURRENCY DATA: Japanese currency?",
+          a: ["WON", "YEN", "DOLLAR", "RINGGIT"],
+          correct: 1,
+          category: "ECONOMY",
+          time: 25,
+          points: 900,
+        },
+        {
+          q: "MEDIA FILE: Movie about Titanic?",
+          a: ["AVATAR", "TITANIC", "INCEPTION", "BATMAN"],
+          correct: 1,
+          category: "MEDIA",
+          time: 20,
+          points: 800,
+        },
+        {
+          q: "SCANNING: Tool to see stars?",
+          a: ["MICROSCOPE", "TELESCOPE", "PERISCOPE", "STETHOSCOPE"],
+          correct: 1,
+          category: "SCIENCE",
+          time: 20,
+          points: 800,
+        },
+      ];
 
-        // Initialize Auth
-        signInAnonymously(auth).catch(console.error);
+      // ==================== QUESTION EDITOR FUNCTIONS ====================
 
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                currentUser = user;
-                console.log('Authenticated:', user.uid);
-            }
+      window.toggleQuestionEditor = () => {
+        document
+          .getElementById("question-editor-modal")
+          .classList.toggle("active");
+        if (
+          document
+            .getElementById("question-editor-modal")
+            .classList.contains("active")
+        ) {
+          renderVisualEditor();
+          updateJsonEditor();
+        }
+      };
+
+      window.switchEditorTab = (tab) => {
+        // Update tab buttons
+        document
+          .querySelectorAll(".tab-button")
+          .forEach((btn) => btn.classList.remove("active"));
+        document.getElementById(`tab-${tab}`).classList.add("active");
+
+        // Update tab content
+        document.getElementById("visual-editor-tab").classList.add("hidden");
+        document.getElementById("json-editor-tab").classList.add("hidden");
+        document.getElementById("import-export-tab").classList.add("hidden");
+
+        document.getElementById(`${tab}-editor-tab`).classList.remove("hidden");
+
+        if (tab === "visual") {
+          renderVisualEditor();
+        } else if (tab === "json") {
+          updateJsonEditor();
+        }
+      };
+
+      function renderVisualEditor() {
+        const container = document.getElementById("questions-list");
+        container.innerHTML = questions
+          .map(
+            (q, index) => `
+                <div class="question-preview">
+                    <div class="flex justify-between items-start mb-3">
+                        <div class="flex-1">
+                            <input type="text" value="${q.q.replace(/"/g, "&quot;")}" 
+                                   onchange="updateQuestion(${index}, 'q', this.value)"
+                                   class="cyber-input text-sm mb-2" placeholder="Question">
+                        </div>
+                        <button onclick="deleteQuestion(${index})" class="text-neon-pink hover:text-neon-blue ml-2">
+                            <span class="iconify" data-icon="mdi:delete"></span>
+                        </button>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2 mb-2">
+                        ${q.a
+                          .map(
+                            (answer, ansIndex) => `
+                            <div class="flex items-center gap-2">
+                                <input type="radio" name="correct-${index}" value="${ansIndex}" 
+                                       ${q.correct === ansIndex ? "checked" : ""}
+                                       onchange="setCorrectAnswer(${index}, ${ansIndex})"
+                                       class="w-4 h-4">
+                                <input type="text" value="${answer}" 
+                                       onchange="updateAnswer(${index}, ${ansIndex}, this.value)"
+                                       class="cyber-input text-xs flex-1">
+                            </div>
+                        `,
+                          )
+                          .join("")}
+                    </div>
+                    
+                    <div class="flex gap-2 text-sm">
+                        <input type="text" value="${q.category}" 
+                               onchange="updateQuestion(${index}, 'category', this.value)"
+                               class="cyber-input text-xs flex-1" placeholder="Category">
+                        <input type="number" value="${q.time}" min="5" max="120"
+                               onchange="updateQuestion(${index}, 'time', parseInt(this.value))"
+                               class="cyber-input text-xs w-20" placeholder="Time">
+                        <input type="number" value="${q.points}" min="100" max="5000"
+                               onchange="updateQuestion(${index}, 'points', parseInt(this.value))"
+                               class="cyber-input text-xs w-20" placeholder="Points">
+                    </div>
+                </div>
+            `,
+          )
+          .join("");
+      }
+
+      window.addNewQuestion = () => {
+        questions.push({
+          q: "New question?",
+          a: ["Option A", "Option B", "Option C", "Option D"],
+          correct: 0,
+          category: "GENERAL",
+          time: 30,
+          points: 1000,
         });
+        renderVisualEditor();
+        updateJsonEditor();
+      };
 
-        // ==================== ROOM MANAGEMENT ====================
+      window.deleteQuestion = (index) => {
+        if (confirm("Delete this question?")) {
+          questions.splice(index, 1);
+          renderVisualEditor();
+          updateJsonEditor();
+        }
+      };
 
-        window.generateRoomCode = () => {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            let code = '';
-            for (let i = 0; i < 6; i++) {
-                code += chars.charAt(Math.floor(Math.random() * chars.length));
+      window.updateQuestion = (index, field, value) => {
+        questions[index][field] = value;
+        updateJsonEditor();
+      };
+
+      window.updateAnswer = (qIndex, ansIndex, value) => {
+        questions[qIndex].a[ansIndex] = value;
+        updateJsonEditor();
+      };
+
+      window.setCorrectAnswer = (qIndex, ansIndex) => {
+        questions[qIndex].correct = ansIndex;
+        updateJsonEditor();
+      };
+
+      function updateJsonEditor() {
+        document.getElementById("json-editor").value = JSON.stringify(
+          questions,
+          null,
+          2,
+        );
+      }
+
+      window.applyJsonChanges = () => {
+        try {
+          const newQuestions = JSON.parse(
+            document.getElementById("json-editor").value,
+          );
+          if (Array.isArray(newQuestions)) {
+            // Validate structure
+            let valid = true;
+            newQuestions.forEach((q, i) => {
+              if (
+                !q.q ||
+                !Array.isArray(q.a) ||
+                q.a.length !== 4 ||
+                typeof q.correct !== "number" ||
+                !q.category ||
+                !q.time ||
+                !q.points
+              ) {
+                valid = false;
+              }
+            });
+
+            if (valid) {
+              questions = newQuestions;
+              renderVisualEditor();
+              showNotification("Questions updated successfully!", "success");
+            } else {
+              showNotification("Invalid question structure!", "error");
             }
-            document.getElementById('input-room-code').value = code;
-            return code;
+          }
+        } catch (e) {
+          showNotification("Invalid JSON format!", "error");
+        }
+      };
+
+      window.validateJson = () => {
+        try {
+          const parsed = JSON.parse(
+            document.getElementById("json-editor").value,
+          );
+          if (Array.isArray(parsed)) {
+            let valid = true;
+            parsed.forEach((q, i) => {
+              if (
+                !q.q ||
+                !Array.isArray(q.a) ||
+                q.a.length !== 4 ||
+                typeof q.correct !== "number" ||
+                !q.category ||
+                !q.time ||
+                !q.points
+              ) {
+                valid = false;
+              }
+            });
+
+            if (valid) {
+              showNotification("✓ JSON is valid!", "success");
+            } else {
+              showNotification("✗ Invalid question structure!", "error");
+            }
+          }
+        } catch (e) {
+          showNotification("✗ Invalid JSON syntax!", "error");
+        }
+      };
+
+      window.exportQuestions = () => {
+        const dataStr = JSON.stringify(questions, null, 2);
+        const dataUri =
+          "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
+        const exportFileDefaultName = `questions_${new Date().toISOString().slice(0, 10)}.json`;
+
+        const linkElement = document.createElement("a");
+        linkElement.setAttribute("href", dataUri);
+        linkElement.setAttribute("download", exportFileDefaultName);
+        linkElement.click();
+      };
+
+      window.importQuestions = (input) => {
+        const file = input.files[0];
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+          try {
+            const imported = JSON.parse(e.target.result);
+            if (Array.isArray(imported)) {
+              questions = imported;
+              renderVisualEditor();
+              updateJsonEditor();
+              showNotification("Questions imported successfully!", "success");
+            }
+          } catch (e) {
+            showNotification("Invalid JSON file!", "error");
+          }
         };
 
-        window.copyRoomCode = () => {
-            const code = document.getElementById('display-room-code').innerText;
-            navigator.clipboard.writeText(code);
-            showNotification('ROOM CODE COPIED', 'success');
-        };
+        reader.readAsText(file);
+        input.value = ""; // Reset file input
+      };
 
-        window.createRoom = async () => {
-            const roomCode = document.getElementById('input-room-code').value.trim().toUpperCase() || generateRoomCode();
-            const nickname = document.getElementById('input-team-name').value.trim();
-            
-            if (!nickname) {
-                alert('INPUT DESIGNATION');
-                return;
-            }
-            
-            try {
-                await setDoc(doc(db, 'rooms', roomCode), {
-                    createdBy: currentUser.uid,
-                    createdByName: nickname,
-                    createdAt: Date.now(),
-                    status: 'waiting',
-                    participants: 1,
-                    maxParticipants: 50,
-                    currentQuestion: 0,
-                    questions: questions
-                });
+      window.saveQuestions = () => {
+        // Save to localStorage
+        localStorage.setItem("customQuestions", JSON.stringify(questions));
+        showNotification("Questions saved to room!", "success");
 
-                await setDoc(doc(db, 'rooms', roomCode, 'participants', currentUser.uid), {
-                    name: nickname,
-                    uid: currentUser.uid,
-                    score: 0,
-                    streak: 0,
-                    booms: 0,
-                    warnings: 0,
-                    joinedAt: Date.now(),
-                    status: 'active',
-                    isAdmin: true
-                });
+        // Update room if exists
+        if (currentRoom && isAdmin) {
+          updateDoc(doc(db, "rooms", currentRoom), {
+            questions: questions,
+          }).catch(console.error);
+        }
+      };
 
-                currentRoom = roomCode;
-                currentNickname = nickname;
-                isAdmin = true;
-                
-                document.getElementById('input-room-code').value = roomCode;
-                document.getElementById('display-team-name').innerText = nickname;
-                document.getElementById('display-room-code').innerText = roomCode;
-                document.getElementById('room-status-display').classList.remove('hidden');
-                document.getElementById('btn-start').disabled = false;
-                document.getElementById('admin-badge').classList.remove('hidden');
-                
-                showNotification(`ROOM ${roomCode} INITIALIZED`, 'success');
-                
-                listenToRoom(roomCode);
-                
-            } catch (e) {
-                console.error('Failed to create room:', e);
-                alert('ROOM CREATION FAILED');
-            }
-        };
+      window.resetToDefault = () => {
+        if (confirm("Reset to default questions?")) {
+          questions = [
+            {
+              q: "ACCESSING DATABASE: What is the capital of Indonesia?",
+              a: ["JAKARTA", "SURABAYA", "BANDUNG", "MEDAN"],
+              correct: 0,
+              category: "GEO-DATA",
+              time: 30,
+              points: 1000,
+            },
+            {
+              q: "HISTORY FILE: Who invented the light bulb?",
+              a: [
+                "NIKOLA TESLA",
+                "THOMAS EDISON",
+                "ALEXANDER BELL",
+                "ALBERT EINSTEIN",
+              ],
+              correct: 1,
+              category: "SCIENCE",
+              time: 30,
+              points: 1000,
+            },
+            {
+              q: "BIOMETRIC SCAN: Which animal can fly?",
+              a: ["CAT", "DOG", "BIRD", "FISH"],
+              correct: 2,
+              category: "BIOLOGY",
+              time: 20,
+              points: 800,
+            },
+            {
+              q: "SPACE DATA: Largest planet in solar system?",
+              a: ["MARS", "SATURN", "JUPITER", "EARTH"],
+              correct: 2,
+              category: "ASTRONOMY",
+              time: 30,
+              points: 1000,
+            },
+            {
+              q: "QUANTUM COMPUTING: 1 + 1 = ?",
+              a: ["1", "2", "3", "4"],
+              correct: 1,
+              category: "MATH",
+              time: 15,
+              points: 500,
+            },
+            {
+              q: "COLOR ANALYSIS: What color are leaves?",
+              a: ["RED", "BLUE", "YELLOW", "GREEN"],
+              correct: 3,
+              category: "BIOLOGY",
+              time: 15,
+              points: 500,
+            },
+            {
+              q: "HISTORICAL DATA: First president of Indonesia?",
+              a: ["SOEHARTO", "HABIBIE", "SOEKARNO", "MEGAWATI"],
+              correct: 2,
+              category: "HISTORY",
+              time: 25,
+              points: 900,
+            },
+            {
+              q: "CURRENCY DATA: Japanese currency?",
+              a: ["WON", "YEN", "DOLLAR", "RINGGIT"],
+              correct: 1,
+              category: "ECONOMY",
+              time: 25,
+              points: 900,
+            },
+            {
+              q: "MEDIA FILE: Movie about Titanic?",
+              a: ["AVATAR", "TITANIC", "INCEPTION", "BATMAN"],
+              correct: 1,
+              category: "MEDIA",
+              time: 20,
+              points: 800,
+            },
+            {
+              q: "SCANNING: Tool to see stars?",
+              a: ["MICROSCOPE", "TELESCOPE", "PERISCOPE", "STETHOSCOPE"],
+              correct: 1,
+              category: "SCIENCE",
+              time: 20,
+              points: 800,
+            },
+          ];
+          renderVisualEditor();
+          updateJsonEditor();
+          showNotification("Reset to default questions", "info");
+        }
+      };
 
-        window.joinRoom = async () => {
-            const roomCode = document.getElementById('input-room-code').value.trim().toUpperCase();
-            const nickname = document.getElementById('input-team-name').value.trim();
-            
-            if (!roomCode || !nickname) {
-                alert('INPUT ALL DATA');
-                return;
-            }
-            
-            try {
-                const roomRef = doc(db, 'rooms', roomCode);
-                const roomSnap = await getDoc(roomRef);
-                
-                if (!roomSnap.exists()) {
-                    alert('ROOM NOT FOUND');
-                    return;
-                }
-                
-                const roomData = roomSnap.data();
-                
-                if (roomData.status === 'in-progress') {
-                    alert('MISSION ALREADY ACTIVE');
-                    return;
-                }
-                
-                await setDoc(doc(db, 'rooms', roomCode, 'participants', currentUser.uid), {
-                    name: nickname,
-                    uid: currentUser.uid,
-                    score: 0,
-                    streak: 0,
-                    booms: 0,
-                    warnings: 0,
-                    joinedAt: Date.now(),
-                    status: 'active',
-                    isAdmin: false
-                });
+      // Load saved questions from localStorage
+      const savedQuestions = localStorage.getItem("customQuestions");
+      if (savedQuestions) {
+        try {
+          questions = JSON.parse(savedQuestions);
+        } catch (e) {
+          console.error("Failed to load saved questions");
+        }
+      }
 
-                await updateDoc(roomRef, {
-                    participants: increment(1)
-                });
+      // ==================== ROOM MANAGEMENT ====================
 
-                currentRoom = roomCode;
-                currentNickname = nickname;
-                isAdmin = false;
-                
-                document.getElementById('display-team-name').innerText = nickname;
-                document.getElementById('display-room-code').innerText = roomCode;
-                document.getElementById('room-status-display').classList.remove('hidden');
-                document.getElementById('btn-start').disabled = true;
-                
-                showNotification(`JOINED ROOM ${roomCode}`, 'success');
-                
-                listenToRoom(roomCode);
-                listenForGameStart(roomCode);
-                
-            } catch (e) {
-                console.error('Failed to join room:', e);
-                alert('JOIN FAILED');
-            }
-        };
+      window.generateRoomCode = () => {
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        let code = "";
+        for (let i = 0; i < 6; i++) {
+          code += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        document.getElementById("input-room-code").value = code;
+        return code;
+      };
 
-        function listenToRoom(roomCode) {
-            if (roomUnsubscribe) {
-                roomUnsubscribe();
-            }
-            
-            roomUnsubscribe = onSnapshot(collection(db, 'rooms', roomCode, 'participants'), (snapshot) => {
-                participants = [];
-                snapshot.forEach(doc => {
-                    participants.push({ id: doc.id, ...doc.data() });
-                });
-                
-                const waitingList = document.getElementById('participants-list-waiting');
-                if (waitingList) {
-                    waitingList.innerHTML = participants.map(p => `
+      window.copyRoomCode = () => {
+        const code = document.getElementById("display-room-code").innerText;
+        navigator.clipboard.writeText(code);
+        showNotification("ROOM CODE COPIED", "success");
+      };
+
+      window.createRoom = async () => {
+        const roomCode =
+          document
+            .getElementById("input-room-code")
+            .value.trim()
+            .toUpperCase() || generateRoomCode();
+        const nickname = document
+          .getElementById("input-team-name")
+          .value.trim();
+
+        if (!nickname) {
+          alert("INPUT DESIGNATION");
+          return;
+        }
+
+        try {
+          await setDoc(doc(db, "rooms", roomCode), {
+            createdBy: currentUser.uid,
+            createdByName: nickname,
+            createdAt: Date.now(),
+            status: "waiting",
+            participants: 1,
+            maxParticipants: 50,
+            currentQuestion: 0,
+            questions: questions,
+          });
+
+          await setDoc(
+            doc(db, "rooms", roomCode, "participants", currentUser.uid),
+            {
+              name: nickname,
+              uid: currentUser.uid,
+              score: 0,
+              streak: 0,
+              booms: 0,
+              warnings: 0,
+              joinedAt: Date.now(),
+              status: "active",
+              isAdmin: true,
+            },
+          );
+
+          currentRoom = roomCode;
+          currentNickname = nickname;
+          isAdmin = true;
+
+          document.getElementById("input-room-code").value = roomCode;
+          document.getElementById("display-team-name").innerText = nickname;
+          document.getElementById("display-room-code").innerText = roomCode;
+          document
+            .getElementById("room-status-display")
+            .classList.remove("hidden");
+          document.getElementById("btn-start").disabled = false;
+          document.getElementById("admin-badge").classList.remove("hidden");
+
+          // Update question info
+          document.getElementById("total-questions").innerText =
+            questions.length;
+          const categories = [...new Set(questions.map((q) => q.category))];
+          document.getElementById("question-categories").innerText =
+            categories.join(", ");
+
+          showNotification(`ROOM ${roomCode} INITIALIZED`, "success");
+
+          listenToRoom(roomCode);
+        } catch (e) {
+          console.error("Failed to create room:", e);
+          alert("ROOM CREATION FAILED");
+        }
+      };
+
+      window.joinRoom = async () => {
+        const roomCode = document
+          .getElementById("input-room-code")
+          .value.trim()
+          .toUpperCase();
+        const nickname = document
+          .getElementById("input-team-name")
+          .value.trim();
+
+        if (!roomCode || !nickname) {
+          alert("INPUT ALL DATA");
+          return;
+        }
+
+        try {
+          const roomRef = doc(db, "rooms", roomCode);
+          const roomSnap = await getDoc(roomRef);
+
+          if (!roomSnap.exists()) {
+            alert("ROOM NOT FOUND");
+            return;
+          }
+
+          const roomData = roomSnap.data();
+
+          if (roomData.status === "in-progress") {
+            alert("MISSION ALREADY ACTIVE");
+            return;
+          }
+
+          await setDoc(
+            doc(db, "rooms", roomCode, "participants", currentUser.uid),
+            {
+              name: nickname,
+              uid: currentUser.uid,
+              score: 0,
+              streak: 0,
+              booms: 0,
+              warnings: 0,
+              joinedAt: Date.now(),
+              status: "active",
+              isAdmin: false,
+            },
+          );
+
+          await updateDoc(roomRef, {
+            participants: increment(1),
+          });
+
+          currentRoom = roomCode;
+          currentNickname = nickname;
+          isAdmin = false;
+
+          document.getElementById("display-team-name").innerText = nickname;
+          document.getElementById("display-room-code").innerText = roomCode;
+          document
+            .getElementById("room-status-display")
+            .classList.remove("hidden");
+          document.getElementById("btn-start").disabled = true;
+
+          // Update question info from room
+          if (roomData.questions) {
+            questions = roomData.questions;
+            document.getElementById("total-questions").innerText =
+              questions.length;
+            const categories = [...new Set(questions.map((q) => q.category))];
+            document.getElementById("question-categories").innerText =
+              categories.join(", ");
+          }
+
+          showNotification(`JOINED ROOM ${roomCode}`, "success");
+
+          listenToRoom(roomCode);
+          listenForGameStart(roomCode);
+        } catch (e) {
+          console.error("Failed to join room:", e);
+          alert("JOIN FAILED");
+        }
+      };
+
+      function listenToRoom(roomCode) {
+        if (roomUnsubscribe) {
+          roomUnsubscribe();
+        }
+
+        roomUnsubscribe = onSnapshot(
+          collection(db, "rooms", roomCode, "participants"),
+          (snapshot) => {
+            participants = [];
+            snapshot.forEach((doc) => {
+              participants.push({ id: doc.id, ...doc.data() });
+            });
+
+            const waitingList = document.getElementById(
+              "participants-list-waiting",
+            );
+            if (waitingList) {
+              waitingList.innerHTML = participants
+                .map(
+                  (p) => `
                         <div class="flex items-center gap-3 p-3 bg-black/50 border border-neon-blue">
                             <div class="cyber-avatar">
                                 ${p.name.charAt(0).toUpperCase()}
                             </div>
                             <div class="flex-1">
                                 <div class="font-bold neon-text-blue">${p.name}</div>
-                                <div class="text-xs font-mono text-gray-400">${p.isAdmin ? 'ADMIN' : 'OPERATOR'}</div>
+                                <div class="text-xs font-mono text-gray-400">${p.isAdmin ? "ADMIN" : "OPERATOR"}</div>
                             </div>
                         </div>
-                    `).join('');
-                }
-                
-                document.getElementById('participant-count').innerText = participants.length;
-                
-                if (!document.getElementById('screen-lobby').classList.contains('hidden')) {
-                    return;
-                }
-                
-                updateLeaderboard();
-            });
-        }
-
-        function listenForGameStart(roomCode) {
-            onSnapshot(doc(db, 'rooms', roomCode), (doc) => {
-                const data = doc.data();
-                if (data && data.status === 'in-progress' && !isAdmin) {
-                    document.getElementById('screen-lobby').classList.add('hidden');
-                    document.getElementById('screen-game').classList.remove('hidden');
-                    document.getElementById('stats-bar').classList.remove('hidden');
-                    
-                    score = 0;
-                    qIdx = 0;
-                    currentStreak = 0;
-                    boomCount = 0;
-                    warningCount = 0;
-                    isGameActive = true;
-                    
-                    document.getElementById('display-score').innerText = '0';
-                    document.getElementById('current-streak').innerText = '0';
-                    document.getElementById('current-booms').innerText = '0';
-                    
-                    startCamera();
-                    loadQuestion();
-                    
-                    showNotification('MISSION STARTED', 'success');
-                }
-            });
-        }
-
-        window.startGame = async () => {
-            if (!currentRoom || !isAdmin) return;
-            
-            try {
-                await updateDoc(doc(db, 'rooms', currentRoom), {
-                    status: 'in-progress',
-                    startedAt: Date.now()
-                });
-                
-                document.getElementById('screen-lobby').classList.add('hidden');
-                document.getElementById('screen-game').classList.remove('hidden');
-                document.getElementById('stats-bar').classList.remove('hidden');
-                
-                disableGameForAdmin();
-                
-            } catch (e) {
-                console.error('Failed to start game:', e);
-                alert('MISSION START FAILED');
+                    `,
+                )
+                .join("");
             }
-        };
 
-        function disableGameForAdmin() {
-            document.getElementById('answers-grid').innerHTML = `
+            document.getElementById("participant-count").innerText =
+              participants.length;
+
+            if (
+              !document
+                .getElementById("screen-lobby")
+                .classList.contains("hidden")
+            ) {
+              return;
+            }
+
+            updateLeaderboard();
+          },
+        );
+      }
+
+      function listenForGameStart(roomCode) {
+        onSnapshot(doc(db, "rooms", roomCode), (doc) => {
+          const data = doc.data();
+          if (data && data.status === "in-progress" && !isAdmin) {
+            document.getElementById("screen-lobby").classList.add("hidden");
+            document.getElementById("screen-game").classList.remove("hidden");
+            document.getElementById("stats-bar").classList.remove("hidden");
+
+            // Load questions from room
+            if (data.questions) {
+              questions = data.questions;
+            }
+
+            score = 0;
+            qIdx = 0;
+            currentStreak = 0;
+            boomCount = 0;
+            warningCount = 0;
+            isGameActive = true;
+
+            document.getElementById("display-score").innerHTML =
+              `<span class="iconify" data-icon="mdi:currency-usd"></span> 0`;
+            document.getElementById("current-streak").innerText = "0";
+            document.getElementById("current-booms").innerText = "0";
+
+            startCamera();
+            loadQuestion();
+
+            showNotification("MISSION STARTED", "success");
+          }
+        });
+      }
+
+      window.startGame = async () => {
+        if (!currentRoom || !isAdmin) return;
+
+        try {
+          await updateDoc(doc(db, "rooms", currentRoom), {
+            status: "in-progress",
+            startedAt: Date.now(),
+            questions: questions, // Save current questions to room
+          });
+
+          document.getElementById("screen-lobby").classList.add("hidden");
+          document.getElementById("screen-game").classList.remove("hidden");
+          document.getElementById("stats-bar").classList.remove("hidden");
+
+          disableGameForAdmin();
+        } catch (e) {
+          console.error("Failed to start game:", e);
+          alert("MISSION START FAILED");
+        }
+      };
+
+      function disableGameForAdmin() {
+        document.getElementById("answers-grid").innerHTML = `
                 <div class="col-span-2 text-center p-12 bg-black/50 border border-neon-purple">
                     <div class="text-5xl mb-4 neon-text-purple">
                         <span class="iconify" data-icon="mdi:crown" data-width="60" data-height="60"></span>
@@ -1448,142 +2398,153 @@
                     <p class="text-gray-400 font-mono">Monitoring active operators</p>
                 </div>
             `;
-            
-            document.getElementById('timer-text').innerText = '--';
-            document.getElementById('question-text').innerHTML = '<span class="iconify" data-icon="mdi:eye"></span> ADMIN OVERRIDE - MONITORING ONLY';
-            document.getElementById('question-category').innerText = 'ADMIN';
-            document.getElementById('powerup-display').classList.add('hidden');
-            document.getElementById('admin-badge').classList.remove('hidden');
+
+        document.getElementById("timer-text").innerText = "--";
+        document.getElementById("question-text").innerHTML =
+          '<span class="iconify" data-icon="mdi:eye"></span> ADMIN OVERRIDE - MONITORING ONLY';
+        document.getElementById("question-category").innerText = "ADMIN";
+        document.getElementById("powerup-display").classList.add("hidden");
+        document.getElementById("admin-badge").classList.remove("hidden");
+      }
+
+      // ==================== CAMERA & ANTI-CHEAT ====================
+
+      async function startCamera() {
+        try {
+          cameraStream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: false,
+          });
+          const video = document.getElementById("camera-feed");
+          video.srcObject = cameraStream;
+          document.getElementById("camera-container").style.display = "block";
+
+          setInterval(checkCamera, 5000);
+        } catch (e) {
+          console.error("Camera error:", e);
+          recordCheat("NO_CAMERA", "Camera not detected");
+        }
+      }
+
+      function checkCamera() {
+        const video = document.getElementById("camera-feed");
+        if (!video || !video.srcObject) {
+          recordCheat("CAMERA_OFF", "Camera disconnected");
+        }
+      }
+
+      document.addEventListener("visibilitychange", () => {
+        if (!isGameActive || isAdmin) return;
+        if (document.hidden) {
+          recordCheat("TAB_SWITCH", "Tab switch detected");
+        }
+      });
+
+      document.addEventListener("copy", (e) => {
+        if (!isGameActive || isAdmin) return;
+        e.preventDefault();
+        recordCheat("COPY", "Copy attempt");
+        return false;
+      });
+
+      document.addEventListener("contextmenu", (e) => {
+        if (!isGameActive || isAdmin) return;
+        e.preventDefault();
+        return false;
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (!isGameActive || isAdmin) return;
+
+        if (e.key === "F12" || (e.ctrlKey && e.shiftKey && e.key === "I")) {
+          e.preventDefault();
+          recordCheat("DEV_TOOLS", "Developer tools detected");
+        }
+      });
+
+      async function recordCheat(type, details) {
+        if (!currentUser || !currentRoom || !isGameActive) return;
+
+        warningCount++;
+
+        const warningEl = document.getElementById("warning-container");
+        const warningText = document.getElementById("warning-text");
+        warningEl.classList.remove("hidden");
+        warningText.innerText = `${details} - WARNING ${warningCount}/3`;
+
+        setTimeout(() => {
+          warningEl.classList.add("hidden");
+        }, 3000);
+
+        try {
+          await updateDoc(
+            doc(db, "rooms", currentRoom, "participants", currentUser.uid),
+            {
+              warnings: warningCount,
+              lastCheat: {
+                type: type,
+                details: details,
+                timestamp: Date.now(),
+              },
+            },
+          );
+
+          if (warningCount >= 3) {
+            disqualifyUser("SYSTEM BREACH DETECTED");
+          }
+        } catch (e) {
+          console.error("Failed to record cheat:", e);
+        }
+      }
+
+      async function disqualifyUser(reason) {
+        isGameActive = false;
+
+        await updateDoc(
+          doc(db, "rooms", currentRoom, "participants", currentUser.uid),
+          {
+            status: "disqualified",
+            disqualifyReason: reason,
+          },
+        );
+
+        document.getElementById("disqualify-reason").innerText = reason;
+        document.getElementById("disqualified-screen").classList.add("active");
+
+        if (cameraStream) {
+          cameraStream.getTracks().forEach((track) => track.stop());
+        }
+      }
+
+      // ==================== GAME FUNCTIONS ====================
+
+      function loadQuestion() {
+        if (isAdmin) return;
+
+        if (qIdx >= questions.length) {
+          finish();
+          return;
         }
 
-        // ==================== CAMERA & ANTI-CHEAT ====================
+        const q = questions[qIdx];
 
-        async function startCamera() {
-            try {
-                cameraStream = await navigator.mediaDevices.getUserMedia({ 
-                    video: true,
-                    audio: false 
-                });
-                const video = document.getElementById('camera-feed');
-                video.srcObject = cameraStream;
-                document.getElementById('camera-container').style.display = 'block';
-                
-                setInterval(checkCamera, 5000);
-            } catch (e) {
-                console.error('Camera error:', e);
-                recordCheat('NO_CAMERA', 'Camera not detected');
-            }
-        }
+        document.getElementById("question-category").innerHTML =
+          `<span class="iconify" data-icon="mdi:tag"></span> ${q.category}`;
+        document.getElementById("question-text").innerHTML =
+          `<span class="iconify" data-icon="mdi:help-circle"></span> ${q.q}`;
+        document.getElementById("question-progress").innerHTML =
+          `<span class="iconify" data-icon="mdi:progress-clock"></span> MISSION ${qIdx + 1}/${questions.length}`;
+        document.getElementById("question-points").innerHTML =
+          `<span class="iconify" data-icon="mdi:currency-usd"></span> +${q.points} CR`;
 
-        function checkCamera() {
-            const video = document.getElementById('camera-feed');
-            if (!video || !video.srcObject) {
-                recordCheat('CAMERA_OFF', 'Camera disconnected');
-            }
-        }
+        const grid = document.getElementById("answers-grid");
+        grid.innerHTML = "";
 
-        document.addEventListener('visibilitychange', () => {
-            if (!isGameActive || isAdmin) return;
-            if (document.hidden) {
-                recordCheat('TAB_SWITCH', 'Tab switch detected');
-            }
-        });
-
-        document.addEventListener('copy', (e) => {
-            if (!isGameActive || isAdmin) return;
-            e.preventDefault();
-            recordCheat('COPY', 'Copy attempt');
-            return false;
-        });
-
-        document.addEventListener('contextmenu', (e) => {
-            if (!isGameActive || isAdmin) return;
-            e.preventDefault();
-            return false;
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if (!isGameActive || isAdmin) return;
-            
-            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
-                e.preventDefault();
-                recordCheat('DEV_TOOLS', 'Developer tools detected');
-            }
-        });
-
-        async function recordCheat(type, details) {
-            if (!currentUser || !currentRoom || !isGameActive) return;
-            
-            warningCount++;
-            
-            const warningEl = document.getElementById('warning-container');
-            const warningText = document.getElementById('warning-text');
-            warningEl.classList.remove('hidden');
-            warningText.innerText = `${details} - WARNING ${warningCount}/3`;
-            
-            setTimeout(() => {
-                warningEl.classList.add('hidden');
-            }, 3000);
-
-            try {
-                await updateDoc(doc(db, 'rooms', currentRoom, 'participants', currentUser.uid), {
-                    warnings: warningCount,
-                    lastCheat: {
-                        type: type,
-                        details: details,
-                        timestamp: Date.now()
-                    }
-                });
-
-                if (warningCount >= 3) {
-                    disqualifyUser('SYSTEM BREACH DETECTED');
-                }
-            } catch (e) {
-                console.error('Failed to record cheat:', e);
-            }
-        }
-
-        async function disqualifyUser(reason) {
-            isGameActive = false;
-            
-            await updateDoc(doc(db, 'rooms', currentRoom, 'participants', currentUser.uid), {
-                status: 'disqualified',
-                disqualifyReason: reason
-            });
-            
-            document.getElementById('disqualify-reason').innerText = reason;
-            document.getElementById('disqualified-screen').classList.add('active');
-            
-            if (cameraStream) {
-                cameraStream.getTracks().forEach(track => track.stop());
-            }
-        }
-
-        // ==================== GAME FUNCTIONS ====================
-
-        function loadQuestion() {
-            if (isAdmin) return;
-            
-            if (qIdx >= questions.length) {
-                finish();
-                return;
-            }
-
-            const q = questions[qIdx];
-            
-            document.getElementById('question-category').innerText = q.category;
-            document.getElementById('question-text').innerHTML = `<span class="iconify" data-icon="mdi:help-circle"></span> ${q.q}`;
-            document.getElementById('question-progress').innerHTML = `<span class="iconify" data-icon="mdi:progress-clock"></span> MISSION ${qIdx + 1}/${questions.length}`;
-            document.getElementById('question-points').innerHTML = `<span class="iconify" data-icon="mdi:currency-usd"></span> +${q.points} CR`;
-            
-            const grid = document.getElementById('answers-grid');
-            grid.innerHTML = '';
-            
-            q.a.forEach((answer, index) => {
-                const option = document.createElement('div');
-                option.className = 'answer-cyber animate__animated animate__fadeIn';
-                option.setAttribute('data-index', index);
-                option.innerHTML = `
+        q.a.forEach((answer, index) => {
+          const option = document.createElement("div");
+          option.className = "answer-cyber animate__animated animate__fadeIn";
+          option.setAttribute("data-index", index);
+          option.innerHTML = `
                     <div class="flex items-center justify-center gap-3">
                         <span class="w-8 h-8 rounded-none bg-black border border-neon-blue text-neon-blue flex items-center justify-center font-mono">
                             ${String.fromCharCode(65 + index)}
@@ -1591,150 +2552,158 @@
                         <span class="font-mono">${answer}</span>
                     </div>
                 `;
-                option.onclick = () => checkAnswer(index);
-                grid.appendChild(option);
-            });
-            
-            startTimer(q.time);
-        }
+          option.onclick = () => checkAnswer(index);
+          grid.appendChild(option);
+        });
 
-        function startTimer(seconds) {
-            clearInterval(timer);
-            timeLeft = seconds;
-            
-            const timerEl = document.getElementById('timer-text');
-            timerEl.innerText = timeLeft;
-            
-            timer = setInterval(() => {
-                timeLeft--;
-                timerEl.innerText = timeLeft;
-                
-                if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    checkAnswer(-1);
-                }
-            }, 1000);
-        }
+        startTimer(q.time);
+      }
 
-        async function checkAnswer(selectedIndex) {
+      function startTimer(seconds) {
+        clearInterval(timer);
+        timeLeft = seconds;
+
+        const timerEl = document.getElementById("timer-text");
+        timerEl.innerText = timeLeft;
+
+        timer = setInterval(() => {
+          timeLeft--;
+          timerEl.innerText = timeLeft;
+
+          if (timeLeft <= 0) {
             clearInterval(timer);
-            
-            const q = questions[qIdx];
-            const isCorrect = (selectedIndex === q.correct);
-            
-            document.querySelectorAll('.answer-cyber').forEach(opt => {
-                opt.classList.add('disabled');
-                opt.style.pointerEvents = 'none';
-            });
-            
-            document.querySelectorAll('.answer-cyber').forEach((opt, index) => {
-                if (index === q.correct) {
-                    opt.classList.add('correct');
-                } else if (index === selectedIndex && !isCorrect) {
-                    opt.classList.add('wrong');
-                }
-            });
-            
-            let pointsEarned = 0;
-            
-            if (isCorrect) {
-                currentStreak++;
-                let multiplier = 1;
-                
-                if (currentStreak >= 7) {
-                    multiplier = 3;
-                    boomCount++;
-                    showNotification('💣 BOOM ACQUIRED', 'success');
-                } else if (currentStreak >= 5) {
-                    multiplier = 2.5;
-                } else if (currentStreak >= 3) {
-                    multiplier = 2;
-                }
-                
-                pointsEarned = q.points * multiplier + (timeLeft * 10);
-                score += pointsEarned;
-                
-                document.getElementById('feedback').className = 'p-6 text-center font-bold text-xl animate__animated animate__bounceIn border-2 border-green-500 bg-black/50 text-green-500';
-                document.getElementById('feedback').innerHTML = `
+            checkAnswer(-1);
+          }
+        }, 1000);
+      }
+
+      async function checkAnswer(selectedIndex) {
+        clearInterval(timer);
+
+        const q = questions[qIdx];
+        const isCorrect = selectedIndex === q.correct;
+
+        document.querySelectorAll(".answer-cyber").forEach((opt) => {
+          opt.classList.add("disabled");
+          opt.style.pointerEvents = "none";
+        });
+
+        document.querySelectorAll(".answer-cyber").forEach((opt, index) => {
+          if (index === q.correct) {
+            opt.classList.add("correct");
+          } else if (index === selectedIndex && !isCorrect) {
+            opt.classList.add("wrong");
+          }
+        });
+
+        let pointsEarned = 0;
+
+        if (isCorrect) {
+          currentStreak++;
+          let multiplier = 1;
+
+          if (currentStreak >= 7) {
+            multiplier = 3;
+            boomCount++;
+            showNotification("💣 BOOM ACQUIRED", "success");
+          } else if (currentStreak >= 5) {
+            multiplier = 2.5;
+          } else if (currentStreak >= 3) {
+            multiplier = 2;
+          }
+
+          pointsEarned = q.points * multiplier + timeLeft * 10;
+          score += pointsEarned;
+
+          document.getElementById("feedback").className =
+            "p-6 text-center font-bold text-xl animate__animated animate__bounceIn border-2 border-green-500 bg-black/50 text-green-500";
+          document.getElementById("feedback").innerHTML = `
                     <span class="iconify" data-icon="mdi:check-circle"></span>
                     ACCESS GRANTED<br>
                     <span class="text-sm font-mono">+${pointsEarned} CR (${multiplier}x MULTIPLIER)</span>
                 `;
-            } else {
-                currentStreak = 0;
-                score = Math.max(0, score - 200);
-                
-                document.getElementById('feedback').className = 'p-6 text-center font-bold text-xl animate__animated animate__shakeX border-2 border-red-500 bg-black/50 text-red-500';
-                document.getElementById('feedback').innerHTML = `
+        } else {
+          currentStreak = 0;
+          score = Math.max(0, score - 200);
+
+          document.getElementById("feedback").className =
+            "p-6 text-center font-bold text-xl animate__animated animate__shakeX border-2 border-red-500 bg-black/50 text-red-500";
+          document.getElementById("feedback").innerHTML = `
                     <span class="iconify" data-icon="mdi:close-circle"></span>
                     ACCESS DENIED -200 CR
                 `;
-            }
-            
-            document.getElementById('feedback').classList.remove('hidden');
-            document.getElementById('display-score').innerHTML = `<span class="iconify" data-icon="mdi:currency-usd"></span> ${score.toLocaleString()}`;
-            document.getElementById('current-streak').innerText = currentStreak;
-            document.getElementById('current-booms').innerText = boomCount;
-            document.getElementById('streak-progress').style.width = `${(currentStreak % 7) * 14}%`;
-            
-            if (boomCount > 0) {
-                document.getElementById('powerup-display').classList.remove('hidden');
-                document.getElementById('powerup-count').innerText = boomCount;
-            }
-            
-            try {
-                await updateDoc(doc(db, 'rooms', currentRoom, 'participants', currentUser.uid), {
-                    score: score,
-                    streak: currentStreak,
-                    booms: boomCount,
-                    lastAnswer: {
-                        correct: isCorrect,
-                        points: pointsEarned,
-                        timestamp: Date.now()
-                    }
-                });
-            } catch (e) {
-                console.error('Update failed:', e);
-            }
-            
-            setTimeout(() => {
-                qIdx++;
-                document.getElementById('feedback').classList.add('hidden');
-                loadQuestion();
-            }, 2000);
         }
 
-        function updateLeaderboard() {
-            const sorted = [...participants]
-                .filter(p => !p.isAdmin)
-                .sort((a, b) => b.score - a.score);
-            
-            const leaderboardEl = document.getElementById('leaderboard');
-            leaderboardEl.innerHTML = sorted.map((p, index) => {
-                const isCurrentUser = p.name === currentNickname;
-                let medal = '';
-                let medalIcon = '';
-                
-                if (index === 0) {
-                    medal = 'medal-gold';
-                    medalIcon = '<span class="iconify" data-icon="mdi:medal"></span>';
-                } else if (index === 1) {
-                    medal = 'medal-silver';
-                    medalIcon = '<span class="iconify" data-icon="mdi:medal"></span>';
-                } else if (index === 2) {
-                    medal = 'medal-bronze';
-                    medalIcon = '<span class="iconify" data-icon="mdi:medal"></span>';
-                }
-                
-                return `
-                    <div class="rank-cyber ${isCurrentUser ? 'current-user' : ''}">
+        document.getElementById("feedback").classList.remove("hidden");
+        document.getElementById("display-score").innerHTML =
+          `<span class="iconify" data-icon="mdi:currency-usd"></span> ${score.toLocaleString()}`;
+        document.getElementById("current-streak").innerText = currentStreak;
+        document.getElementById("current-booms").innerText = boomCount;
+        document.getElementById("streak-progress").style.width =
+          `${(currentStreak % 7) * 14}%`;
+
+        if (boomCount > 0) {
+          document.getElementById("powerup-display").classList.remove("hidden");
+          document.getElementById("powerup-count").innerText = boomCount;
+        }
+
+        try {
+          await updateDoc(
+            doc(db, "rooms", currentRoom, "participants", currentUser.uid),
+            {
+              score: score,
+              streak: currentStreak,
+              booms: boomCount,
+              lastAnswer: {
+                correct: isCorrect,
+                points: pointsEarned,
+                timestamp: Date.now(),
+              },
+            },
+          );
+        } catch (e) {
+          console.error("Update failed:", e);
+        }
+
+        setTimeout(() => {
+          qIdx++;
+          document.getElementById("feedback").classList.add("hidden");
+          loadQuestion();
+        }, 2000);
+      }
+
+      function updateLeaderboard() {
+        const sorted = [...participants]
+          .filter((p) => !p.isAdmin)
+          .sort((a, b) => b.score - a.score);
+
+        const leaderboardEl = document.getElementById("leaderboard");
+        leaderboardEl.innerHTML = sorted
+          .map((p, index) => {
+            const isCurrentUser = p.name === currentNickname;
+            let medal = "";
+            let medalIcon = "";
+
+            if (index === 0) {
+              medal = "medal-gold";
+              medalIcon = '<span class="iconify" data-icon="mdi:medal"></span>';
+            } else if (index === 1) {
+              medal = "medal-silver";
+              medalIcon = '<span class="iconify" data-icon="mdi:medal"></span>';
+            } else if (index === 2) {
+              medal = "medal-bronze";
+              medalIcon = '<span class="iconify" data-icon="mdi:medal"></span>';
+            }
+
+            return `
+                    <div class="rank-cyber ${isCurrentUser ? "current-user" : ""}">
                         <span class="text-2xl w-10 ${medal}">${medalIcon || `#${index + 1}`}</span>
                         <div class="cyber-avatar">
                             ${p.name.charAt(0).toUpperCase()}
                         </div>
                         <div class="flex-1">
                             <div class="font-bold neon-text-blue">${p.name}</div>
-                            ${p.streak > 2 ? `<div class="text-xs font-mono text-neon-yellow flex items-center gap-1"><span class="iconify" data-icon="mdi:fire"></span> STREAK ${p.streak}</div>` : ''}
+                            ${p.streak > 2 ? `<div class="text-xs font-mono text-neon-yellow flex items-center gap-1"><span class="iconify" data-icon="mdi:fire"></span> STREAK ${p.streak}</div>` : ""}
                         </div>
                         <div class="font-bold text-neon-purple text-xl flex items-center gap-1">
                             <span class="iconify" data-icon="mdi:currency-usd"></span>
@@ -1742,54 +2711,60 @@
                         </div>
                     </div>
                 `;
-            }).join('');
-            
-            const myRank = sorted.findIndex(p => p.name === currentNickname) + 1;
-            if (myRank > 0) {
-                document.getElementById('display-rank').innerHTML = `<span class="iconify" data-icon="mdi:trophy"></span> #${myRank}`;
-            }
+          })
+          .join("");
+
+        const myRank = sorted.findIndex((p) => p.name === currentNickname) + 1;
+        if (myRank > 0) {
+          document.getElementById("display-rank").innerHTML =
+            `<span class="iconify" data-icon="mdi:trophy"></span> #${myRank}`;
+        }
+      }
+
+      async function finish() {
+        isGameActive = false;
+
+        document.getElementById("screen-game").classList.add("hidden");
+        document.getElementById("screen-results").classList.remove("hidden");
+
+        document.getElementById("res-team-name").innerHTML =
+          `<span class="iconify" data-icon="mdi:account"></span> ${currentNickname}`;
+        document.getElementById("res-score").innerHTML =
+          `<span class="iconify" data-icon="mdi:currency-usd"></span> ${score.toLocaleString()}`;
+
+        if (cameraStream) {
+          cameraStream.getTracks().forEach((track) => track.stop());
+          document.getElementById("camera-container").style.display = "none";
         }
 
-        async function finish() {
-            isGameActive = false;
-            
-            document.getElementById('screen-game').classList.add('hidden');
-            document.getElementById('screen-results').classList.remove('hidden');
-            
-            document.getElementById('res-team-name').innerHTML = `<span class="iconify" data-icon="mdi:account"></span> ${currentNickname}`;
-            document.getElementById('res-score').innerHTML = `<span class="iconify" data-icon="mdi:currency-usd"></span> ${score.toLocaleString()}`;
-            
-            if (cameraStream) {
-                cameraStream.getTracks().forEach(track => track.stop());
-                document.getElementById('camera-container').style.display = 'none';
+        const sorted = participants
+          .filter((p) => !p.isAdmin)
+          .sort((a, b) => b.score - a.score);
+
+        const myRank = sorted.findIndex((p) => p.name === currentNickname) + 1;
+        document.getElementById("res-rank").innerHTML =
+          `<span class="iconify" data-icon="mdi:medal"></span> #${myRank}`;
+
+        const finalEl = document.getElementById("final-leaderboard");
+        finalEl.innerHTML = sorted
+          .map((p, index) => {
+            const isCurrentUser = p.name === currentNickname;
+            let medal = "";
+            let medalIcon = "";
+
+            if (index === 0) {
+              medal = "medal-gold";
+              medalIcon = '<span class="iconify" data-icon="mdi:medal"></span>';
+            } else if (index === 1) {
+              medal = "medal-silver";
+              medalIcon = '<span class="iconify" data-icon="mdi:medal"></span>';
+            } else if (index === 2) {
+              medal = "medal-bronze";
+              medalIcon = '<span class="iconify" data-icon="mdi:medal"></span>';
             }
-            
-            const sorted = participants
-                .filter(p => !p.isAdmin)
-                .sort((a, b) => b.score - a.score);
-            
-            const myRank = sorted.findIndex(p => p.name === currentNickname) + 1;
-            document.getElementById('res-rank').innerHTML = `<span class="iconify" data-icon="mdi:medal"></span> #${myRank}`;
-            
-            const finalEl = document.getElementById('final-leaderboard');
-            finalEl.innerHTML = sorted.map((p, index) => {
-                const isCurrentUser = p.name === currentNickname;
-                let medal = '';
-                let medalIcon = '';
-                
-                if (index === 0) {
-                    medal = 'medal-gold';
-                    medalIcon = '<span class="iconify" data-icon="mdi:medal"></span>';
-                } else if (index === 1) {
-                    medal = 'medal-silver';
-                    medalIcon = '<span class="iconify" data-icon="mdi:medal"></span>';
-                } else if (index === 2) {
-                    medal = 'medal-bronze';
-                    medalIcon = '<span class="iconify" data-icon="mdi:medal"></span>';
-                }
-                
-                return `
-                    <div class="rank-cyber ${isCurrentUser ? 'current-user' : ''}">
+
+            return `
+                    <div class="rank-cyber ${isCurrentUser ? "current-user" : ""}">
                         <span class="text-3xl w-12 ${medal}">${medalIcon || `#${index + 1}`}</span>
                         <div class="cyber-avatar">
                             ${p.name.charAt(0).toUpperCase()}
@@ -1803,35 +2778,43 @@
                         </div>
                     </div>
                 `;
-            }).join('');
-            
-            if (myRank === 1) {
-                startConfetti();
-            }
+          })
+          .join("");
+
+        if (myRank === 1) {
+          startConfetti();
         }
+      }
 
-        // ==================== BOOM SYSTEM ====================
+      // ==================== BOOM SYSTEM ====================
 
-        window.activateBoom = () => {
-            if (boomCount <= 0) return;
-            
-            document.getElementById('boom-targets').classList.remove('hidden');
-            loadBoomTargets();
-        };
+      window.activateBoom = () => {
+        if (boomCount <= 0) return;
 
-        async function loadBoomTargets() {
-            const participantsRef = collection(db, 'rooms', currentRoom, 'participants');
-            const snapshot = await getDocs(participantsRef);
-            
-            const targets = [];
-            snapshot.forEach(doc => {
-                if (doc.id !== currentUser.uid && !doc.data().isAdmin) {
-                    targets.push({ id: doc.id, ...doc.data() });
-                }
-            });
-            
-            const targetsList = document.getElementById('targets-list');
-            targetsList.innerHTML = targets.map(t => `
+        document.getElementById("boom-targets").classList.remove("hidden");
+        loadBoomTargets();
+      };
+
+      async function loadBoomTargets() {
+        const participantsRef = collection(
+          db,
+          "rooms",
+          currentRoom,
+          "participants",
+        );
+        const snapshot = await getDocs(participantsRef);
+
+        const targets = [];
+        snapshot.forEach((doc) => {
+          if (doc.id !== currentUser.uid && !doc.data().isAdmin) {
+            targets.push({ id: doc.id, ...doc.data() });
+          }
+        });
+
+        const targetsList = document.getElementById("targets-list");
+        targetsList.innerHTML = targets
+          .map(
+            (t) => `
                 <button onclick="useBoom('${t.id}', '${t.name}')" 
                         class="bg-black/50 border border-neon-pink hover:bg-neon-pink/20 p-3 transition-all font-mono">
                     <div class="font-bold neon-text-pink">${t.name}</div>
@@ -1840,75 +2823,105 @@
                         ${t.score} CR
                     </div>
                 </button>
-            `).join('');
+            `,
+          )
+          .join("");
+      }
+
+      window.useBoom = async (targetId, targetName) => {
+        if (boomCount <= 0) return;
+
+        try {
+          await updateDoc(
+            doc(db, "rooms", currentRoom, "participants", targetId),
+            {
+              score: increment(-500),
+            },
+          );
+
+          boomCount--;
+          await updateDoc(
+            doc(db, "rooms", currentRoom, "participants", currentUser.uid),
+            {
+              booms: boomCount,
+            },
+          );
+
+          const boomEffect = document.createElement("div");
+          boomEffect.className =
+            "fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-8xl z-50 animate__animated animate__bounceIn";
+          boomEffect.innerHTML =
+            '<span class="iconify" data-icon="mdi:flash" data-width="100" data-height="100"></span>';
+          document.body.appendChild(boomEffect);
+
+          setTimeout(() => boomEffect.remove(), 1000);
+
+          document.getElementById("boom-targets").classList.add("hidden");
+          document.getElementById("current-booms").innerText = boomCount;
+
+          if (boomCount === 0) {
+            document.getElementById("powerup-display").classList.add("hidden");
+          }
+
+          showNotification(`BOOM! ${targetName} LOST 500 CR`, "success");
+        } catch (e) {
+          console.error("Boom failed:", e);
         }
+      };
 
-        window.useBoom = async (targetId, targetName) => {
-            if (boomCount <= 0) return;
-            
-            try {
-                await updateDoc(doc(db, 'rooms', currentRoom, 'participants', targetId), {
-                    score: increment(-500)
-                });
-                
-                boomCount--;
-                await updateDoc(doc(db, 'rooms', currentRoom, 'participants', currentUser.uid), {
-                    booms: boomCount
-                });
-                
-                const boomEffect = document.createElement('div');
-                boomEffect.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-8xl z-50 animate__animated animate__bounceIn';
-                boomEffect.innerHTML = '<span class="iconify" data-icon="mdi:flash" data-width="100" data-height="100"></span>';
-                document.body.appendChild(boomEffect);
-                
-                setTimeout(() => boomEffect.remove(), 1000);
-                
-                document.getElementById('boom-targets').classList.add('hidden');
-                document.getElementById('current-booms').innerText = boomCount;
-                
-                if (boomCount === 0) {
-                    document.getElementById('powerup-display').classList.add('hidden');
-                }
-                
-                showNotification(`BOOM! ${targetName} LOST 500 CR`, 'success');
-                
-            } catch (e) {
-                console.error('Boom failed:', e);
-            }
-        };
+      // ==================== ADMIN MONITORING ====================
 
-        // ==================== ADMIN MONITORING ====================
+      window.toggleAdminPanel = () => {
+        document.getElementById("admin-modal").classList.toggle("active");
+      };
 
-        window.toggleAdminPanel = () => {
-            document.getElementById('admin-modal').classList.toggle('active');
-        };
+      window.monitorRoom = () => {
+        const roomCode = document
+          .getElementById("admin-room-code")
+          .value.trim()
+          .toUpperCase();
+        if (!roomCode) return;
 
-        window.monitorRoom = () => {
-            const roomCode = document.getElementById('admin-room-code').value.trim().toUpperCase();
-            if (!roomCode) return;
-            
-            document.getElementById('admin-monitoring-info').classList.remove('hidden');
-            document.getElementById('monitoring-room-code').innerText = roomCode;
-            
-            onSnapshot(collection(db, 'rooms', roomCode, 'participants'), (snapshot) => {
-                const participants = [];
-                snapshot.forEach(doc => participants.push({ id: doc.id, ...doc.data() }));
-                
-                const players = participants.filter(p => !p.isAdmin);
-                
-                document.getElementById('admin-participants').innerText = players.length;
-                
-                const totalBooms = players.reduce((sum, p) => sum + (p.booms || 0), 0);
-                document.getElementById('admin-total-booms').innerText = totalBooms;
-                
-                const totalWarnings = players.reduce((sum, p) => sum + (p.warnings || 0), 0);
-                document.getElementById('admin-warnings').innerText = totalWarnings;
-                
-                const disqualified = players.filter(p => p.status === 'disqualified').length;
-                document.getElementById('admin-disqualified').innerText = disqualified;
-                
-                const listEl = document.getElementById('participants-list');
-                listEl.innerHTML = players.map(p => `
+        document
+          .getElementById("admin-monitoring-info")
+          .classList.remove("hidden");
+        document.getElementById("monitoring-room-code").innerText = roomCode;
+
+        onSnapshot(
+          collection(db, "rooms", roomCode, "participants"),
+          (snapshot) => {
+            const participants = [];
+            snapshot.forEach((doc) =>
+              participants.push({ id: doc.id, ...doc.data() }),
+            );
+
+            const players = participants.filter((p) => !p.isAdmin);
+
+            document.getElementById("admin-participants").innerText =
+              players.length;
+
+            const totalBooms = players.reduce(
+              (sum, p) => sum + (p.booms || 0),
+              0,
+            );
+            document.getElementById("admin-total-booms").innerText = totalBooms;
+
+            const totalWarnings = players.reduce(
+              (sum, p) => sum + (p.warnings || 0),
+              0,
+            );
+            document.getElementById("admin-warnings").innerText = totalWarnings;
+
+            const disqualified = players.filter(
+              (p) => p.status === "disqualified",
+            ).length;
+            document.getElementById("admin-disqualified").innerText =
+              disqualified;
+
+            const listEl = document.getElementById("participants-list");
+            listEl.innerHTML = players
+              .map(
+                (p) => `
                     <div class="flex items-center justify-between p-3 bg-black/50 border border-neon-blue">
                         <div class="flex items-center gap-3">
                             <div class="cyber-avatar w-8 h-8 text-sm">${p.name.charAt(0)}</div>
@@ -1925,95 +2938,105 @@
                                 <span class="iconify" data-icon="mdi:flash"></span>
                                 ${p.booms || 0}
                             </div>
-                            ${p.warnings > 0 ? `<div class="text-xs text-neon-yellow flex items-center gap-1"><span class="iconify" data-icon="mdi:alert"></span>${p.warnings}</div>` : ''}
+                            ${p.warnings > 0 ? `<div class="text-xs text-neon-yellow flex items-center gap-1"><span class="iconify" data-icon="mdi:alert"></span>${p.warnings}</div>` : ""}
                         </div>
                     </div>
-                `).join('');
-            });
+                `,
+              )
+              .join("");
+          },
+        );
+      };
+
+      window.stopMonitoring = () => {
+        document
+          .getElementById("admin-monitoring-info")
+          .classList.add("hidden");
+        document.getElementById("participants-list").innerHTML = "";
+      };
+
+      // ==================== NOTIFICATIONS ====================
+
+      function showNotification(message, type = "info") {
+        const notification = document.createElement("div");
+        notification.className = `fixed top-4 right-4 px-6 py-3 font-mono font-bold z-50 animate__animated animate__slideInRight border-2 flex items-center gap-2`;
+
+        const colors = {
+          success: "border-green-500 bg-black text-green-500",
+          error: "border-red-500 bg-black text-red-500",
+          warning: "border-yellow-500 bg-black text-yellow-500",
+          info: "border-blue-500 bg-black text-blue-500",
         };
 
-        window.stopMonitoring = () => {
-            document.getElementById('admin-monitoring-info').classList.add('hidden');
-            document.getElementById('participants-list').innerHTML = '';
-        };
+        let icon = "";
+        if (type === "success")
+          icon = '<span class="iconify" data-icon="mdi:check-circle"></span>';
+        else if (type === "error")
+          icon = '<span class="iconify" data-icon="mdi:close-circle"></span>';
+        else if (type === "warning")
+          icon = '<span class="iconify" data-icon="mdi:alert"></span>';
+        else icon = '<span class="iconify" data-icon="mdi:information"></span>';
 
-        // ==================== NOTIFICATIONS ====================
+        notification.className += ` ${colors[type] || colors.info}`;
+        notification.innerHTML = `${icon} ${message}`;
+        document.body.appendChild(notification);
 
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.className = `fixed top-4 right-4 px-6 py-3 font-mono font-bold z-50 animate__animated animate__slideInRight border-2 flex items-center gap-2`;
-            
-            const colors = {
-                success: 'border-green-500 bg-black text-green-500',
-                error: 'border-red-500 bg-black text-red-500',
-                warning: 'border-yellow-500 bg-black text-yellow-500',
-                info: 'border-blue-500 bg-black text-blue-500'
-            };
-            
-            let icon = '';
-            if (type === 'success') icon = '<span class="iconify" data-icon="mdi:check-circle"></span>';
-            else if (type === 'error') icon = '<span class="iconify" data-icon="mdi:close-circle"></span>';
-            else if (type === 'warning') icon = '<span class="iconify" data-icon="mdi:alert"></span>';
-            else icon = '<span class="iconify" data-icon="mdi:information"></span>';
-            
-            notification.className += ` ${colors[type] || colors.info}`;
-            notification.innerHTML = `${icon} ${message}`;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => notification.remove(), 3000);
+        setTimeout(() => notification.remove(), 3000);
+      }
+
+      // ==================== CONFETTI ====================
+
+      function startConfetti() {
+        const canvas = document.getElementById("confetti");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles = [];
+        for (let i = 0; i < 100; i++) {
+          particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height - canvas.height,
+            size: Math.random() * 5 + 2,
+            speed: Math.random() * 3 + 2,
+            color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+          });
         }
 
-        // ==================== CONFETTI ====================
+        function animate() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        function startConfetti() {
-            const canvas = document.getElementById('confetti');
-            const ctx = canvas.getContext('2d');
-            
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            
-            const particles = [];
-            for (let i = 0; i < 100; i++) {
-                particles.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height - canvas.height,
-                    size: Math.random() * 5 + 2,
-                    speed: Math.random() * 3 + 2,
-                    color: `hsl(${Math.random() * 360}, 100%, 50%)`
-                });
+          particles.forEach((p) => {
+            ctx.fillStyle = p.color;
+            ctx.fillRect(p.x, p.y, p.size, p.size);
+            p.y += p.speed;
+
+            if (p.y > canvas.height) {
+              p.y = -10;
+              p.x = Math.random() * canvas.width;
             }
-            
-            function animate() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
-                particles.forEach(p => {
-                    ctx.fillStyle = p.color;
-                    ctx.fillRect(p.x, p.y, p.size, p.size);
-                    p.y += p.speed;
-                    
-                    if (p.y > canvas.height) {
-                        p.y = -10;
-                        p.x = Math.random() * canvas.width;
-                    }
-                });
-                
-                requestAnimationFrame(animate);
-            }
-            
-            animate();
+          });
+
+          requestAnimationFrame(animate);
         }
 
-        // ==================== CLEANUP ====================
+        animate();
+      }
 
-        window.addEventListener('beforeunload', async () => {
-            if (currentRoom && currentUser) {
-                try {
-                    await deleteDoc(doc(db, 'rooms', currentRoom, 'participants', currentUser.uid));
-                } catch (e) {
-                    console.error('Cleanup failed:', e);
-                }
-            }
-        });
+      // ==================== CLEANUP ====================
+
+      window.addEventListener("beforeunload", async () => {
+        if (currentRoom && currentUser) {
+          try {
+            await deleteDoc(
+              doc(db, "rooms", currentRoom, "participants", currentUser.uid),
+            );
+          } catch (e) {
+            console.error("Cleanup failed:", e);
+          }
+        }
+      });
     </script>
-</body>
+  </body>
 </html>
