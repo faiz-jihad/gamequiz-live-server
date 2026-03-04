@@ -16,7 +16,6 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
     />
     <style>
-      /* [SAME STYLES AS BEFORE - tetap sama untuk menghemat space] */
       * {
         margin: 0;
         padding: 0;
@@ -29,12 +28,100 @@
         --neon-purple: #b300ff;
         --neon-yellow: #ffff00;
         --dark-bg: #0a0a0f;
+        --darker-bg: #050507;
       }
 
       body {
         font-family: "Rajdhani", sans-serif;
         background: var(--dark-bg);
         color: #fff;
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      /* Cyber Grid Background */
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image:
+          linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+        background-size: 50px 50px;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* Glitch Effect */
+      .glitch {
+        position: relative;
+        animation: glitch 1s linear infinite;
+      }
+
+      @keyframes glitch {
+        2%,
+        64% {
+          transform: translate(2px, 0) skew(0deg);
+        }
+        4%,
+        60% {
+          transform: translate(-2px, 0) skew(0deg);
+        }
+        62% {
+          transform: translate(0, 0) skew(5deg);
+        }
+      }
+
+      .glitch::before,
+      .glitch::after {
+        content: attr(data-text);
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--dark-bg);
+      }
+
+      .glitch::before {
+        animation: glitchTop 1s linear infinite;
+        clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+      }
+
+      @keyframes glitchTop {
+        2%,
+        64% {
+          transform: translate(2px, -2px);
+        }
+        4%,
+        60% {
+          transform: translate(-2px, 2px);
+        }
+        62% {
+          transform: translate(13px, -1px) skew(-13deg);
+        }
+      }
+
+      .glitch::after {
+        animation: glitchBottom 1.5s linear infinite;
+        clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+      }
+
+      @keyframes glitchBottom {
+        2%,
+        64% {
+          transform: translate(-2px, 0);
+        }
+        4%,
+        60% {
+          transform: translate(-2px, 0);
+        }
+        62% {
+          transform: translate(-22px, 5px) skew(21deg);
+        }
       }
 
       /* Cyber Card */
@@ -42,9 +129,52 @@
         background: rgba(10, 10, 15, 0.8);
         backdrop-filter: blur(10px);
         border: 2px solid var(--neon-blue);
-        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        box-shadow:
+          0 0 30px rgba(0, 255, 255, 0.3),
+          0 0 0 2px rgba(0, 255, 255, 0.1) inset;
+        border-radius: 0;
         clip-path: polygon(0 0, 100% 0, 100% 95%, 95% 100%, 0 100%);
         padding: 24px;
+        transition: all 0.3s;
+        position: relative;
+        z-index: 1;
+      }
+
+      .cyber-card::before {
+        content: "";
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(
+          45deg,
+          var(--neon-blue),
+          var(--neon-pink),
+          var(--neon-purple)
+        );
+        z-index: -1;
+        animation: borderRotate 4s linear infinite;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+
+      .cyber-card:hover::before {
+        opacity: 1;
+      }
+
+      @keyframes borderRotate {
+        0% {
+          filter: hue-rotate(0deg);
+        }
+        100% {
+          filter: hue-rotate(360deg);
+        }
+      }
+
+      .cyber-card:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 0 50px rgba(0, 255, 255, 0.5);
       }
 
       /* Cyber Button */
@@ -53,33 +183,75 @@
         color: var(--neon-blue);
         font-family: "Orbitron", sans-serif;
         font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
         padding: 16px 32px;
         border: 2px solid var(--neon-blue);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s;
         cursor: pointer;
+        z-index: 1;
         clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
         display: inline-flex;
         align-items: center;
+        justify-content: center;
         gap: 8px;
-        transition: all 0.3s;
+      }
+
+      .cyber-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(0, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s;
+        z-index: -1;
+      }
+
+      .cyber-button:hover::before {
+        left: 100%;
       }
 
       .cyber-button:hover {
         background: var(--neon-blue);
         color: var(--dark-bg);
         box-shadow: 0 0 30px var(--neon-blue);
+        text-shadow: none;
+      }
+
+      .cyber-button:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+        border-color: #666;
       }
 
       .cyber-button-outline {
         background: transparent;
         border: 2px solid var(--neon-pink);
         color: var(--neon-pink);
+        font-family: "Orbitron", sans-serif;
+        font-weight: 600;
         padding: 14px 28px;
         clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
       }
 
       .cyber-button-outline:hover {
         background: var(--neon-pink);
         color: var(--dark-bg);
+        box-shadow: 0 0 30px var(--neon-pink);
       }
 
       /* Answer Option */
@@ -89,33 +261,84 @@
         padding: 20px;
         cursor: pointer;
         transition: all 0.2s;
+        font-size: 18px;
+        font-weight: 500;
+        letter-spacing: 1px;
+        position: relative;
+        overflow: hidden;
         clip-path: polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%);
+      }
+
+      .answer-cyber::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(0, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .answer-cyber:hover::before {
+        left: 100%;
       }
 
       .answer-cyber:hover {
         border-color: var(--neon-pink);
         box-shadow: 0 0 20px var(--neon-pink);
+        transform: scale(1.02);
+      }
+
+      .answer-cyber.selected {
+        border-color: var(--neon-yellow);
+        box-shadow: 0 0 30px var(--neon-yellow);
+        background: rgba(255, 255, 0, 0.1);
       }
 
       .answer-cyber.correct {
         border-color: #00ff00;
         box-shadow: 0 0 30px #00ff00;
+        background: rgba(0, 255, 0, 0.1);
       }
 
       .answer-cyber.wrong {
         border-color: #ff0000;
         box-shadow: 0 0 30px #ff0000;
+        background: rgba(255, 0, 0, 0.1);
       }
 
-      /* Cyber Timer */
+      /* Timer */
       .cyber-timer {
         background: rgba(0, 0, 0, 0.8);
         border: 3px solid var(--neon-blue);
         padding: 15px 30px;
         font-size: 48px;
         font-family: "Orbitron", sans-serif;
+        font-weight: 900;
         color: var(--neon-blue);
         text-shadow: 0 0 20px var(--neon-blue);
+        position: relative;
+        clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .cyber-timer::after {
+        content: "";
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        right: 5px;
+        bottom: 5px;
+        border: 1px solid var(--neon-pink);
+        pointer-events: none;
         clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
       }
 
@@ -132,7 +355,115 @@
         font-weight: 900;
         letter-spacing: 10px;
         color: var(--dark-bg);
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        position: relative;
         clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
+      }
+
+      /* Avatar */
+      .cyber-avatar {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(
+          135deg,
+          var(--neon-blue),
+          var(--neon-purple)
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 20px;
+        color: var(--dark-bg);
+        clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
+        position: relative;
+      }
+
+      .cyber-avatar::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        right: 2px;
+        bottom: 2px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
+      }
+
+      /* Rank Item */
+      .rank-cyber {
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid var(--neon-blue);
+        padding: 15px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        transition: all 0.3s;
+        clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
+      }
+
+      .rank-cyber:hover {
+        border-color: var(--neon-pink);
+        box-shadow: 0 0 20px var(--neon-pink);
+        transform: translateX(10px);
+      }
+
+      .rank-cyber.current-user {
+        border-color: var(--neon-yellow);
+        box-shadow: 0 0 30px var(--neon-yellow);
+        background: rgba(255, 255, 0, 0.1);
+      }
+
+      /* Medal */
+      .medal-gold {
+        color: #ffd700;
+        text-shadow: 0 0 20px #ffd700;
+      }
+      .medal-silver {
+        color: #c0c0c0;
+        text-shadow: 0 0 20px #c0c0c0;
+      }
+      .medal-bronze {
+        color: #cd7f32;
+        text-shadow: 0 0 20px #cd7f32;
+      }
+
+      /* Power-up */
+      .powerup-cyber {
+        background: linear-gradient(135deg, var(--neon-yellow), #ff6600);
+        color: var(--dark-bg);
+        padding: 8px 16px;
+        font-weight: 700;
+        clip-path: polygon(0 0, 100% 0, 100% 75%, 75% 100%, 0 100%);
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        animation: pulse 1.5s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
+
+      /* Warning */
+      .warning-cyber {
+        background: rgba(255, 0, 0, 0.2);
+        border: 2px solid #ff0000;
+        padding: 10px 20px;
+        color: #ff0000;
+        font-weight: 700;
+        text-shadow: 0 0 10px #ff0000;
+        clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
+        display: flex;
+        align-items: center;
+        gap: 10px;
       }
 
       /* Input */
@@ -151,6 +482,53 @@
         outline: none;
         border-color: var(--neon-pink);
         box-shadow: 0 0 30px var(--neon-pink);
+      }
+
+      .cyber-input::placeholder {
+        color: rgba(0, 255, 255, 0.3);
+      }
+
+      /* Camera */
+      #camera-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 250px;
+        height: 180px;
+        border: 3px solid var(--neon-blue);
+        box-shadow: 0 0 30px var(--neon-blue);
+        overflow: hidden;
+        z-index: 1000;
+        display: none;
+        clip-path: polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%);
+      }
+
+      #camera-container video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .camera-indicator {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        width: 15px;
+        height: 15px;
+        background: #00ff00;
+        border-radius: 0;
+        box-shadow: 0 0 20px #00ff00;
+        animation: blink 1s infinite;
+      }
+
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
       }
 
       /* Modal */
@@ -184,6 +562,128 @@
         clip-path: polygon(0 0, 100% 0, 100% 95%, 95% 100%, 0 100%);
       }
 
+      /* Disqualified */
+      #disqualified-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.95);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 3000;
+      }
+
+      #disqualified-screen.active {
+        display: flex;
+      }
+
+      /* Scanner Line */
+      .scanner {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--neon-blue),
+          transparent
+        );
+        animation: scan 2s linear infinite;
+      }
+
+      @keyframes scan {
+        0% {
+          top: -10px;
+        }
+        100% {
+          top: 110%;
+        }
+      }
+
+      /* Neon Text */
+      .neon-text-blue {
+        color: var(--neon-blue);
+        text-shadow:
+          0 0 10px var(--neon-blue),
+          0 0 20px var(--neon-blue),
+          0 0 40px var(--neon-blue);
+      }
+
+      .neon-text-pink {
+        color: var(--neon-pink);
+        text-shadow:
+          0 0 10px var(--neon-pink),
+          0 0 20px var(--neon-pink),
+          0 0 40px var(--neon-pink);
+      }
+
+      .neon-text-purple {
+        color: var(--neon-purple);
+        text-shadow:
+          0 0 10px var(--neon-purple),
+          0 0 20px var(--neon-purple),
+          0 0 40px var(--neon-purple);
+      }
+
+      .neon-text-yellow {
+        color: var(--neon-yellow);
+        text-shadow:
+          0 0 10px var(--neon-yellow),
+          0 0 20px var(--neon-yellow),
+          0 0 40px var(--neon-yellow);
+      }
+
+      /* Progress Bar */
+      .cyber-progress {
+        height: 10px;
+        background: rgba(0, 255, 255, 0.2);
+        border: 1px solid var(--neon-blue);
+        position: relative;
+      }
+
+      .cyber-progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
+        width: 0%;
+        transition: width 0.3s;
+        position: relative;
+      }
+
+      .cyber-progress-fill::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 5px;
+        height: 100%;
+        background: white;
+        box-shadow: 0 0 20px white;
+        animation: blink 0.5s infinite;
+      }
+
+      /* Icon styles */
+      .icon {
+        width: 1.2em;
+        height: 1.2em;
+        display: inline-block;
+        vertical-align: middle;
+      }
+
+      .icon-lg {
+        width: 2em;
+        height: 2em;
+      }
+
+      .icon-xl {
+        width: 3em;
+        height: 3em;
+      }
+
       /* JSON Editor */
       .json-editor {
         background: #1e1e1e;
@@ -191,10 +691,18 @@
         color: #00ff00;
         font-family: "Courier New", monospace;
         font-size: 14px;
+        line-height: 1.5;
         padding: 15px;
         width: 100%;
         min-height: 400px;
+        resize: vertical;
         clip-path: polygon(0 0, 100% 0, 100% 95%, 95% 100%, 0 100%);
+      }
+
+      .json-editor:focus {
+        outline: none;
+        border-color: var(--neon-pink);
+        box-shadow: 0 0 30px var(--neon-pink);
       }
 
       .tab-button {
@@ -204,12 +712,18 @@
         padding: 10px 20px;
         font-family: "Orbitron", sans-serif;
         cursor: pointer;
+        transition: all 0.3s;
         clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
       }
 
       .tab-button.active {
         background: var(--neon-blue);
         color: var(--dark-bg);
+      }
+
+      .tab-button:hover {
+        border-color: var(--neon-pink);
+        color: var(--neon-pink);
       }
 
       .question-preview {
@@ -220,103 +734,178 @@
         clip-path: polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%);
       }
 
-      /* Rank Item */
-      .rank-cyber {
-        background: rgba(0, 0, 0, 0.5);
-        border: 1px solid var(--neon-blue);
-        padding: 15px;
-        margin-bottom: 10px;
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
+      .question-preview:hover {
+        border-color: var(--neon-pink);
+        box-shadow: 0 0 20px var(--neon-pink);
       }
 
-      .rank-cyber.current-user {
-        border-color: var(--neon-yellow);
-        box-shadow: 0 0 30px var(--neon-yellow);
+      /* Loading Spinner */
+      .loading-spinner {
+        border: 4px solid rgba(0, 255, 255, 0.3);
+        border-top: 4px solid var(--neon-blue);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Admin Badge */
+      .admin-badge {
+        background: linear-gradient(
+          135deg,
+          var(--neon-purple),
+          var(--neon-pink)
+        );
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border: 1px solid var(--neon-blue);
+        box-shadow: 0 0 10px var(--neon-purple);
       }
     </style>
   </head>
   <body>
     <!-- Camera Container -->
-    <div
-      id="camera-container"
-      style="
-        display: none;
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        width: 250px;
-        height: 180px;
-        border: 3px solid var(--neon-blue);
-        z-index: 1000;
-      "
-    >
-      <video
-        id="camera-feed"
-        autoplay
-        playsinline
-        muted
-        style="width: 100%; height: 100%; object-fit: cover"
-      ></video>
+    <div id="camera-container">
+      <video id="camera-feed" autoplay playsinline muted></video>
+      <div class="camera-indicator"></div>
+      <div class="scanner"></div>
     </div>
 
     <!-- Disqualified Screen -->
-    <div id="disqualified-screen" class="cyber-modal">
+    <div id="disqualified-screen">
       <div class="cyber-modal-content text-center">
-        <h2 class="text-5xl font-bold mb-4 neon-text-pink">DISKUALIFIKASI</h2>
-        <p class="text-xl mb-6" id="disqualify-reason"></p>
-        <button onclick="location.reload()" class="cyber-button">REBOOT</button>
+        <div class="text-8xl mb-4 neon-text-pink glitch" data-text="⚠️">
+          <span
+            class="iconify"
+            data-icon="mdi:alert-circle"
+            data-width="80"
+            data-height="80"
+          ></span>
+        </div>
+        <h2
+          class="text-5xl font-bold mb-4 neon-text-pink glitch"
+          data-text="DISKUALIFIKASI"
+        >
+          DISKUALIFIKASI
+        </h2>
+        <p class="text-xl mb-6 text-gray-300" id="disqualify-reason">
+          Kecurangan terdeteksi
+        </p>
+        <button onclick="location.reload()" class="cyber-button w-full">
+          <span class="iconify" data-icon="mdi:restart"></span>
+          REBOOT SYSTEM
+        </button>
       </div>
     </div>
 
     <!-- Main Container -->
-    <div class="container mx-auto px-4 py-6 max-w-6xl">
+    <div class="container mx-auto px-4 py-6 max-w-6xl relative z-10">
       <!-- Header -->
       <div class="cyber-card mb-6 flex justify-between items-center">
         <div class="flex items-center gap-4">
-          <div class="text-2xl">💾</div>
+          <div class="cyber-avatar text-2xl">
+            <span
+              class="iconify"
+              data-icon="mdi:database"
+              data-width="30"
+              data-height="30"
+            ></span>
+          </div>
           <div>
-            <h1 class="text-3xl font-bold">
+            <h1
+              class="text-3xl font-bold tracking-tighter glitch"
+              data-text="CYBERPUNK 2077"
+            >
               <span class="neon-text-blue">CYBERPUNK</span>
               <span class="neon-text-pink"> 2077</span>
             </h1>
+            <p class="text-xs text-gray-500 font-mono">
+              DATABASE WARRIORS v9.0
+            </p>
           </div>
+        </div>
+
+        <!-- Connection Status -->
+        <div id="connection-status" class="flex items-center gap-2">
+          <div
+            class="w-3 h-3 bg-green-500 rounded-full animate-pulse"
+            id="status-indicator"
+          ></div>
+          <span id="status-text" class="text-sm font-mono text-neon-blue"
+            >ONLINE</span
+          >
         </div>
 
         <!-- Game Stats -->
         <div id="stats-bar" class="hidden items-center gap-6">
           <div class="text-right">
-            <p class="text-gray-500 text-xs">PLAYER</p>
+            <p class="text-gray-500 text-xs font-mono">DESIGNATION</p>
             <p
               id="display-team-name"
-              class="font-bold text-xl neon-text-blue"
-            ></p>
-          </div>
-          <div class="text-right">
-            <p class="text-gray-500 text-xs">SCORE</p>
-            <p id="display-score" class="font-bold text-2xl neon-text-yellow">
-              0
+              class="font-bold text-xl neon-text-blue flex items-center gap-2"
+            >
+              <span class="iconify" data-icon="mdi:account"></span>
+              <span></span>
             </p>
           </div>
           <div class="text-right">
-            <p class="text-gray-500 text-xs">RANK</p>
-            <p id="display-rank" class="font-bold text-xl neon-text-purple">
-              #0
+            <p class="text-gray-500 text-xs font-mono">CREDITS</p>
+            <p
+              id="display-score"
+              class="font-bold text-2xl neon-text-yellow flex items-center gap-2"
+            >
+              <span class="iconify" data-icon="mdi:currency-usd"></span>
+              <span>0</span>
+            </p>
+          </div>
+          <div class="text-right">
+            <p class="text-gray-500 text-xs font-mono">RANK</p>
+            <p
+              id="display-rank"
+              class="font-bold text-xl neon-text-purple flex items-center gap-2"
+            >
+              <span class="iconify" data-icon="mdi:trophy"></span>
+              <span>#0</span>
             </p>
           </div>
         </div>
+
+        <!-- Admin Badge - HANYA MUNCUL UNTUK ADMIN -->
+        <div id="admin-badge-container" class="hidden">
+          <span class="admin-badge flex items-center gap-2">
+            <span class="iconify" data-icon="mdi:crown"></span>
+            ADMIN MODE
+          </span>
+        </div>
       </div>
 
-      <!-- Question Editor Modal -->
+      <!-- Question Editor Modal - HANYA UNTUK ADMIN -->
       <div id="question-editor-modal" class="cyber-modal">
         <div class="cyber-modal-content">
           <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold neon-text-blue">QUESTION EDITOR</h2>
+            <h2
+              class="text-2xl font-bold neon-text-purple flex items-center gap-2"
+            >
+              <span class="iconify" data-icon="mdi:file-document-edit"></span>
+              QUESTION EDITOR [ADMIN]
+            </h2>
             <button
               onclick="toggleQuestionEditor()"
-              class="text-2xl text-gray-500 hover:text-neon-pink"
+              class="text-gray-500 hover:text-neon-pink text-2xl"
             >
               &times;
             </button>
@@ -329,34 +918,36 @@
               onclick="switchEditorTab('visual')"
               id="tab-visual"
             >
-              VISUAL
+              <span class="iconify" data-icon="mdi:eye"></span> VISUAL
             </button>
             <button
               class="tab-button"
               onclick="switchEditorTab('json')"
               id="tab-json"
             >
-              JSON
+              <span class="iconify" data-icon="mdi:code-json"></span> JSON
             </button>
             <button
               class="tab-button"
               onclick="switchEditorTab('import')"
               id="tab-import"
             >
-              IMPORT
+              <span class="iconify" data-icon="mdi:file-import"></span> IMPORT
             </button>
           </div>
 
           <!-- Visual Editor Tab -->
-          <div id="visual-editor-tab">
+          <div id="visual-editor-tab" class="space-y-4">
             <div
               id="questions-list"
               class="space-y-3 max-h-96 overflow-y-auto pr-2"
             >
               <!-- Questions will be dynamically added here -->
             </div>
-            <button onclick="addNewQuestion()" class="cyber-button w-full mt-4">
-              + ADD QUESTION
+
+            <button onclick="addNewQuestion()" class="cyber-button w-full">
+              <span class="iconify" data-icon="mdi:plus-circle"></span>
+              ADD QUESTION
             </button>
           </div>
 
@@ -369,12 +960,14 @@
             ></textarea>
             <div class="flex gap-3 mt-4">
               <button onclick="applyJsonChanges()" class="cyber-button flex-1">
+                <span class="iconify" data-icon="mdi:check"></span>
                 APPLY
               </button>
               <button
                 onclick="validateJson()"
                 class="cyber-button-outline flex-1"
               >
+                <span class="iconify" data-icon="mdi:check-decagram"></span>
                 VALIDATE
               </button>
             </div>
@@ -383,30 +976,67 @@
           <!-- Import/Export Tab -->
           <div id="import-export-tab" class="hidden">
             <div class="space-y-4">
-              <button onclick="exportQuestions()" class="cyber-button w-full">
-                DOWNLOAD JSON
-              </button>
-              <input
-                type="file"
-                id="import-file"
-                accept=".json"
-                class="hidden"
-                onchange="importQuestions(this)"
-              />
-              <button
-                onclick="document.getElementById('import-file').click()"
-                class="cyber-button-outline w-full"
-              >
-                UPLOAD JSON
-              </button>
+              <div>
+                <h3
+                  class="font-bold mb-2 neon-text-blue flex items-center gap-2"
+                >
+                  <span class="iconify" data-icon="mdi:download"></span>
+                  EXPORT
+                </h3>
+                <button onclick="exportQuestions()" class="cyber-button w-full">
+                  <span class="iconify" data-icon="mdi:download"></span>
+                  DOWNLOAD JSON
+                </button>
+              </div>
+
+              <div>
+                <h3
+                  class="font-bold mb-2 neon-text-pink flex items-center gap-2"
+                >
+                  <span class="iconify" data-icon="mdi:upload"></span>
+                  IMPORT
+                </h3>
+                <input
+                  type="file"
+                  id="import-file"
+                  accept=".json"
+                  class="hidden"
+                  onchange="importQuestions(this)"
+                />
+                <button
+                  onclick="document.getElementById('import-file').click()"
+                  class="cyber-button-outline w-full"
+                >
+                  <span class="iconify" data-icon="mdi:upload"></span>
+                  SELECT FILE
+                </button>
+              </div>
+
+              <div class="mt-4 p-4 bg-black/50 border border-neon-blue">
+                <h4 class="font-bold mb-2 neon-text-yellow">JSON FORMAT:</h4>
+                <pre class="text-xs text-green-400 font-mono overflow-x-auto">
+[
+  {
+    "q": "Question?",
+    "a": ["A", "B", "C", "D"],
+    "correct": 0,
+    "category": "CATEGORY",
+    "time": 30,
+    "points": 1000
+  }
+]</pre
+                >
+              </div>
             </div>
           </div>
 
           <div class="flex justify-end gap-3 mt-6">
             <button onclick="saveQuestions()" class="cyber-button">
+              <span class="iconify" data-icon="mdi:content-save"></span>
               SAVE TO ROOM
             </button>
             <button onclick="resetToDefault()" class="cyber-button-outline">
+              <span class="iconify" data-icon="mdi:restore"></span>
               RESET
             </button>
           </div>
@@ -418,16 +1048,33 @@
         id="screen-lobby"
         class="min-h-[600px] flex items-center justify-center"
       >
-        <div class="cyber-card max-w-md w-full">
+        <div
+          class="cyber-card max-w-md w-full animate__animated animate__fadeInUp"
+        >
           <div class="text-center mb-8">
-            <div class="text-7xl mb-4 neon-text-blue">⌨️</div>
-            <h2 class="text-4xl font-bold mb-2 neon-text-blue">INITIALIZE</h2>
+            <div class="text-7xl mb-4 neon-text-blue glitch" data-text="⌨️">
+              <span
+                class="iconify"
+                data-icon="mdi:keyboard"
+                data-width="80"
+                data-height="80"
+              ></span>
+            </div>
+            <h2 class="text-4xl font-bold mb-2 glitch" data-text="INITIALIZE">
+              <span class="neon-text-blue">INITIALIZE</span>
+            </h2>
+            <p class="text-gray-400 font-mono">Enter access credentials</p>
           </div>
 
           <div class="space-y-4">
             <!-- Room Code -->
             <div>
-              <label class="block text-gray-400 text-sm mb-2">ROOM CODE</label>
+              <label
+                class="block text-gray-400 font-mono text-sm mb-2 ml-2 flex items-center gap-2"
+              >
+                <span class="iconify" data-icon="mdi:key-variant"></span>
+                ROOM CODE
+              </label>
               <div class="flex gap-2">
                 <input
                   type="text"
@@ -438,8 +1085,9 @@
                 />
                 <button
                   onclick="generateRoomCode()"
-                  class="cyber-button-outline px-6"
+                  class="cyber-button-outline px-6 flex items-center gap-2"
                 >
+                  <span class="iconify" data-icon="mdi:refresh"></span>
                   GEN
                 </button>
               </div>
@@ -447,11 +1095,16 @@
 
             <!-- Nickname -->
             <div>
-              <label class="block text-gray-400 text-sm mb-2">NICKNAME</label>
+              <label
+                class="block text-gray-400 font-mono text-sm mb-2 ml-2 flex items-center gap-2"
+              >
+                <span class="iconify" data-icon="mdi:badge-account"></span>
+                DESIGNATION
+              </label>
               <input
                 type="text"
                 id="input-team-name"
-                placeholder="Enter your name"
+                placeholder="Enter your callsign..."
                 class="cyber-input"
               />
             </div>
@@ -463,6 +1116,7 @@
                 class="cyber-button"
                 id="create-room-btn"
               >
+                <span class="iconify" data-icon="mdi:plus-circle"></span>
                 CREATE
               </button>
               <button
@@ -470,6 +1124,7 @@
                 class="cyber-button-outline"
                 id="join-room-btn"
               >
+                <span class="iconify" data-icon="mdi:login"></span>
                 JOIN
               </button>
             </div>
@@ -480,52 +1135,86 @@
               class="hidden mt-6 p-6 bg-black/50 border border-neon-blue"
             >
               <div class="text-center mb-4">
+                <p
+                  class="text-gray-400 font-mono text-sm mb-2 flex items-center justify-center gap-2"
+                >
+                  <span class="iconify" data-icon="mdi:key-variant"></span>
+                  ROOM CODE
+                </p>
                 <div class="room-code-cyber text-3xl" id="display-room-code">
                   DEFAULT
                 </div>
-                <button onclick="copyRoomCode()" class="mt-3 text-neon-blue">
-                  📋 COPY
+                <button
+                  onclick="copyRoomCode()"
+                  class="mt-3 text-neon-blue hover:text-neon-pink font-mono text-sm flex items-center gap-2 mx-auto"
+                >
+                  <span class="iconify" data-icon="mdi:content-copy"></span>
+                  COPY CODE
                 </button>
               </div>
 
-              <div class="flex justify-between mb-4">
-                <span>STATUS:</span>
-                <span id="room-status-text" class="text-neon-yellow"
-                  >WAITING</span
+              <div class="flex justify-between items-center mb-4 font-mono">
+                <span class="text-gray-400 flex items-center gap-2">
+                  <span class="iconify" data-icon="mdi:information"></span>
+                  STATUS:
+                </span>
+                <span
+                  id="room-status-text"
+                  class="text-neon-yellow flex items-center gap-2"
                 >
+                  <span class="iconify" data-icon="mdi:clock-outline"></span>
+                  WAITING
+                </span>
               </div>
 
               <!-- Question Info -->
               <div class="mb-4 p-3 bg-black/50 border border-neon-purple">
-                <div class="flex justify-between">
-                  <span>Questions:</span>
-                  <span id="total-questions" class="text-neon-yellow">0</span>
+                <div class="flex justify-between items-center">
+                  <span class="flex items-center gap-2">
+                    <span class="iconify" data-icon="mdi:file-question"></span>
+                    QUESTIONS:
+                  </span>
+                  <span id="total-questions" class="text-neon-yellow font-bold"
+                    >0</span
+                  >
                 </div>
               </div>
 
               <div class="mb-4">
-                <h3 class="mb-3">PLAYERS:</h3>
+                <h3
+                  class="font-mono text-neon-blue mb-3 flex items-center gap-2"
+                >
+                  <span class="iconify" data-icon="mdi:account-group"></span>
+                  ACTIVE OPERATORS:
+                </h3>
                 <div
                   id="participants-list-waiting"
                   class="space-y-2 max-h-48 overflow-y-auto"
-                ></div>
+                >
+                  <!-- Participants will be listed here -->
+                </div>
               </div>
 
+              <!-- Start Button - Hanya untuk Admin -->
               <button
                 id="btn-start"
                 onclick="startGame()"
                 disabled
-                class="cyber-button w-full"
+                class="cyber-button w-full text-lg disabled:opacity-50"
               >
-                START GAME
+                <span class="iconify" data-icon="mdi:play-circle"></span>
+                START MISSION
               </button>
             </div>
 
             <!-- Error Message -->
             <div
               id="error-message"
-              class="hidden p-3 bg-red-900/50 border border-red-500 text-red-500"
-            ></div>
+              class="hidden p-3 bg-red-900/50 border border-red-500 text-red-500 text-sm font-mono flex items-center gap-2"
+            >
+              <span class="iconify" data-icon="mdi:alert"></span>
+              <span id="error-text"></span>
+            </div>
           </div>
         </div>
       </div>
@@ -535,52 +1224,185 @@
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
           <!-- Main Game Area -->
           <div class="lg:col-span-3 space-y-4">
-            <div class="cyber-card">
+            <div class="cyber-card relative overflow-hidden">
+              <div class="scanner"></div>
+
               <div class="flex justify-between items-center mb-6">
                 <span
                   id="question-category"
-                  class="px-4 py-2 border border-neon-blue text-neon-blue"
-                  >LOADING...</span
+                  class="bg-black/50 border border-neon-blue px-4 py-2 font-mono text-neon-blue flex items-center gap-2"
                 >
-                <div class="cyber-timer"><span id="timer-text">30</span></div>
+                  <span class="iconify" data-icon="mdi:tag"></span>
+                  LOADING...
+                </span>
+
+                <div class="cyber-timer">
+                  <span class="iconify" data-icon="mdi:timer"></span>
+                  <span id="timer-text">30</span>
+                </div>
               </div>
-              <p id="question-text" class="text-2xl font-bold mb-8">
+
+              <p
+                id="question-text"
+                class="text-2xl font-bold mb-8 leading-relaxed glitch flex items-center gap-3"
+                data-text="Loading question..."
+              >
+                <span class="iconify" data-icon="mdi:help-circle"></span>
                 Loading question...
               </p>
-              <div class="flex justify-between">
-                <span id="question-progress">0/0</span>
-                <span id="question-points" class="text-neon-yellow">+0</span>
+
+              <div class="flex justify-between items-center font-mono text-sm">
+                <span
+                  id="question-progress"
+                  class="text-gray-400 flex items-center gap-2"
+                >
+                  <span class="iconify" data-icon="mdi:progress-clock"></span>
+                  MISSION 0/10
+                </span>
+                <span
+                  id="question-points"
+                  class="text-neon-yellow flex items-center gap-2"
+                >
+                  <span class="iconify" data-icon="mdi:currency-usd"></span>
+                  +1000 CR
+                </span>
               </div>
             </div>
 
             <div
               id="answers-grid"
               class="grid grid-cols-1 md:grid-cols-2 gap-4"
-            ></div>
+            >
+              <!-- Answers will be inserted here -->
+            </div>
+
             <div
               id="feedback"
-              class="hidden p-6 text-center font-bold text-xl border-2"
+              class="hidden p-6 text-center font-bold text-xl animate__animated animate__bounceIn border-2 flex items-center justify-center gap-3"
             ></div>
+
+            <!-- Warning Message -->
+            <div id="warning-container" class="hidden warning-cyber">
+              <span class="iconify" data-icon="mdi:alert"></span>
+              <span id="warning-text"></span>
+            </div>
           </div>
 
           <!-- Sidebar -->
           <div class="lg:col-span-1 space-y-4">
+            <!-- Live Rankings -->
             <div class="cyber-card">
-              <h3 class="font-bold text-lg mb-4 neon-text-purple">RANKINGS</h3>
+              <h3
+                class="font-bold text-lg mb-4 flex items-center gap-2 neon-text-purple"
+              >
+                <span class="iconify" data-icon="mdi:trophy"></span>
+                LIVE RANKINGS
+              </h3>
+
               <div
                 id="leaderboard"
-                class="space-y-2 max-h-96 overflow-y-auto"
-              ></div>
+                class="space-y-2 max-h-[500px] overflow-y-auto"
+              >
+                <!-- Leaderboard will be inserted here -->
+              </div>
             </div>
 
+            <!-- Power-ups Info -->
             <div class="cyber-card">
-              <div class="flex justify-between mb-2">
-                <span>ROOM:</span>
-                <span id="current-room-code" class="text-neon-blue">---</span>
+              <h3
+                class="font-bold text-lg mb-3 neon-text-yellow flex items-center gap-2"
+              >
+                <span class="iconify" data-icon="mdi:flash"></span>
+                POWER-UPS
+              </h3>
+              <div class="space-y-2 font-mono text-sm">
+                <div
+                  class="flex justify-between items-center p-2 bg-black/50 border border-neon-blue"
+                >
+                  <span class="flex items-center gap-2">
+                    <span class="iconify" data-icon="mdi:numeric-3-box"></span>
+                    3x STREAK
+                  </span>
+                  <span class="text-neon-blue flex items-center gap-1">
+                    <span class="iconify" data-icon="mdi:currency-usd"></span>
+                    2x CREDITS
+                  </span>
+                </div>
+                <div
+                  class="flex justify-between items-center p-2 bg-black/50 border border-neon-blue"
+                >
+                  <span class="flex items-center gap-2">
+                    <span class="iconify" data-icon="mdi:numeric-5-box"></span>
+                    5x STREAK
+                  </span>
+                  <span class="text-neon-purple flex items-center gap-1">
+                    <span class="iconify" data-icon="mdi:shield"></span>
+                    SHIELD
+                  </span>
+                </div>
+                <div
+                  class="flex justify-between items-center p-2 bg-black/50 border border-neon-blue"
+                >
+                  <span class="flex items-center gap-2">
+                    <span class="iconify" data-icon="mdi:numeric-7-box"></span>
+                    7x STREAK
+                  </span>
+                  <span class="text-neon-pink flex items-center gap-1">
+                    <span class="iconify" data-icon="mdi:flash"></span>
+                    BOOM +1
+                  </span>
+                </div>
               </div>
-              <div class="flex justify-between">
-                <span>PLAYERS:</span>
-                <span id="participant-count" class="text-neon-purple">0</span>
+            </div>
+
+            <!-- Room Info -->
+            <div class="cyber-card">
+              <div class="flex justify-between items-center mb-2 font-mono">
+                <span class="text-gray-400 flex items-center gap-2">
+                  <span class="iconify" data-icon="mdi:key-variant"></span>
+                  ROOM:
+                </span>
+                <span id="current-room-code" class="font-bold text-neon-blue"
+                  >---</span
+                >
+              </div>
+              <div class="flex justify-between items-center mb-2 font-mono">
+                <span class="text-gray-400 flex items-center gap-2">
+                  <span class="iconify" data-icon="mdi:account-group"></span>
+                  OPERATORS:
+                </span>
+                <span id="participant-count" class="font-bold text-neon-purple"
+                  >0</span
+                >
+              </div>
+              <div class="flex justify-between items-center mb-2 font-mono">
+                <span class="text-gray-400 flex items-center gap-2">
+                  <span class="iconify" data-icon="mdi:fire"></span>
+                  STREAK:
+                </span>
+                <span id="current-streak" class="font-bold text-neon-yellow"
+                  >0</span
+                >
+              </div>
+              <div class="flex justify-between items-center font-mono">
+                <span class="text-gray-400 flex items-center gap-2">
+                  <span class="iconify" data-icon="mdi:flash"></span>
+                  BOOMS:
+                </span>
+                <span id="current-booms" class="font-bold text-neon-pink"
+                  >0</span
+                >
+              </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="cyber-card">
+              <div class="cyber-progress">
+                <div
+                  id="streak-progress"
+                  class="cyber-progress-fill"
+                  style="width: 0%"
+                ></div>
               </div>
             </div>
           </div>
@@ -589,40 +1411,103 @@
 
       <!-- Results Screen -->
       <div id="screen-results" class="hidden">
-        <div class="max-w-4xl mx-auto">
+        <div class="max-w-4xl mx-auto space-y-6">
+          <!-- Winner Celebration -->
           <div class="cyber-card text-center p-12">
-            <h2 class="text-6xl font-bold mb-2 neon-text-blue">GAME OVER</h2>
+            <div
+              class="text-8xl mb-4 animate__animated animate__bounceIn neon-text-blue glitch"
+              data-text="🏆"
+            >
+              <span
+                class="iconify"
+                data-icon="mdi:trophy"
+                data-width="80"
+                data-height="80"
+              ></span>
+            </div>
+            <h2
+              class="text-6xl font-bold mb-2 glitch"
+              data-text="MISSION COMPLETE"
+            >
+              <span class="neon-text-blue">MISSION</span>
+              <span class="neon-text-pink"> COMPLETE</span>
+            </h2>
+            <p
+              class="text-xl text-gray-400 font-mono flex items-center justify-center gap-2"
+            >
+              <span class="iconify" data-icon="mdi:check-circle"></span>
+              All objectives accomplished
+            </p>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+          <!-- Final Stats -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="cyber-card text-center p-8">
-              <p class="text-gray-400 mb-2">PLAYER</p>
-              <p id="res-team-name" class="text-3xl font-bold neon-text-blue">
-                -
+              <p
+                class="text-gray-400 font-mono text-sm mb-2 flex items-center justify-center gap-2"
+              >
+                <span class="iconify" data-icon="mdi:badge-account"></span>
+                DESIGNATION
+              </p>
+              <p
+                id="res-team-name"
+                class="text-3xl font-bold neon-text-blue flex items-center justify-center gap-2"
+              >
+                <span class="iconify" data-icon="mdi:account"></span>
+                <span>-</span>
               </p>
             </div>
+
             <div class="cyber-card text-center p-8">
-              <p class="text-gray-400 mb-2">SCORE</p>
-              <p id="res-score" class="text-5xl font-bold neon-text-yellow">
-                0
+              <p
+                class="text-gray-400 font-mono text-sm mb-2 flex items-center justify-center gap-2"
+              >
+                <span class="iconify" data-icon="mdi:currency-usd"></span>
+                FINAL CREDITS
+              </p>
+              <p
+                id="res-score"
+                class="text-5xl font-bold neon-text-yellow flex items-center justify-center gap-2"
+              >
+                <span class="iconify" data-icon="mdi:currency-usd"></span>
+                <span>0</span>
               </p>
             </div>
+
             <div class="cyber-card text-center p-8">
-              <p class="text-gray-400 mb-2">RANK</p>
-              <p id="res-rank" class="text-4xl font-bold neon-text-purple">
-                #0
+              <p
+                class="text-gray-400 font-mono text-sm mb-2 flex items-center justify-center gap-2"
+              >
+                <span class="iconify" data-icon="mdi:trophy"></span>
+                FINAL RANK
+              </p>
+              <p
+                id="res-rank"
+                class="text-4xl font-bold neon-text-purple flex items-center justify-center gap-2"
+              >
+                <span class="iconify" data-icon="mdi:medal"></span>
+                <span>#0</span>
               </p>
             </div>
           </div>
 
-          <div class="cyber-card p-8 mt-6">
-            <h3 class="text-2xl font-bold mb-6 neon-text-purple">
+          <!-- Final Leaderboard -->
+          <div class="cyber-card p-8">
+            <h3
+              class="text-2xl font-bold mb-6 flex items-center gap-3 neon-text-purple"
+            >
+              <span class="iconify" data-icon="mdi:trophy"></span>
               FINAL RANKINGS
             </h3>
-            <div id="final-leaderboard" class="space-y-2"></div>
+
+            <div id="final-leaderboard" class="space-y-2">
+              <!-- Final leaderboard will be inserted here -->
+            </div>
+
             <div class="mt-8 text-center">
               <button onclick="location.reload()" class="cyber-button px-12">
-                PLAY AGAIN
+                <span class="iconify" data-icon="mdi:restart"></span>
+                REBOOT SYSTEM
               </button>
             </div>
           </div>
@@ -630,40 +1515,134 @@
       </div>
     </div>
 
-    <!-- Admin Panel Button -->
-    <div class="fixed bottom-6 right-6 z-50 flex gap-3">
+    <!-- Admin Panel Buttons - HANYA MUNCUL UNTUK ADMIN -->
+    <div
+      id="admin-panel-buttons"
+      class="fixed bottom-6 right-6 z-50 flex gap-3 hidden"
+    >
       <button
         onclick="toggleQuestionEditor()"
-        class="cyber-button w-14 h-14 p-0 text-2xl"
+        class="cyber-button w-14 h-14 rounded-none p-0 text-2xl"
+        title="Edit Questions"
       >
-        📝
+        <span class="iconify" data-icon="mdi:file-document-edit"></span>
       </button>
       <button
         onclick="toggleAdminPanel()"
-        class="cyber-button w-14 h-14 p-0 text-2xl"
+        class="cyber-button w-14 h-14 rounded-none p-0 text-2xl"
+        title="Admin Monitor"
       >
-        👑
+        <span class="iconify" data-icon="mdi:crown"></span>
       </button>
     </div>
 
     <!-- Admin Modal -->
     <div id="admin-modal" class="cyber-modal">
-      <div class="cyber-modal-content">
-        <h2 class="text-2xl font-bold mb-6 neon-text-purple">ADMIN MONITOR</h2>
-        <div class="mb-4">
-          <input
-            type="text"
-            id="admin-room-code"
-            placeholder="ROOM CODE"
-            class="cyber-input"
-          />
-          <button onclick="monitorRoom()" class="cyber-button mt-2 w-full">
-            MONITOR
+      <div class="cyber-modal-content max-w-4xl w-full">
+        <div class="flex justify-between items-center mb-6">
+          <h2
+            class="text-2xl font-bold neon-text-purple flex items-center gap-2"
+          >
+            <span class="iconify" data-icon="mdi:crown"></span>
+            ADMIN OVERRIDE
+          </h2>
+          <button
+            onclick="toggleAdminPanel()"
+            class="text-gray-500 hover:text-neon-pink text-2xl"
+          >
+            &times;
           </button>
         </div>
+
+        <div class="mb-4">
+          <div class="flex gap-2">
+            <input
+              type="text"
+              id="admin-room-code"
+              placeholder="ROOM CODE"
+              class="cyber-input flex-1"
+            />
+            <button onclick="monitorRoom()" class="cyber-button px-6">
+              <span class="iconify" data-icon="mdi:monitor"></span>
+              MONITOR
+            </button>
+          </div>
+        </div>
+
         <div
-          id="admin-participants-list"
-          class="space-y-2 max-h-96 overflow-y-auto"
+          id="admin-monitoring-info"
+          class="hidden mb-4 p-4 bg-black/50 border border-neon-blue flex items-center justify-between"
+        >
+          <span class="font-mono flex items-center gap-2">
+            <span class="iconify" data-icon="mdi:eye"></span>
+            MONITORING:
+            <span id="monitoring-room-code" class="text-neon-blue"></span>
+          </span>
+          <button
+            onclick="stopMonitoring()"
+            class="text-neon-pink hover:text-neon-blue flex items-center gap-1"
+          >
+            <span class="iconify" data-icon="mdi:stop"></span>
+            STOP
+          </button>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-4 gap-3 mb-6">
+          <div class="bg-black/50 border border-neon-blue p-3 text-center">
+            <div
+              class="text-2xl font-bold text-neon-blue flex items-center justify-center gap-1"
+            >
+              <span class="iconify" data-icon="mdi:account-group"></span>
+              <span id="admin-participants">0</span>
+            </div>
+            <div class="text-xs font-mono text-gray-400">OPERATORS</div>
+          </div>
+          <div class="bg-black/50 border border-neon-purple p-3 text-center">
+            <div
+              class="text-2xl font-bold text-neon-purple flex items-center justify-center gap-1"
+            >
+              <span class="iconify" data-icon="mdi:flash"></span>
+              <span id="admin-total-booms">0</span>
+            </div>
+            <div class="text-xs font-mono text-gray-400">BOOMS</div>
+          </div>
+          <div class="bg-black/50 border border-neon-yellow p-3 text-center">
+            <div
+              class="text-2xl font-bold text-neon-yellow flex items-center justify-center gap-1"
+            >
+              <span class="iconify" data-icon="mdi:alert"></span>
+              <span id="admin-warnings">0</span>
+            </div>
+            <div class="text-xs font-mono text-gray-400">WARNINGS</div>
+          </div>
+          <div class="bg-black/50 border border-neon-pink p-3 text-center">
+            <div
+              class="text-2xl font-bold text-neon-pink flex items-center justify-center gap-1"
+            >
+              <span class="iconify" data-icon="mdi:close-circle"></span>
+              <span id="admin-disqualified">0</span>
+            </div>
+            <div class="text-xs font-mono text-gray-400">TERMINATED</div>
+          </div>
+        </div>
+
+        <h3 class="font-bold mb-3 neon-text-blue flex items-center gap-2">
+          <span class="iconify" data-icon="mdi:account-group"></span>
+          ACTIVE OPERATORS
+        </h3>
+        <div
+          id="participants-list"
+          class="space-y-2 max-h-60 overflow-y-auto mb-6"
+        ></div>
+
+        <h3 class="font-bold mb-3 neon-text-purple flex items-center gap-2">
+          <span class="iconify" data-icon="mdi:history"></span>
+          ACTIVITY LOG
+        </h3>
+        <div
+          id="activity-log"
+          class="space-y-2 max-h-40 overflow-y-auto bg-black/50 p-3 border border-neon-blue font-mono text-sm"
         ></div>
       </div>
     </div>
@@ -678,7 +1657,7 @@
         width: 100%;
         height: 100%;
         pointer-events: none;
-        z-index: 9999;
+        z-index: 4000;
       "
     ></canvas>
 
@@ -697,8 +1676,10 @@
         collection,
         onSnapshot,
         increment,
+        arrayUnion,
         getDoc,
         getDocs,
+        deleteDoc,
       } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
       // Firebase Config
@@ -726,9 +1707,14 @@
       let timer;
       let timeLeft;
       let currentStreak = 0;
+      let boomCount = 0;
+      let warningCount = 0;
+      let roomUnsubscribe = null;
+      let cameraStream = null;
+      let isGameActive = false;
       let participants = [];
 
-      // Default Questions - PASTIKAN VARIABEL INI GLOBAL
+      // Default Questions
       window.questions = [
         {
           q: "What is the capital of Indonesia?",
@@ -762,9 +1748,44 @@
       onAuthStateChanged(auth, (user) => {
         if (user) {
           currentUser = user;
-          console.log("User:", user.uid);
+          console.log("User authenticated:", user.uid);
+          document.getElementById("status-text").innerText = "ONLINE";
+          document.getElementById("status-indicator").className =
+            "w-3 h-3 bg-green-500 rounded-full animate-pulse";
         }
       });
+
+      // Helper Functions
+      function showError(message) {
+        const errorEl = document.getElementById("error-message");
+        const errorText = document.getElementById("error-text");
+        errorText.innerText = message;
+        errorEl.classList.remove("hidden");
+        setTimeout(() => errorEl.classList.add("hidden"), 5000);
+      }
+
+      function showNotification(message, type = "info") {
+        const notification = document.createElement("div");
+        notification.className = `fixed top-4 right-4 px-6 py-3 font-mono font-bold z-[5000] animate__animated animate__slideInRight border-2 flex items-center gap-2`;
+
+        const colors = {
+          success: "border-green-500 bg-black text-green-500",
+          error: "border-red-500 bg-black text-red-500",
+          info: "border-blue-500 bg-black text-blue-500",
+        };
+
+        let icon =
+          type === "success"
+            ? '<span class="iconify" data-icon="mdi:check-circle"></span>'
+            : type === "error"
+              ? '<span class="iconify" data-icon="mdi:close-circle"></span>'
+              : '<span class="iconify" data-icon="mdi:information"></span>';
+
+        notification.className += ` ${colors[type] || colors.info}`;
+        notification.innerHTML = `${icon} ${message}`;
+        document.body.appendChild(notification);
+        setTimeout(() => notification.remove(), 3000);
+      }
 
       // ==================== ROOM MANAGEMENT ====================
 
@@ -781,31 +1802,45 @@
       window.copyRoomCode = () => {
         const code = document.getElementById("display-room-code").innerText;
         navigator.clipboard.writeText(code);
-        alert("Code copied!");
+        showNotification("CODE COPIED", "success");
       };
 
       window.createRoom = async () => {
-        const roomCode =
-          document
-            .getElementById("input-room-code")
-            .value.trim()
-            .toUpperCase() || generateRoomCode();
-        const nickname = document
-          .getElementById("input-team-name")
-          .value.trim();
-
-        if (!nickname) return alert("Enter your name!");
+        const createBtn = document.getElementById("create-room-btn");
+        createBtn.disabled = true;
+        createBtn.innerHTML =
+          '<span class="loading-spinner"></span> CREATING...';
 
         try {
+          const roomCode =
+            document
+              .getElementById("input-room-code")
+              .value.trim()
+              .toUpperCase() || generateRoomCode();
+          const nickname = document
+            .getElementById("input-team-name")
+            .value.trim();
+
+          if (!nickname) {
+            alert("Enter your callsign!");
+            createBtn.disabled = false;
+            createBtn.innerHTML =
+              '<span class="iconify" data-icon="mdi:plus-circle"></span> CREATE';
+            return;
+          }
+
+          // Create room document
           await setDoc(doc(db, "rooms", roomCode), {
             createdBy: currentUser.uid,
             createdByName: nickname,
             createdAt: Date.now(),
             status: "waiting",
             participants: 1,
-            questions: window.questions, // SIMPAN QUESTIONS KE ROOM
+            maxParticipants: 50,
+            questions: window.questions,
           });
 
+          // Add creator as admin
           await setDoc(
             doc(db, "rooms", roomCode, "participants", currentUser.uid),
             {
@@ -813,7 +1848,10 @@
               uid: currentUser.uid,
               score: 0,
               streak: 0,
+              booms: 0,
+              warnings: 0,
               joinedAt: Date.now(),
+              status: "active",
               isAdmin: true,
             },
           );
@@ -823,6 +1861,7 @@
           isAdmin = true;
 
           // Update UI
+          document.getElementById("input-room-code").value = roomCode;
           document.getElementById("display-team-name").innerText = nickname;
           document.getElementById("display-room-code").innerText = roomCode;
           document
@@ -832,32 +1871,69 @@
           document.getElementById("total-questions").innerText =
             window.questions.length;
 
+          // TAMPILKAN ADMIN BUTTONS
+          document
+            .getElementById("admin-panel-buttons")
+            .classList.remove("hidden");
+          document
+            .getElementById("admin-badge-container")
+            .classList.remove("hidden");
+
+          showNotification(`ROOM ${roomCode} CREATED`, "success");
+
           listenToRoom(roomCode);
-          alert("Room created!");
         } catch (error) {
           console.error(error);
-          alert("Failed to create room");
+          showError("Failed to create room: " + error.message);
+        } finally {
+          createBtn.disabled = false;
+          createBtn.innerHTML =
+            '<span class="iconify" data-icon="mdi:plus-circle"></span> CREATE';
         }
       };
 
       window.joinRoom = async () => {
-        const roomCode = document
-          .getElementById("input-room-code")
-          .value.trim()
-          .toUpperCase();
-        const nickname = document
-          .getElementById("input-team-name")
-          .value.trim();
-
-        if (!roomCode || !nickname) return alert("Enter room code and name!");
+        const joinBtn = document.getElementById("join-room-btn");
+        joinBtn.disabled = true;
+        joinBtn.innerHTML = '<span class="loading-spinner"></span> JOINING...';
 
         try {
+          const roomCode = document
+            .getElementById("input-room-code")
+            .value.trim()
+            .toUpperCase();
+          const nickname = document
+            .getElementById("input-team-name")
+            .value.trim();
+
+          if (!roomCode || !nickname) {
+            alert("Enter room code and callsign!");
+            joinBtn.disabled = false;
+            joinBtn.innerHTML =
+              '<span class="iconify" data-icon="mdi:login"></span> JOIN';
+            return;
+          }
+
           const roomRef = doc(db, "rooms", roomCode);
           const roomSnap = await getDoc(roomRef);
 
-          if (!roomSnap.exists()) return alert("Room not found!");
+          if (!roomSnap.exists()) {
+            alert("Room not found!");
+            joinBtn.disabled = false;
+            joinBtn.innerHTML =
+              '<span class="iconify" data-icon="mdi:login"></span> JOIN';
+            return;
+          }
 
           const roomData = roomSnap.data();
+
+          if (roomData.status === "in-progress") {
+            alert("Mission already in progress!");
+            joinBtn.disabled = false;
+            joinBtn.innerHTML =
+              '<span class="iconify" data-icon="mdi:login"></span> JOIN';
+            return;
+          }
 
           await setDoc(
             doc(db, "rooms", roomCode, "participants", currentUser.uid),
@@ -866,22 +1942,28 @@
               uid: currentUser.uid,
               score: 0,
               streak: 0,
+              booms: 0,
+              warnings: 0,
               joinedAt: Date.now(),
+              status: "active",
               isAdmin: false,
             },
           );
 
-          await updateDoc(roomRef, { participants: increment(1) });
+          await updateDoc(roomRef, {
+            participants: increment(1),
+          });
 
           currentRoom = roomCode;
           currentNickname = nickname;
           isAdmin = false;
 
-          // LOAD QUESTIONS FROM ROOM
+          // Load questions from room
           if (roomData.questions) {
             window.questions = roomData.questions;
           }
 
+          // Update UI
           document.getElementById("display-team-name").innerText = nickname;
           document.getElementById("display-room-code").innerText = roomCode;
           document
@@ -891,22 +1973,40 @@
           document.getElementById("total-questions").innerText =
             window.questions.length;
 
+          // SEMBUNYIKAN ADMIN BUTTONS UNTUK NON-ADMIN
+          document
+            .getElementById("admin-panel-buttons")
+            .classList.add("hidden");
+          document
+            .getElementById("admin-badge-container")
+            .classList.add("hidden");
+
+          showNotification(`JOINED ROOM ${roomCode}`, "success");
+
           listenToRoom(roomCode);
           listenForGameStart(roomCode);
         } catch (error) {
           console.error(error);
-          alert("Failed to join room");
+          showError("Failed to join room: " + error.message);
+        } finally {
+          joinBtn.disabled = false;
+          joinBtn.innerHTML =
+            '<span class="iconify" data-icon="mdi:login"></span> JOIN';
         }
       };
 
       function listenToRoom(roomCode) {
-        onSnapshot(
+        if (roomUnsubscribe) {
+          roomUnsubscribe();
+        }
+
+        roomUnsubscribe = onSnapshot(
           collection(db, "rooms", roomCode, "participants"),
           (snapshot) => {
             participants = [];
-            snapshot.forEach((doc) =>
-              participants.push({ id: doc.id, ...doc.data() }),
-            );
+            snapshot.forEach((doc) => {
+              participants.push({ id: doc.id, ...doc.data() });
+            });
 
             // Update waiting list
             const waitingList = document.getElementById(
@@ -916,8 +2016,14 @@
               waitingList.innerHTML = participants
                 .map(
                   (p) => `
-                        <div class="p-2 bg-black/50 border border-neon-blue">
-                            ${p.name} ${p.isAdmin ? "(ADMIN)" : ""}
+                        <div class="flex items-center gap-3 p-3 bg-black/50 border border-neon-blue">
+                            <div class="cyber-avatar">
+                                ${p.name.charAt(0).toUpperCase()}
+                            </div>
+                            <div class="flex-1">
+                                <div class="font-bold neon-text-blue">${p.name}</div>
+                                <div class="text-xs font-mono text-gray-400">${p.isAdmin ? "👑 ADMIN" : "OPERATOR"}</div>
+                            </div>
                         </div>
                     `,
                 )
@@ -926,6 +2032,15 @@
 
             document.getElementById("participant-count").innerText =
               participants.length;
+
+            if (
+              !document
+                .getElementById("screen-lobby")
+                .classList.contains("hidden")
+            ) {
+              return;
+            }
+
             updateLeaderboard();
           },
         );
@@ -935,7 +2050,7 @@
         onSnapshot(doc(db, "rooms", roomCode), (doc) => {
           const data = doc.data();
           if (data && data.status === "in-progress" && !isAdmin) {
-            // LOAD QUESTIONS FROM ROOM
+            // Load questions from room
             if (data.questions) {
               window.questions = data.questions;
             }
@@ -946,7 +2061,19 @@
 
             score = 0;
             qIdx = 0;
+            currentStreak = 0;
+            boomCount = 0;
+            isGameActive = true;
+
+            document.getElementById("display-score").innerHTML =
+              `<span class="iconify" data-icon="mdi:currency-usd"></span> 0`;
+            document.getElementById("current-streak").innerText = "0";
+            document.getElementById("current-booms").innerText = "0";
+
+            startCamera();
             loadQuestion();
+
+            showNotification("MISSION STARTED", "success");
           }
         });
       }
@@ -955,25 +2082,140 @@
         if (!currentRoom || !isAdmin) return;
 
         try {
-          // SAVE CURRENT QUESTIONS TO ROOM BEFORE STARTING
+          // Save current questions to room
           await updateDoc(doc(db, "rooms", currentRoom), {
             status: "in-progress",
             startedAt: Date.now(),
-            questions: window.questions, // PASTIKAN QUESTIONS TERSIMPAN
+            questions: window.questions,
           });
 
           document.getElementById("screen-lobby").classList.add("hidden");
           document.getElementById("screen-game").classList.remove("hidden");
           document.getElementById("stats-bar").classList.remove("hidden");
 
-          // Admin mode
-          document.getElementById("answers-grid").innerHTML =
-            '<div class="col-span-2 text-center p-12">ADMIN MODE - MONITORING ONLY</div>';
+          disableGameForAdmin();
         } catch (error) {
           console.error(error);
-          alert("Failed to start game");
+          showError("Failed to start mission");
         }
       };
+
+      function disableGameForAdmin() {
+        document.getElementById("answers-grid").innerHTML = `
+                <div class="col-span-2 text-center p-12 bg-black/50 border border-neon-purple">
+                    <div class="text-5xl mb-4 neon-text-purple">
+                        <span class="iconify" data-icon="mdi:crown" data-width="60" data-height="60"></span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2 neon-text-purple">ADMIN MODE</h3>
+                    <p class="text-gray-400 font-mono">Monitoring active operators</p>
+                </div>
+            `;
+
+        document.getElementById("timer-text").innerText = "--";
+        document.getElementById("question-text").innerHTML =
+          '<span class="iconify" data-icon="mdi:eye"></span> ADMIN OVERRIDE - MONITORING ONLY';
+        document.getElementById("question-category").innerText = "ADMIN";
+      }
+
+      // ==================== CAMERA & ANTI-CHEAT ====================
+
+      async function startCamera() {
+        try {
+          cameraStream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: false,
+          });
+          const video = document.getElementById("camera-feed");
+          video.srcObject = cameraStream;
+          document.getElementById("camera-container").style.display = "block";
+        } catch (e) {
+          console.error("Camera error:", e);
+          recordCheat("NO_CAMERA", "Camera not detected");
+        }
+      }
+
+      document.addEventListener("visibilitychange", () => {
+        if (!isGameActive || isAdmin) return;
+        if (document.hidden) {
+          recordCheat("TAB_SWITCH", "Tab switch detected");
+        }
+      });
+
+      document.addEventListener("copy", (e) => {
+        if (!isGameActive || isAdmin) return;
+        e.preventDefault();
+        recordCheat("COPY", "Copy attempt");
+        return false;
+      });
+
+      document.addEventListener("contextmenu", (e) => {
+        if (!isGameActive || isAdmin) return;
+        e.preventDefault();
+        return false;
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (!isGameActive || isAdmin) return;
+
+        if (e.key === "F12" || (e.ctrlKey && e.shiftKey && e.key === "I")) {
+          e.preventDefault();
+          recordCheat("DEV_TOOLS", "Developer tools detected");
+        }
+      });
+
+      async function recordCheat(type, details) {
+        if (!currentUser || !currentRoom || !isGameActive) return;
+
+        warningCount++;
+
+        const warningEl = document.getElementById("warning-container");
+        const warningText = document.getElementById("warning-text");
+        warningEl.classList.remove("hidden");
+        warningText.innerText = `${details} - WARNING ${warningCount}/3`;
+
+        setTimeout(() => {
+          warningEl.classList.add("hidden");
+        }, 3000);
+
+        try {
+          await updateDoc(
+            doc(db, "rooms", currentRoom, "participants", currentUser.uid),
+            {
+              warnings: warningCount,
+              lastCheat: {
+                type: type,
+                details: details,
+                timestamp: Date.now(),
+              },
+            },
+          );
+
+          if (warningCount >= 3) {
+            disqualifyUser("SYSTEM BREACH DETECTED");
+          }
+        } catch (e) {
+          console.error("Failed to record cheat:", e);
+        }
+      }
+
+      async function disqualifyUser(reason) {
+        isGameActive = false;
+
+        await updateDoc(
+          doc(db, "rooms", currentRoom, "participants", currentUser.uid),
+          {
+            status: "disqualified",
+            disqualifyReason: reason,
+          },
+        );
+
+        document.getElementById("disqualify-reason").innerText = reason;
+        document.getElementById("disqualified-screen").classList.add("active");
+
+        if (cameraStream) {
+          cameraStream.getTracks().forEach((track) => track.stop());
+        }
+      }
 
       // ==================== GAME FUNCTIONS ====================
 
@@ -987,19 +2229,30 @@
 
         const q = window.questions[qIdx];
 
-        document.getElementById("question-category").innerText = q.category;
-        document.getElementById("question-text").innerText = q.q;
-        document.getElementById("question-progress").innerText =
-          `${qIdx + 1}/${window.questions.length}`;
-        document.getElementById("question-points").innerText = `+${q.points}`;
+        document.getElementById("question-category").innerHTML =
+          `<span class="iconify" data-icon="mdi:tag"></span> ${q.category}`;
+        document.getElementById("question-text").innerHTML =
+          `<span class="iconify" data-icon="mdi:help-circle"></span> ${q.q}`;
+        document.getElementById("question-progress").innerHTML =
+          `<span class="iconify" data-icon="mdi:progress-clock"></span> MISSION ${qIdx + 1}/${window.questions.length}`;
+        document.getElementById("question-points").innerHTML =
+          `<span class="iconify" data-icon="mdi:currency-usd"></span> +${q.points} CR`;
 
         const grid = document.getElementById("answers-grid");
         grid.innerHTML = "";
 
         q.a.forEach((answer, index) => {
           const option = document.createElement("div");
-          option.className = "answer-cyber";
-          option.innerHTML = `<div class="flex items-center justify-center gap-3"><span class="w-8 h-8 bg-black border border-neon-blue flex items-center justify-center">${String.fromCharCode(65 + index)}</span><span>${answer}</span></div>`;
+          option.className = "answer-cyber animate__animated animate__fadeIn";
+          option.setAttribute("data-index", index);
+          option.innerHTML = `
+                    <div class="flex items-center justify-center gap-3">
+                        <span class="w-8 h-8 rounded-none bg-black border border-neon-blue text-neon-blue flex items-center justify-center font-mono">
+                            ${String.fromCharCode(65 + index)}
+                        </span>
+                        <span class="font-mono">${answer}</span>
+                    </div>
+                `;
           option.onclick = () => checkAnswer(index);
           grid.appendChild(option);
         });
@@ -1010,11 +2263,14 @@
       function startTimer(seconds) {
         clearInterval(timer);
         timeLeft = seconds;
-        document.getElementById("timer-text").innerText = timeLeft;
+
+        const timerEl = document.getElementById("timer-text");
+        timerEl.innerText = timeLeft;
 
         timer = setInterval(() => {
           timeLeft--;
-          document.getElementById("timer-text").innerText = timeLeft;
+          timerEl.innerText = timeLeft;
+
           if (timeLeft <= 0) {
             clearInterval(timer);
             checkAnswer(-1);
@@ -1028,29 +2284,71 @@
         const q = window.questions[qIdx];
         const isCorrect = selectedIndex === q.correct;
 
-        document
-          .querySelectorAll(".answer-cyber")
-          .forEach((opt) => (opt.style.pointerEvents = "none"));
+        document.querySelectorAll(".answer-cyber").forEach((opt) => {
+          opt.classList.add("disabled");
+          opt.style.pointerEvents = "none";
+        });
+
+        document.querySelectorAll(".answer-cyber").forEach((opt, index) => {
+          if (index === q.correct) {
+            opt.classList.add("correct");
+          } else if (index === selectedIndex && !isCorrect) {
+            opt.classList.add("wrong");
+          }
+        });
+
+        let pointsEarned = 0;
 
         if (isCorrect) {
           currentStreak++;
-          const points = q.points + timeLeft * 10;
-          score += points;
+          let multiplier = 1;
+
+          if (currentStreak >= 7) {
+            multiplier = 3;
+            boomCount++;
+            showNotification("💣 BOOM ACQUIRED", "success");
+          } else if (currentStreak >= 5) {
+            multiplier = 2.5;
+          } else if (currentStreak >= 3) {
+            multiplier = 2;
+          }
+
+          pointsEarned = q.points * multiplier + timeLeft * 10;
+          score += pointsEarned;
 
           document.getElementById("feedback").className =
-            "p-6 text-center font-bold text-xl border-2 border-green-500 bg-black/50 text-green-500";
-          document.getElementById("feedback").innerHTML = `✅ +${points}`;
+            "p-6 text-center font-bold text-xl animate__animated animate__bounceIn border-2 border-green-500 bg-black/50 text-green-500";
+          document.getElementById("feedback").innerHTML = `
+                    <span class="iconify" data-icon="mdi:check-circle"></span>
+                    ACCESS GRANTED<br>
+                    <span class="text-sm font-mono">+${pointsEarned} CR (${multiplier}x MULTIPLIER)</span>
+                `;
         } else {
           currentStreak = 0;
           score = Math.max(0, score - 200);
 
           document.getElementById("feedback").className =
-            "p-6 text-center font-bold text-xl border-2 border-red-500 bg-black/50 text-red-500";
-          document.getElementById("feedback").innerHTML = "❌ -200";
+            "p-6 text-center font-bold text-xl animate__animated animate__shakeX border-2 border-red-500 bg-black/50 text-red-500";
+          document.getElementById("feedback").innerHTML = `
+                    <span class="iconify" data-icon="mdi:close-circle"></span>
+                    ACCESS DENIED -200 CR
+                `;
         }
 
         document.getElementById("feedback").classList.remove("hidden");
-        document.getElementById("display-score").innerText = score;
+        document.getElementById("display-score").innerHTML =
+          `<span class="iconify" data-icon="mdi:currency-usd"></span> ${score.toLocaleString()}`;
+        document.getElementById("current-streak").innerText = currentStreak;
+        document.getElementById("current-booms").innerText = boomCount;
+        document.getElementById("streak-progress").style.width =
+          `${(currentStreak % 7) * 14}%`;
+
+        if (boomCount > 0) {
+          document
+            .getElementById("powerup-display")
+            ?.classList.remove("hidden");
+          document.getElementById("powerup-count").innerText = boomCount;
+        }
 
         try {
           await updateDoc(
@@ -1058,9 +2356,17 @@
             {
               score: score,
               streak: currentStreak,
+              booms: boomCount,
+              lastAnswer: {
+                correct: isCorrect,
+                points: pointsEarned,
+                timestamp: Date.now(),
+              },
             },
           );
-        } catch (e) {}
+        } catch (e) {
+          console.error("Update failed:", e);
+        }
 
         setTimeout(() => {
           qIdx++;
@@ -1075,51 +2381,121 @@
           .sort((a, b) => b.score - a.score);
 
         const leaderboardEl = document.getElementById("leaderboard");
-        if (leaderboardEl) {
-          leaderboardEl.innerHTML = sorted
-            .map(
-              (p, i) => `
-                    <div class="rank-cyber ${p.name === currentNickname ? "current-user" : ""}">
-                        <span class="text-2xl w-10">#${i + 1}</span>
-                        <div class="flex-1 font-bold">${p.name}</div>
-                        <div class="font-bold text-neon-purple">${p.score}</div>
+        leaderboardEl.innerHTML = sorted
+          .map((p, index) => {
+            const isCurrentUser = p.name === currentNickname;
+            let medal = "";
+            let medalIcon = "";
+
+            if (index === 0) {
+              medal = "medal-gold";
+              medalIcon = '<span class="iconify" data-icon="mdi:medal"></span>';
+            } else if (index === 1) {
+              medal = "medal-silver";
+              medalIcon = '<span class="iconify" data-icon="mdi:medal"></span>';
+            } else if (index === 2) {
+              medal = "medal-bronze";
+              medalIcon = '<span class="iconify" data-icon="mdi:medal"></span>';
+            }
+
+            return `
+                    <div class="rank-cyber ${isCurrentUser ? "current-user" : ""}">
+                        <span class="text-2xl w-10 ${medal}">${medalIcon || `#${index + 1}`}</span>
+                        <div class="cyber-avatar">
+                            ${p.name.charAt(0).toUpperCase()}
+                        </div>
+                        <div class="flex-1">
+                            <div class="font-bold neon-text-blue">${p.name}</div>
+                            ${p.streak > 2 ? `<div class="text-xs font-mono text-neon-yellow flex items-center gap-1"><span class="iconify" data-icon="mdi:fire"></span> STREAK ${p.streak}</div>` : ""}
+                        </div>
+                        <div class="font-bold text-neon-purple text-xl flex items-center gap-1">
+                            <span class="iconify" data-icon="mdi:currency-usd"></span>
+                            ${p.score.toLocaleString()}
+                        </div>
                     </div>
-                `,
-            )
-            .join("");
+                `;
+          })
+          .join("");
+
+        const myRank = sorted.findIndex((p) => p.name === currentNickname) + 1;
+        if (myRank > 0) {
+          document.getElementById("display-rank").innerHTML =
+            `<span class="iconify" data-icon="mdi:trophy"></span> #${myRank}`;
         }
       }
 
-      function finish() {
+      async function finish() {
+        isGameActive = false;
+
         document.getElementById("screen-game").classList.add("hidden");
         document.getElementById("screen-results").classList.remove("hidden");
 
-        document.getElementById("res-team-name").innerText = currentNickname;
-        document.getElementById("res-score").innerText = score;
+        document.getElementById("res-team-name").innerHTML =
+          `<span class="iconify" data-icon="mdi:account"></span> ${currentNickname}`;
+        document.getElementById("res-score").innerHTML =
+          `<span class="iconify" data-icon="mdi:currency-usd"></span> ${score.toLocaleString()}`;
+
+        if (cameraStream) {
+          cameraStream.getTracks().forEach((track) => track.stop());
+          document.getElementById("camera-container").style.display = "none";
+        }
 
         const sorted = participants
           .filter((p) => !p.isAdmin)
           .sort((a, b) => b.score - a.score);
+
         const myRank = sorted.findIndex((p) => p.name === currentNickname) + 1;
-        document.getElementById("res-rank").innerText = `#${myRank}`;
+        document.getElementById("res-rank").innerHTML =
+          `<span class="iconify" data-icon="mdi:medal"></span> #${myRank}`;
 
         const finalEl = document.getElementById("final-leaderboard");
         finalEl.innerHTML = sorted
-          .map(
-            (p, i) => `
-                <div class="rank-cyber ${p.name === currentNickname ? "current-user" : ""}">
-                    <span class="text-3xl w-12">#${i + 1}</span>
-                    <div class="flex-1 font-bold text-lg">${p.name}</div>
-                    <div class="font-bold text-neon-purple text-2xl">${p.score}</div>
-                </div>
-            `,
-          )
+          .map((p, index) => {
+            const isCurrentUser = p.name === currentNickname;
+            let medal = "";
+            let medalIcon = "";
+
+            if (index === 0) {
+              medal = "medal-gold";
+              medalIcon = '<span class="iconify" data-icon="mdi:medal"></span>';
+            } else if (index === 1) {
+              medal = "medal-silver";
+              medalIcon = '<span class="iconify" data-icon="mdi:medal"></span>';
+            } else if (index === 2) {
+              medal = "medal-bronze";
+              medalIcon = '<span class="iconify" data-icon="mdi:medal"></span>';
+            }
+
+            return `
+                    <div class="rank-cyber ${isCurrentUser ? "current-user" : ""}">
+                        <span class="text-3xl w-12 ${medal}">${medalIcon || `#${index + 1}`}</span>
+                        <div class="cyber-avatar">
+                            ${p.name.charAt(0).toUpperCase()}
+                        </div>
+                        <div class="flex-1">
+                            <div class="font-bold text-lg neon-text-blue">${p.name}</div>
+                        </div>
+                        <div class="font-bold text-neon-purple text-2xl flex items-center gap-1">
+                            <span class="iconify" data-icon="mdi:currency-usd"></span>
+                            ${p.score.toLocaleString()}
+                        </div>
+                    </div>
+                `;
+          })
           .join("");
+
+        if (myRank === 1) {
+          startConfetti();
+        }
       }
 
-      // ==================== QUESTION EDITOR - YANG DIPERBAIKI ====================
+      // ==================== QUESTION EDITOR FUNCTIONS ====================
 
       window.toggleQuestionEditor = () => {
+        if (!isAdmin) {
+          showNotification("Admin only!", "error");
+          return;
+        }
         document
           .getElementById("question-editor-modal")
           .classList.toggle("active");
@@ -1145,8 +2521,11 @@
 
         document.getElementById(`${tab}-editor-tab`).classList.remove("hidden");
 
-        if (tab === "visual") renderVisualEditor();
-        else if (tab === "json") updateJsonEditor();
+        if (tab === "visual") {
+          renderVisualEditor();
+        } else if (tab === "json") {
+          updateJsonEditor();
+        }
       };
 
       function renderVisualEditor() {
@@ -1159,7 +2538,9 @@
                         <input type="text" value="${q.q.replace(/"/g, "&quot;")}" 
                                onchange="window.updateQuestion(${index}, 'q', this.value)"
                                class="cyber-input text-sm mb-2" placeholder="Question">
-                        <button onclick="window.deleteQuestion(${index})" class="text-neon-pink ml-2 text-xl">🗑️</button>
+                        <button onclick="window.deleteQuestion(${index})" class="text-neon-pink ml-2 text-xl">
+                            <span class="iconify" data-icon="mdi:delete"></span>
+                        </button>
                     </div>
                     
                     <div class="grid grid-cols-2 gap-2 mb-2">
@@ -1170,7 +2551,7 @@
                                 <input type="radio" name="correct-${index}" value="${ansIndex}" 
                                        ${q.correct === ansIndex ? "checked" : ""}
                                        onchange="window.setCorrectAnswer(${index}, ${ansIndex})"
-                                       class="w-4 h-4">
+                                       class="w-4 h-4 accent-neon-pink">
                                 <input type="text" value="${answer}" 
                                        onchange="window.updateAnswer(${index}, ${ansIndex}, this.value)"
                                        class="cyber-input text-xs flex-1" placeholder="Option ${ansIndex + 1}">
@@ -1253,30 +2634,33 @@
             renderVisualEditor();
             document.getElementById("total-questions").innerText =
               window.questions.length;
-            alert("Questions updated!");
+            showNotification("Questions updated!", "success");
           }
         } catch (e) {
-          alert("Invalid JSON!");
+          showNotification("Invalid JSON!", "error");
         }
       };
 
       window.validateJson = () => {
         try {
           JSON.parse(document.getElementById("json-editor").value);
-          alert("✓ JSON is valid!");
+          showNotification("✓ JSON is valid!", "success");
         } catch (e) {
-          alert("✗ Invalid JSON!");
+          showNotification("✗ Invalid JSON!", "error");
         }
       };
 
       window.exportQuestions = () => {
         const dataStr = JSON.stringify(window.questions, null, 2);
-        const blob = new Blob([dataStr], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "questions.json";
-        a.click();
+        const dataUri =
+          "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
+        const link = document.createElement("a");
+        link.setAttribute("href", dataUri);
+        link.setAttribute(
+          "download",
+          `questions_${new Date().toISOString().slice(0, 10)}.json`,
+        );
+        link.click();
       };
 
       window.importQuestions = (input) => {
@@ -1291,9 +2675,9 @@
             updateJsonEditor();
             document.getElementById("total-questions").innerText =
               window.questions.length;
-            alert("Questions imported!");
+            showNotification("Questions imported!", "success");
           } catch (e) {
-            alert("Invalid file!");
+            showNotification("Invalid file!", "error");
           }
         };
 
@@ -1302,6 +2686,11 @@
       };
 
       window.saveQuestions = async () => {
+        if (!isAdmin) {
+          showNotification("Admin only!", "error");
+          return;
+        }
+
         // Save to localStorage
         localStorage.setItem(
           "customQuestions",
@@ -1314,13 +2703,13 @@
             await updateDoc(doc(db, "rooms", currentRoom), {
               questions: window.questions,
             });
-            alert("Questions saved to room!");
+            showNotification("Questions saved to room!", "success");
           } catch (error) {
             console.error("Failed to save to room:", error);
-            alert("Saved locally only (not in room)");
+            showNotification("Saved locally only", "info");
           }
         } else {
-          alert("Questions saved locally!");
+          showNotification("Questions saved locally!", "success");
         }
 
         document.getElementById("total-questions").innerText =
@@ -1358,10 +2747,10 @@
         updateJsonEditor();
         document.getElementById("total-questions").innerText =
           window.questions.length;
-        alert("Reset to default");
+        showNotification("Reset to default", "info");
       };
 
-      // Load saved questions from localStorage
+      // Load saved questions
       const savedQuestions = localStorage.getItem("customQuestions");
       if (savedQuestions) {
         try {
@@ -1372,37 +2761,168 @@
       // ==================== ADMIN MONITORING ====================
 
       window.toggleAdminPanel = () => {
+        if (!isAdmin) {
+          showNotification("Admin only!", "error");
+          return;
+        }
         document.getElementById("admin-modal").classList.toggle("active");
       };
 
-      window.monitorRoom = async () => {
+      window.monitorRoom = () => {
         const roomCode = document
           .getElementById("admin-room-code")
           .value.trim()
           .toUpperCase();
         if (!roomCode) return;
 
-        const listEl = document.getElementById("admin-participants-list");
+        document
+          .getElementById("admin-monitoring-info")
+          .classList.remove("hidden");
+        document.getElementById("monitoring-room-code").innerText = roomCode;
 
         onSnapshot(
           collection(db, "rooms", roomCode, "participants"),
           (snapshot) => {
             const participants = [];
-            snapshot.forEach((doc) => participants.push(doc.data()));
+            snapshot.forEach((doc) =>
+              participants.push({ id: doc.id, ...doc.data() }),
+            );
 
-            listEl.innerHTML = participants
+            const players = participants.filter((p) => !p.isAdmin);
+
+            document.getElementById("admin-participants").innerText =
+              players.length;
+
+            const totalBooms = players.reduce(
+              (sum, p) => sum + (p.booms || 0),
+              0,
+            );
+            document.getElementById("admin-total-booms").innerText = totalBooms;
+
+            const totalWarnings = players.reduce(
+              (sum, p) => sum + (p.warnings || 0),
+              0,
+            );
+            document.getElementById("admin-warnings").innerText = totalWarnings;
+
+            const disqualified = players.filter(
+              (p) => p.status === "disqualified",
+            ).length;
+            document.getElementById("admin-disqualified").innerText =
+              disqualified;
+
+            const listEl = document.getElementById("participants-list");
+            listEl.innerHTML = players
               .map(
                 (p) => `
-                    <div class="p-3 bg-black/50 border border-neon-blue">
-                        <div class="font-bold">${p.name}</div>
-                        <div class="text-sm">Score: ${p.score}</div>
+                    <div class="flex items-center justify-between p-3 bg-black/50 border border-neon-blue">
+                        <div class="flex items-center gap-3">
+                            <div class="cyber-avatar w-8 h-8 text-sm">${p.name.charAt(0)}</div>
+                            <div>
+                                <div class="font-bold neon-text-blue">${p.name}</div>
+                                <div class="text-xs font-mono text-gray-400 flex items-center gap-2">
+                                    <span class="flex items-center gap-1"><span class="iconify" data-icon="mdi:currency-usd"></span>${p.score}</span>
+                                    <span class="flex items-center gap-1"><span class="iconify" data-icon="mdi:fire"></span>${p.streak || 0}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm text-neon-pink flex items-center gap-1">
+                                <span class="iconify" data-icon="mdi:flash"></span>
+                                ${p.booms || 0}
+                            </div>
+                            ${p.warnings > 0 ? `<div class="text-xs text-neon-yellow flex items-center gap-1"><span class="iconify" data-icon="mdi:alert"></span>${p.warnings}</div>` : ""}
+                        </div>
                     </div>
                 `,
               )
               .join("");
           },
         );
+
+        // Listen to activity log
+        onSnapshot(doc(db, "rooms", roomCode), (doc) => {
+          const data = doc.data();
+          if (data && data.activityLog) {
+            const logEl = document.getElementById("activity-log");
+            logEl.innerHTML =
+              data.activityLog
+                .slice()
+                .reverse()
+                .map((activity) => {
+                  if (activity.type === "BOOM") {
+                    return `
+                                <div class="text-xs border-b border-gray-700 py-2">
+                                    💣 <span class="text-red-400">${activity.from}</span> → 
+                                    <span class="text-blue-400">${activity.to}</span>
+                                    <span class="text-gray-400">-${activity.damage}</span>
+                                    <span class="text-gray-600">${new Date(activity.timestamp).toLocaleTimeString()}</span>
+                                </div>
+                            `;
+                  } else if (activity.type === "CHEAT") {
+                    return `
+                                <div class="text-xs border-b border-gray-700 py-2">
+                                    ⚠️ <span class="text-red-400">${activity.from}</span>
+                                    <span class="text-gray-400">${activity.details}</span>
+                                    <span class="text-yellow-400">(Warning ${activity.warningCount})</span>
+                                </div>
+                            `;
+                  }
+                })
+                .join("") ||
+              '<div class="text-gray-500 text-center py-4">No activity</div>';
+          }
+        });
       };
+
+      window.stopMonitoring = () => {
+        document
+          .getElementById("admin-monitoring-info")
+          .classList.add("hidden");
+        document.getElementById("participants-list").innerHTML = "";
+        document.getElementById("activity-log").innerHTML =
+          '<div class="text-gray-500 text-center py-4">No room selected</div>';
+      };
+
+      // ==================== CONFETTI ====================
+
+      function startConfetti() {
+        const canvas = document.getElementById("confetti");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles = [];
+        for (let i = 0; i < 100; i++) {
+          particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height - canvas.height,
+            size: Math.random() * 5 + 2,
+            speed: Math.random() * 3 + 2,
+            color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+          });
+        }
+
+        function animate() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          particles.forEach((p) => {
+            ctx.fillStyle = p.color;
+            ctx.fillRect(p.x, p.y, p.size, p.size);
+            p.y += p.speed;
+
+            if (p.y > canvas.height) {
+              p.y = -10;
+              p.x = Math.random() * canvas.width;
+            }
+          });
+
+          requestAnimationFrame(animate);
+        }
+
+        animate();
+      }
     </script>
   </body>
 </html>
