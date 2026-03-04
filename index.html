@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CYBERPUNK 2077: Database Warriors</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Iconify -->
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
@@ -154,6 +156,10 @@
             cursor: pointer;
             z-index: 1;
             clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .cyber-button::before {
@@ -194,6 +200,10 @@
             padding: 14px 28px;
             clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
             transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .cyber-button-outline:hover {
@@ -268,6 +278,9 @@
             text-shadow: 0 0 20px var(--neon-blue);
             position: relative;
             clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .cyber-timer::after {
@@ -379,6 +392,9 @@
             font-weight: 700;
             text-shadow: 0 0 10px #ff0000;
             clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         /* Input */
@@ -520,6 +536,11 @@
             text-shadow: 0 0 10px var(--neon-purple), 0 0 20px var(--neon-purple), 0 0 40px var(--neon-purple);
         }
 
+        .neon-text-yellow {
+            color: var(--neon-yellow);
+            text-shadow: 0 0 10px var(--neon-yellow), 0 0 20px var(--neon-yellow), 0 0 40px var(--neon-yellow);
+        }
+
         /* Progress Bar */
         .cyber-progress {
             height: 10px;
@@ -548,12 +569,22 @@
             animation: blink 0.5s infinite;
         }
 
-        /* Grid */
-        .cyber-grid {
-            display: grid;
-            gap: 2px;
-            background: rgba(0, 255, 255, 0.1);
-            padding: 2px;
+        /* Icon styles */
+        .icon {
+            width: 1.2em;
+            height: 1.2em;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .icon-lg {
+            width: 2em;
+            height: 2em;
+        }
+
+        .icon-xl {
+            width: 3em;
+            height: 3em;
         }
     </style>
 </head>
@@ -568,10 +599,13 @@
     <!-- Disqualified Screen -->
     <div id="disqualified-screen">
         <div class="cyber-modal-content text-center">
-            <div class="text-8xl mb-4 neon-text-pink glitch" data-text="⚠️">⚠️</div>
+            <div class="text-8xl mb-4 neon-text-pink glitch" data-text="⚠️">
+                <span class="iconify" data-icon="mdi:alert-circle" data-width="80" data-height="80"></span>
+            </div>
             <h2 class="text-5xl font-bold mb-4 neon-text-pink glitch" data-text="DISKUALIFIKASI">DISKUALIFIKASI</h2>
             <p class="text-xl mb-6 text-gray-300" id="disqualify-reason">Kecurangan terdeteksi</p>
             <button onclick="location.reload()" class="cyber-button w-full">
+                <span class="iconify" data-icon="mdi:restart"></span>
                 REBOOT SYSTEM
             </button>
         </div>
@@ -583,7 +617,7 @@
         <div class="cyber-card mb-6 flex justify-between items-center">
             <div class="flex items-center gap-4">
                 <div class="cyber-avatar text-2xl">
-                    <span class="neon-text-blue">DB</span>
+                    <span class="iconify" data-icon="mdi:database" data-width="30" data-height="30"></span>
                 </div>
                 <div>
                     <h1 class="text-3xl font-bold tracking-tighter glitch" data-text="CYBERPUNK 2077">
@@ -598,24 +632,35 @@
             <div id="stats-bar" class="hidden items-center gap-6">
                 <div class="text-right">
                     <p class="text-gray-500 text-xs font-mono">DESIGNATION</p>
-                    <p id="display-team-name" class="font-bold text-xl neon-text-blue"></p>
+                    <p id="display-team-name" class="font-bold text-xl neon-text-blue flex items-center gap-2">
+                        <span class="iconify" data-icon="mdi:account"></span>
+                        <span></span>
+                    </p>
                 </div>
                 <div class="text-right">
                     <p class="text-gray-500 text-xs font-mono">CREDITS</p>
-                    <p id="display-score" class="font-bold text-2xl neon-text-yellow">0</p>
+                    <p id="display-score" class="font-bold text-2xl neon-text-yellow flex items-center gap-2">
+                        <span class="iconify" data-icon="mdi:currency-usd"></span>
+                        <span>0</span>
+                    </p>
                 </div>
                 <div class="text-right">
                     <p class="text-gray-500 text-xs font-mono">RANK</p>
-                    <p id="display-rank" class="font-bold text-xl neon-text-purple">#0</p>
+                    <p id="display-rank" class="font-bold text-xl neon-text-purple flex items-center gap-2">
+                        <span class="iconify" data-icon="mdi:trophy"></span>
+                        <span>#0</span>
+                    </p>
                 </div>
                 <div id="powerup-display" class="powerup-cyber hidden">
-                    💣 <span id="powerup-count">0</span>
+                    <span class="iconify" data-icon="mdi:flash"></span>
+                    <span id="powerup-count">0</span>
                 </div>
             </div>
 
             <!-- Admin Badge -->
             <div id="admin-badge" class="hidden powerup-cyber bg-purple-600">
-                👑 ADMIN MODE
+                <span class="iconify" data-icon="mdi:crown"></span>
+                ADMIN MODE
             </div>
         </div>
 
@@ -623,7 +668,9 @@
         <div id="screen-lobby" class="min-h-[600px] flex items-center justify-center">
             <div class="cyber-card max-w-md w-full animate__animated animate__fadeInUp">
                 <div class="text-center mb-8">
-                    <div class="text-7xl mb-4 neon-text-blue glitch" data-text="⌨️">⌨️</div>
+                    <div class="text-7xl mb-4 neon-text-blue glitch" data-text="⌨️">
+                        <span class="iconify" data-icon="mdi:keyboard" data-width="80" data-height="80"></span>
+                    </div>
                     <h2 class="text-4xl font-bold mb-2 glitch" data-text="INITIALIZE">
                         <span class="neon-text-blue">INITIALIZE</span>
                     </h2>
@@ -633,12 +680,16 @@
                 <div class="space-y-4">
                     <!-- Room Code -->
                     <div>
-                        <label class="block text-gray-400 font-mono text-sm mb-2 ml-2">ROOM CODE</label>
+                        <label class="block text-gray-400 font-mono text-sm mb-2 ml-2 flex items-center gap-2">
+                            <span class="iconify" data-icon="mdi:key-variant"></span>
+                            ROOM CODE
+                        </label>
                         <div class="flex gap-2">
                             <input type="text" id="input-room-code" maxlength="6" 
                                    placeholder="XXXXXX" 
                                    class="cyber-input text-center text-2xl font-bold uppercase">
-                            <button onclick="generateRoomCode()" class="cyber-button-outline px-6">
+                            <button onclick="generateRoomCode()" class="cyber-button-outline px-6 flex items-center gap-2">
+                                <span class="iconify" data-icon="mdi:refresh"></span>
                                 GEN
                             </button>
                         </div>
@@ -646,7 +697,10 @@
 
                     <!-- Nickname -->
                     <div>
-                        <label class="block text-gray-400 font-mono text-sm mb-2 ml-2">DESIGNATION</label>
+                        <label class="block text-gray-400 font-mono text-sm mb-2 ml-2 flex items-center gap-2">
+                            <span class="iconify" data-icon="mdi:badge-account"></span>
+                            DESIGNATION
+                        </label>
                         <input type="text" id="input-team-name" placeholder="Enter your callsign..." 
                                class="cyber-input">
                     </div>
@@ -654,9 +708,11 @@
                     <!-- Action Buttons -->
                     <div class="grid grid-cols-2 gap-3 pt-4">
                         <button onclick="createRoom()" class="cyber-button">
+                            <span class="iconify" data-icon="mdi:plus-circle"></span>
                             CREATE
                         </button>
                         <button onclick="joinRoom()" class="cyber-button-outline">
+                            <span class="iconify" data-icon="mdi:login"></span>
                             JOIN
                         </button>
                     </div>
@@ -664,20 +720,33 @@
                     <!-- Room Status -->
                     <div id="room-status-display" class="hidden mt-6 p-6 bg-black/50 border border-neon-blue">
                         <div class="text-center mb-4">
-                            <p class="text-gray-400 font-mono text-sm mb-2">ROOM CODE</p>
+                            <p class="text-gray-400 font-mono text-sm mb-2 flex items-center justify-center gap-2">
+                                <span class="iconify" data-icon="mdi:key-variant"></span>
+                                ROOM CODE
+                            </p>
                             <div class="room-code-cyber" id="display-room-code">DEFAULT</div>
-                            <button onclick="copyRoomCode()" class="mt-3 text-neon-blue hover:text-neon-pink font-mono text-sm">
-                                📋 COPY CODE
+                            <button onclick="copyRoomCode()" class="mt-3 text-neon-blue hover:text-neon-pink font-mono text-sm flex items-center gap-2 mx-auto">
+                                <span class="iconify" data-icon="mdi:content-copy"></span>
+                                COPY CODE
                             </button>
                         </div>
                         
                         <div class="flex justify-between items-center mb-4 font-mono">
-                            <span class="text-gray-400">STATUS:</span>
-                            <span id="room-status-text" class="text-neon-yellow">WAITING</span>
+                            <span class="text-gray-400 flex items-center gap-2">
+                                <span class="iconify" data-icon="mdi:information"></span>
+                                STATUS:
+                            </span>
+                            <span id="room-status-text" class="text-neon-yellow flex items-center gap-2">
+                                <span class="iconify" data-icon="mdi:clock-outline"></span>
+                                WAITING
+                            </span>
                         </div>
                         
                         <div class="mb-4">
-                            <h3 class="font-mono text-neon-blue mb-3">ACTIVE OPERATORS:</h3>
+                            <h3 class="font-mono text-neon-blue mb-3 flex items-center gap-2">
+                                <span class="iconify" data-icon="mdi:account-group"></span>
+                                ACTIVE OPERATORS:
+                            </h3>
                             <div id="participants-list-waiting" class="space-y-2 max-h-48 overflow-y-auto">
                                 <!-- Participants will be listed here -->
                             </div>
@@ -686,6 +755,7 @@
                         <!-- Start Button -->
                         <button id="btn-start" onclick="startGame()" disabled 
                                 class="cyber-button w-full text-lg disabled:opacity-50">
+                            <span class="iconify" data-icon="mdi:play-circle"></span>
                             INITIALIZE MISSION
                         </button>
                     </div>
@@ -704,24 +774,33 @@
                         
                         <!-- Header -->
                         <div class="flex justify-between items-center mb-6">
-                            <span id="question-category" class="bg-black/50 border border-neon-blue px-4 py-2 font-mono text-neon-blue">
+                            <span id="question-category" class="bg-black/50 border border-neon-blue px-4 py-2 font-mono text-neon-blue flex items-center gap-2">
+                                <span class="iconify" data-icon="mdi:tag"></span>
                                 LOADING...
                             </span>
                             
                             <div class="cyber-timer">
+                                <span class="iconify" data-icon="mdi:timer"></span>
                                 <span id="timer-text">30</span>
                             </div>
                         </div>
                         
                         <!-- Question -->
-                        <p id="question-text" class="text-2xl font-bold mb-8 leading-relaxed glitch" data-text="Loading question...">
+                        <p id="question-text" class="text-2xl font-bold mb-8 leading-relaxed glitch flex items-center gap-3" data-text="Loading question...">
+                            <span class="iconify" data-icon="mdi:help-circle"></span>
                             Loading question...
                         </p>
 
                         <!-- Progress -->
                         <div class="flex justify-between items-center font-mono text-sm">
-                            <span id="question-progress" class="text-gray-400">MISSION 0/10</span>
-                            <span id="question-points" class="text-neon-yellow">+1000 CR</span>
+                            <span id="question-progress" class="text-gray-400 flex items-center gap-2">
+                                <span class="iconify" data-icon="mdi:progress-clock"></span>
+                                MISSION 0/10
+                            </span>
+                            <span id="question-points" class="text-neon-yellow flex items-center gap-2">
+                                <span class="iconify" data-icon="mdi:currency-usd"></span>
+                                +1000 CR
+                            </span>
                         </div>
                     </div>
 
@@ -731,18 +810,21 @@
                     </div>
 
                     <!-- Feedback -->
-                    <div id="feedback" class="hidden p-6 text-center font-bold text-xl animate__animated animate__bounceIn border-2">
+                    <div id="feedback" class="hidden p-6 text-center font-bold text-xl animate__animated animate__bounceIn border-2 flex items-center justify-center gap-3">
                     </div>
 
                     <!-- Warning Message -->
-                    <div id="warning-container" class="hidden warning-cyber flex items-center gap-3">
-                        <span>⚠️</span>
+                    <div id="warning-container" class="hidden warning-cyber">
+                        <span class="iconify" data-icon="mdi:alert"></span>
                         <span id="warning-text"></span>
                     </div>
 
                     <!-- Boom Targets -->
                     <div id="boom-targets" class="hidden cyber-card">
-                        <h3 class="font-bold text-lg mb-3 neon-text-pink">💣 SELECT TARGET</h3>
+                        <h3 class="font-bold text-lg mb-3 neon-text-pink flex items-center gap-2">
+                            <span class="iconify" data-icon="mdi:flash"></span>
+                            SELECT TARGET
+                        </h3>
                         <div id="targets-list" class="grid grid-cols-2 md:grid-cols-3 gap-2">
                             <!-- Targets will be listed here -->
                         </div>
@@ -754,7 +836,8 @@
                     <!-- Live Rankings -->
                     <div class="cyber-card">
                         <h3 class="font-bold text-lg mb-4 flex items-center gap-2 neon-text-purple">
-                            <span>🏆</span> LIVE RANKINGS
+                            <span class="iconify" data-icon="mdi:trophy"></span>
+                            LIVE RANKINGS
                         </h3>
                         
                         <div id="leaderboard" class="space-y-2 max-h-[500px] overflow-y-auto">
@@ -764,19 +847,40 @@
 
                     <!-- Power-ups Info -->
                     <div class="cyber-card">
-                        <h3 class="font-bold text-lg mb-3 neon-text-yellow">⚡ POWER-UPS</h3>
+                        <h3 class="font-bold text-lg mb-3 neon-text-yellow flex items-center gap-2">
+                            <span class="iconify" data-icon="mdi:flash"></span>
+                            POWER-UPS
+                        </h3>
                         <div class="space-y-2 font-mono text-sm">
                             <div class="flex justify-between items-center p-2 bg-black/50 border border-neon-blue">
-                                <span>3x STREAK</span>
-                                <span class="text-neon-blue">2x CREDITS</span>
+                                <span class="flex items-center gap-2">
+                                    <span class="iconify" data-icon="mdi:numeric-3-box"></span>
+                                    3x STREAK
+                                </span>
+                                <span class="text-neon-blue flex items-center gap-1">
+                                    <span class="iconify" data-icon="mdi:currency-usd"></span>
+                                    2x CREDITS
+                                </span>
                             </div>
                             <div class="flex justify-between items-center p-2 bg-black/50 border border-neon-blue">
-                                <span>5x STREAK</span>
-                                <span class="text-neon-purple">SHIELD</span>
+                                <span class="flex items-center gap-2">
+                                    <span class="iconify" data-icon="mdi:numeric-5-box"></span>
+                                    5x STREAK
+                                </span>
+                                <span class="text-neon-purple flex items-center gap-1">
+                                    <span class="iconify" data-icon="mdi:shield"></span>
+                                    SHIELD
+                                </span>
                             </div>
                             <div class="flex justify-between items-center p-2 bg-black/50 border border-neon-blue">
-                                <span>7x STREAK</span>
-                                <span class="text-neon-pink">BOOM +1</span>
+                                <span class="flex items-center gap-2">
+                                    <span class="iconify" data-icon="mdi:numeric-7-box"></span>
+                                    7x STREAK
+                                </span>
+                                <span class="text-neon-pink flex items-center gap-1">
+                                    <span class="iconify" data-icon="mdi:flash"></span>
+                                    BOOM +1
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -784,19 +888,31 @@
                     <!-- Room Info -->
                     <div class="cyber-card">
                         <div class="flex justify-between items-center mb-2 font-mono">
-                            <span class="text-gray-400">ROOM:</span>
+                            <span class="text-gray-400 flex items-center gap-2">
+                                <span class="iconify" data-icon="mdi:key-variant"></span>
+                                ROOM:
+                            </span>
                             <span id="current-room-code" class="font-bold text-neon-blue">---</span>
                         </div>
                         <div class="flex justify-between items-center mb-2 font-mono">
-                            <span class="text-gray-400">OPERATORS:</span>
+                            <span class="text-gray-400 flex items-center gap-2">
+                                <span class="iconify" data-icon="mdi:account-group"></span>
+                                OPERATORS:
+                            </span>
                             <span id="participant-count" class="font-bold text-neon-purple">0</span>
                         </div>
                         <div class="flex justify-between items-center mb-2 font-mono">
-                            <span class="text-gray-400">STREAK:</span>
+                            <span class="text-gray-400 flex items-center gap-2">
+                                <span class="iconify" data-icon="mdi:fire"></span>
+                                STREAK:
+                            </span>
                             <span id="current-streak" class="font-bold text-neon-yellow">0</span>
                         </div>
                         <div class="flex justify-between items-center font-mono">
-                            <span class="text-gray-400">BOOMS:</span>
+                            <span class="text-gray-400 flex items-center gap-2">
+                                <span class="iconify" data-icon="mdi:flash"></span>
+                                BOOMS:
+                            </span>
                             <span id="current-booms" class="font-bold text-neon-pink">0</span>
                         </div>
                     </div>
@@ -816,36 +932,60 @@
             <div class="max-w-4xl mx-auto space-y-6">
                 <!-- Winner Celebration -->
                 <div class="cyber-card text-center p-12">
-                    <div class="text-8xl mb-4 animate__animated animate__bounceIn neon-text-blue glitch" data-text="🏆">🏆</div>
+                    <div class="text-8xl mb-4 animate__animated animate__bounceIn neon-text-blue glitch" data-text="🏆">
+                        <span class="iconify" data-icon="mdi:trophy" data-width="80" data-height="80"></span>
+                    </div>
                     <h2 class="text-6xl font-bold mb-2 glitch" data-text="MISSION COMPLETE">
                         <span class="neon-text-blue">MISSION</span>
                         <span class="neon-text-pink"> COMPLETE</span>
                     </h2>
-                    <p class="text-xl text-gray-400 font-mono">All objectives accomplished</p>
+                    <p class="text-xl text-gray-400 font-mono flex items-center justify-center gap-2">
+                        <span class="iconify" data-icon="mdi:check-circle"></span>
+                        All objectives accomplished
+                    </p>
                 </div>
 
                 <!-- Final Stats -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="cyber-card text-center p-8">
-                        <p class="text-gray-400 font-mono text-sm mb-2">DESIGNATION</p>
-                        <p id="res-team-name" class="text-3xl font-bold neon-text-blue">-</p>
+                        <p class="text-gray-400 font-mono text-sm mb-2 flex items-center justify-center gap-2">
+                            <span class="iconify" data-icon="mdi:badge-account"></span>
+                            DESIGNATION
+                        </p>
+                        <p id="res-team-name" class="text-3xl font-bold neon-text-blue flex items-center justify-center gap-2">
+                            <span class="iconify" data-icon="mdi:account"></span>
+                            <span>-</span>
+                        </p>
                     </div>
                     
                     <div class="cyber-card text-center p-8">
-                        <p class="text-gray-400 font-mono text-sm mb-2">FINAL CREDITS</p>
-                        <p id="res-score" class="text-5xl font-bold neon-text-yellow">0</p>
+                        <p class="text-gray-400 font-mono text-sm mb-2 flex items-center justify-center gap-2">
+                            <span class="iconify" data-icon="mdi:currency-usd"></span>
+                            FINAL CREDITS
+                        </p>
+                        <p id="res-score" class="text-5xl font-bold neon-text-yellow flex items-center justify-center gap-2">
+                            <span class="iconify" data-icon="mdi:currency-usd"></span>
+                            <span>0</span>
+                        </p>
                     </div>
                     
                     <div class="cyber-card text-center p-8">
-                        <p class="text-gray-400 font-mono text-sm mb-2">FINAL RANK</p>
-                        <p id="res-rank" class="text-4xl font-bold neon-text-purple">#0</p>
+                        <p class="text-gray-400 font-mono text-sm mb-2 flex items-center justify-center gap-2">
+                            <span class="iconify" data-icon="mdi:trophy"></span>
+                            FINAL RANK
+                        </p>
+                        <p id="res-rank" class="text-4xl font-bold neon-text-purple flex items-center justify-center gap-2">
+                            <span class="iconify" data-icon="mdi:medal"></span>
+                            <span>#0</span>
+                        </p>
                     </div>
                 </div>
 
                 <!-- Final Leaderboard -->
                 <div class="cyber-card p-8">
                     <h3 class="text-2xl font-bold mb-6 flex items-center gap-3 neon-text-purple">
-                        <span>🏆</span> FINAL RANKINGS
+                        <span class="iconify" data-icon="mdi:trophy"></span>
+                        FINAL RANKINGS
                     </h3>
                     
                     <div id="final-leaderboard" class="space-y-2">
@@ -854,6 +994,7 @@
 
                     <div class="mt-8 text-center">
                         <button onclick="location.reload()" class="cyber-button px-12">
+                            <span class="iconify" data-icon="mdi:restart"></span>
                             REBOOT SYSTEM
                         </button>
                     </div>
@@ -865,7 +1006,7 @@
     <!-- Admin Monitoring Panel -->
     <div class="fixed bottom-6 right-6 z-50">
         <button onclick="toggleAdminPanel()" class="cyber-button w-14 h-14 rounded-none p-0 text-2xl">
-            👑
+            <span class="iconify" data-icon="mdi:crown"></span>
         </button>
     </div>
 
@@ -873,7 +1014,10 @@
     <div id="admin-modal" class="cyber-modal">
         <div class="cyber-modal-content max-w-4xl w-full">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold neon-text-purple">👑 ADMIN OVERRIDE</h2>
+                <h2 class="text-2xl font-bold neon-text-purple flex items-center gap-2">
+                    <span class="iconify" data-icon="mdi:crown"></span>
+                    ADMIN OVERRIDE
+                </h2>
                 <button onclick="toggleAdminPanel()" class="text-gray-500 hover:text-neon-pink text-2xl">&times;</button>
             </div>
 
@@ -882,40 +1026,65 @@
                     <input type="text" id="admin-room-code" placeholder="ROOM CODE" 
                            class="cyber-input flex-1">
                     <button onclick="monitorRoom()" class="cyber-button px-6">
+                        <span class="iconify" data-icon="mdi:monitor"></span>
                         MONITOR
                     </button>
                 </div>
             </div>
 
-            <div id="admin-monitoring-info" class="hidden mb-4 p-4 bg-black/50 border border-neon-blue">
-                <span class="font-mono">MONITORING: <span id="monitoring-room-code" class="text-neon-blue"></span></span>
-                <button onclick="stopMonitoring()" class="ml-4 text-neon-pink hover:text-neon-blue">[STOP]</button>
+            <div id="admin-monitoring-info" class="hidden mb-4 p-4 bg-black/50 border border-neon-blue flex items-center justify-between">
+                <span class="font-mono flex items-center gap-2">
+                    <span class="iconify" data-icon="mdi:eye"></span>
+                    MONITORING: <span id="monitoring-room-code" class="text-neon-blue"></span>
+                </span>
+                <button onclick="stopMonitoring()" class="text-neon-pink hover:text-neon-blue flex items-center gap-1">
+                    <span class="iconify" data-icon="mdi:stop"></span>
+                    STOP
+                </button>
             </div>
 
             <!-- Stats -->
             <div class="grid grid-cols-4 gap-3 mb-6">
                 <div class="bg-black/50 border border-neon-blue p-3 text-center">
-                    <div class="text-2xl font-bold text-neon-blue" id="admin-participants">0</div>
+                    <div class="text-2xl font-bold text-neon-blue flex items-center justify-center gap-1">
+                        <span class="iconify" data-icon="mdi:account-group"></span>
+                        <span id="admin-participants">0</span>
+                    </div>
                     <div class="text-xs font-mono text-gray-400">OPERATORS</div>
                 </div>
                 <div class="bg-black/50 border border-neon-purple p-3 text-center">
-                    <div class="text-2xl font-bold text-neon-purple" id="admin-total-booms">0</div>
+                    <div class="text-2xl font-bold text-neon-purple flex items-center justify-center gap-1">
+                        <span class="iconify" data-icon="mdi:flash"></span>
+                        <span id="admin-total-booms">0</span>
+                    </div>
                     <div class="text-xs font-mono text-gray-400">BOOMS</div>
                 </div>
                 <div class="bg-black/50 border border-neon-yellow p-3 text-center">
-                    <div class="text-2xl font-bold text-neon-yellow" id="admin-warnings">0</div>
+                    <div class="text-2xl font-bold text-neon-yellow flex items-center justify-center gap-1">
+                        <span class="iconify" data-icon="mdi:alert"></span>
+                        <span id="admin-warnings">0</span>
+                    </div>
                     <div class="text-xs font-mono text-gray-400">WARNINGS</div>
                 </div>
                 <div class="bg-black/50 border border-neon-pink p-3 text-center">
-                    <div class="text-2xl font-bold text-neon-pink" id="admin-disqualified">0</div>
+                    <div class="text-2xl font-bold text-neon-pink flex items-center justify-center gap-1">
+                        <span class="iconify" data-icon="mdi:close-circle"></span>
+                        <span id="admin-disqualified">0</span>
+                    </div>
                     <div class="text-xs font-mono text-gray-400">TERMINATED</div>
                 </div>
             </div>
 
-            <h3 class="font-bold mb-3 neon-text-blue">ACTIVE OPERATORS</h3>
+            <h3 class="font-bold mb-3 neon-text-blue flex items-center gap-2">
+                <span class="iconify" data-icon="mdi:account-group"></span>
+                ACTIVE OPERATORS
+            </h3>
             <div id="participants-list" class="space-y-2 max-h-60 overflow-y-auto mb-6"></div>
 
-            <h3 class="font-bold mb-3 neon-text-purple">ACTIVITY LOG</h3>
+            <h3 class="font-bold mb-3 neon-text-purple flex items-center gap-2">
+                <span class="iconify" data-icon="mdi:history"></span>
+                ACTIVITY LOG
+            </h3>
             <div id="activity-log" class="space-y-2 max-h-40 overflow-y-auto bg-black/50 p-3 border border-neon-blue font-mono text-sm"></div>
         </div>
     </div>
@@ -1272,14 +1441,16 @@
         function disableGameForAdmin() {
             document.getElementById('answers-grid').innerHTML = `
                 <div class="col-span-2 text-center p-12 bg-black/50 border border-neon-purple">
-                    <div class="text-5xl mb-4 neon-text-purple">👑</div>
+                    <div class="text-5xl mb-4 neon-text-purple">
+                        <span class="iconify" data-icon="mdi:crown" data-width="60" data-height="60"></span>
+                    </div>
                     <h3 class="text-2xl font-bold mb-2 neon-text-purple">ADMIN MODE</h3>
                     <p class="text-gray-400 font-mono">Monitoring active operators</p>
                 </div>
             `;
             
             document.getElementById('timer-text').innerText = '--';
-            document.getElementById('question-text').innerText = 'ADMIN OVERRIDE - MONITORING ONLY';
+            document.getElementById('question-text').innerHTML = '<span class="iconify" data-icon="mdi:eye"></span> ADMIN OVERRIDE - MONITORING ONLY';
             document.getElementById('question-category').innerText = 'ADMIN';
             document.getElementById('powerup-display').classList.add('hidden');
             document.getElementById('admin-badge').classList.remove('hidden');
@@ -1401,9 +1572,9 @@
             const q = questions[qIdx];
             
             document.getElementById('question-category').innerText = q.category;
-            document.getElementById('question-text').innerText = q.q;
-            document.getElementById('question-progress').innerText = `MISSION ${qIdx + 1}/${questions.length}`;
-            document.getElementById('question-points').innerText = `+${q.points} CR`;
+            document.getElementById('question-text').innerHTML = `<span class="iconify" data-icon="mdi:help-circle"></span> ${q.q}`;
+            document.getElementById('question-progress').innerHTML = `<span class="iconify" data-icon="mdi:progress-clock"></span> MISSION ${qIdx + 1}/${questions.length}`;
+            document.getElementById('question-points').innerHTML = `<span class="iconify" data-icon="mdi:currency-usd"></span> +${q.points} CR`;
             
             const grid = document.getElementById('answers-grid');
             grid.innerHTML = '';
@@ -1485,7 +1656,8 @@
                 
                 document.getElementById('feedback').className = 'p-6 text-center font-bold text-xl animate__animated animate__bounceIn border-2 border-green-500 bg-black/50 text-green-500';
                 document.getElementById('feedback').innerHTML = `
-                    ✅ ACCESS GRANTED<br>
+                    <span class="iconify" data-icon="mdi:check-circle"></span>
+                    ACCESS GRANTED<br>
                     <span class="text-sm font-mono">+${pointsEarned} CR (${multiplier}x MULTIPLIER)</span>
                 `;
             } else {
@@ -1493,11 +1665,14 @@
                 score = Math.max(0, score - 200);
                 
                 document.getElementById('feedback').className = 'p-6 text-center font-bold text-xl animate__animated animate__shakeX border-2 border-red-500 bg-black/50 text-red-500';
-                document.getElementById('feedback').innerHTML = '❌ ACCESS DENIED -200 CR';
+                document.getElementById('feedback').innerHTML = `
+                    <span class="iconify" data-icon="mdi:close-circle"></span>
+                    ACCESS DENIED -200 CR
+                `;
             }
             
             document.getElementById('feedback').classList.remove('hidden');
-            document.getElementById('display-score').innerText = score.toLocaleString();
+            document.getElementById('display-score').innerHTML = `<span class="iconify" data-icon="mdi:currency-usd"></span> ${score.toLocaleString()}`;
             document.getElementById('current-streak').innerText = currentStreak;
             document.getElementById('current-booms').innerText = boomCount;
             document.getElementById('streak-progress').style.width = `${(currentStreak % 7) * 14}%`;
@@ -1538,29 +1713,40 @@
             leaderboardEl.innerHTML = sorted.map((p, index) => {
                 const isCurrentUser = p.name === currentNickname;
                 let medal = '';
+                let medalIcon = '';
                 
-                if (index === 0) medal = '🥇';
-                else if (index === 1) medal = '🥈';
-                else if (index === 2) medal = '🥉';
+                if (index === 0) {
+                    medal = 'medal-gold';
+                    medalIcon = '<span class="iconify" data-icon="mdi:medal"></span>';
+                } else if (index === 1) {
+                    medal = 'medal-silver';
+                    medalIcon = '<span class="iconify" data-icon="mdi:medal"></span>';
+                } else if (index === 2) {
+                    medal = 'medal-bronze';
+                    medalIcon = '<span class="iconify" data-icon="mdi:medal"></span>';
+                }
                 
                 return `
                     <div class="rank-cyber ${isCurrentUser ? 'current-user' : ''}">
-                        <span class="text-2xl w-10 ${medal ? `medal-${index === 0 ? 'gold' : index === 1 ? 'silver' : 'bronze'}` : ''}">${medal || `#${index + 1}`}</span>
+                        <span class="text-2xl w-10 ${medal}">${medalIcon || `#${index + 1}`}</span>
                         <div class="cyber-avatar">
                             ${p.name.charAt(0).toUpperCase()}
                         </div>
                         <div class="flex-1">
                             <div class="font-bold neon-text-blue">${p.name}</div>
-                            ${p.streak > 2 ? `<div class="text-xs font-mono text-neon-yellow">🔥 STREAK ${p.streak}</div>` : ''}
+                            ${p.streak > 2 ? `<div class="text-xs font-mono text-neon-yellow flex items-center gap-1"><span class="iconify" data-icon="mdi:fire"></span> STREAK ${p.streak}</div>` : ''}
                         </div>
-                        <div class="font-bold text-neon-purple text-xl">${p.score.toLocaleString()}</div>
+                        <div class="font-bold text-neon-purple text-xl flex items-center gap-1">
+                            <span class="iconify" data-icon="mdi:currency-usd"></span>
+                            ${p.score.toLocaleString()}
+                        </div>
                     </div>
                 `;
             }).join('');
             
             const myRank = sorted.findIndex(p => p.name === currentNickname) + 1;
             if (myRank > 0) {
-                document.getElementById('display-rank').innerText = `#${myRank}`;
+                document.getElementById('display-rank').innerHTML = `<span class="iconify" data-icon="mdi:trophy"></span> #${myRank}`;
             }
         }
 
@@ -1570,8 +1756,8 @@
             document.getElementById('screen-game').classList.add('hidden');
             document.getElementById('screen-results').classList.remove('hidden');
             
-            document.getElementById('res-team-name').innerText = currentNickname;
-            document.getElementById('res-score').innerText = score.toLocaleString();
+            document.getElementById('res-team-name').innerHTML = `<span class="iconify" data-icon="mdi:account"></span> ${currentNickname}`;
+            document.getElementById('res-score').innerHTML = `<span class="iconify" data-icon="mdi:currency-usd"></span> ${score.toLocaleString()}`;
             
             if (cameraStream) {
                 cameraStream.getTracks().forEach(track => track.stop());
@@ -1583,27 +1769,38 @@
                 .sort((a, b) => b.score - a.score);
             
             const myRank = sorted.findIndex(p => p.name === currentNickname) + 1;
-            document.getElementById('res-rank').innerText = `#${myRank}`;
+            document.getElementById('res-rank').innerHTML = `<span class="iconify" data-icon="mdi:medal"></span> #${myRank}`;
             
             const finalEl = document.getElementById('final-leaderboard');
             finalEl.innerHTML = sorted.map((p, index) => {
                 const isCurrentUser = p.name === currentNickname;
                 let medal = '';
+                let medalIcon = '';
                 
-                if (index === 0) medal = '🥇';
-                else if (index === 1) medal = '🥈';
-                else if (index === 2) medal = '🥉';
+                if (index === 0) {
+                    medal = 'medal-gold';
+                    medalIcon = '<span class="iconify" data-icon="mdi:medal"></span>';
+                } else if (index === 1) {
+                    medal = 'medal-silver';
+                    medalIcon = '<span class="iconify" data-icon="mdi:medal"></span>';
+                } else if (index === 2) {
+                    medal = 'medal-bronze';
+                    medalIcon = '<span class="iconify" data-icon="mdi:medal"></span>';
+                }
                 
                 return `
                     <div class="rank-cyber ${isCurrentUser ? 'current-user' : ''}">
-                        <span class="text-3xl w-12 ${medal ? `medal-${index === 0 ? 'gold' : index === 1 ? 'silver' : 'bronze'}` : ''}">${medal || `#${index + 1}`}</span>
+                        <span class="text-3xl w-12 ${medal}">${medalIcon || `#${index + 1}`}</span>
                         <div class="cyber-avatar">
                             ${p.name.charAt(0).toUpperCase()}
                         </div>
                         <div class="flex-1">
                             <div class="font-bold text-lg neon-text-blue">${p.name}</div>
                         </div>
-                        <div class="font-bold text-neon-purple text-2xl">${p.score.toLocaleString()}</div>
+                        <div class="font-bold text-neon-purple text-2xl flex items-center gap-1">
+                            <span class="iconify" data-icon="mdi:currency-usd"></span>
+                            ${p.score.toLocaleString()}
+                        </div>
                     </div>
                 `;
             }).join('');
@@ -1638,7 +1835,10 @@
                 <button onclick="useBoom('${t.id}', '${t.name}')" 
                         class="bg-black/50 border border-neon-pink hover:bg-neon-pink/20 p-3 transition-all font-mono">
                     <div class="font-bold neon-text-pink">${t.name}</div>
-                    <div class="text-sm text-gray-400">${t.score} CR</div>
+                    <div class="text-sm text-gray-400 flex items-center justify-center gap-1">
+                        <span class="iconify" data-icon="mdi:currency-usd"></span>
+                        ${t.score} CR
+                    </div>
                 </button>
             `).join('');
         }
@@ -1658,7 +1858,7 @@
                 
                 const boomEffect = document.createElement('div');
                 boomEffect.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-8xl z-50 animate__animated animate__bounceIn';
-                boomEffect.innerText = '💥';
+                boomEffect.innerHTML = '<span class="iconify" data-icon="mdi:flash" data-width="100" data-height="100"></span>';
                 document.body.appendChild(boomEffect);
                 
                 setTimeout(() => boomEffect.remove(), 1000);
@@ -1714,12 +1914,18 @@
                             <div class="cyber-avatar w-8 h-8 text-sm">${p.name.charAt(0)}</div>
                             <div>
                                 <div class="font-bold neon-text-blue">${p.name}</div>
-                                <div class="text-xs font-mono text-gray-400">${p.score} CR | 🔥${p.streak || 0}</div>
+                                <div class="text-xs font-mono text-gray-400 flex items-center gap-2">
+                                    <span class="flex items-center gap-1"><span class="iconify" data-icon="mdi:currency-usd"></span>${p.score}</span>
+                                    <span class="flex items-center gap-1"><span class="iconify" data-icon="mdi:fire"></span>${p.streak || 0}</span>
+                                </div>
                             </div>
                         </div>
                         <div class="text-right">
-                            <div class="text-sm text-neon-pink">💣 ${p.booms || 0}</div>
-                            ${p.warnings > 0 ? `<div class="text-xs text-neon-yellow">⚠️${p.warnings}</div>` : ''}
+                            <div class="text-sm text-neon-pink flex items-center gap-1">
+                                <span class="iconify" data-icon="mdi:flash"></span>
+                                ${p.booms || 0}
+                            </div>
+                            ${p.warnings > 0 ? `<div class="text-xs text-neon-yellow flex items-center gap-1"><span class="iconify" data-icon="mdi:alert"></span>${p.warnings}</div>` : ''}
                         </div>
                     </div>
                 `).join('');
@@ -1735,7 +1941,7 @@
 
         function showNotification(message, type = 'info') {
             const notification = document.createElement('div');
-            notification.className = `fixed top-4 right-4 px-6 py-3 font-mono font-bold z-50 animate__animated animate__slideInRight border-2`;
+            notification.className = `fixed top-4 right-4 px-6 py-3 font-mono font-bold z-50 animate__animated animate__slideInRight border-2 flex items-center gap-2`;
             
             const colors = {
                 success: 'border-green-500 bg-black text-green-500',
@@ -1744,8 +1950,14 @@
                 info: 'border-blue-500 bg-black text-blue-500'
             };
             
+            let icon = '';
+            if (type === 'success') icon = '<span class="iconify" data-icon="mdi:check-circle"></span>';
+            else if (type === 'error') icon = '<span class="iconify" data-icon="mdi:close-circle"></span>';
+            else if (type === 'warning') icon = '<span class="iconify" data-icon="mdi:alert"></span>';
+            else icon = '<span class="iconify" data-icon="mdi:information"></span>';
+            
             notification.className += ` ${colors[type] || colors.info}`;
-            notification.innerText = message;
+            notification.innerHTML = `${icon} ${message}`;
             document.body.appendChild(notification);
             
             setTimeout(() => notification.remove(), 3000);
